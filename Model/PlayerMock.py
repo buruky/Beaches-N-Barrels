@@ -1,6 +1,9 @@
 import pygame
-class PlayerMock:
+from Model.DungeonCharacter import DungeonCharacter
+class PlayerMock(DungeonCharacter):
     def __init__(self):
+        super().__init__()#####
+        print(self.__myAttackDamage)
         self.player_x = 250
         self.player_y = 250
         self.speed = 5
@@ -41,3 +44,19 @@ class PlayerMock:
     def moveTo(self, num1, num2):
         self.player_x = num1
         self.player_y = num2
+    
+
+    def moveCharacter(theNewX: int, theNewY: int) -> None:
+        pass
+
+
+    def Dies():
+        pass
+    
+
+    def getPosition() -> list:
+        pass
+
+
+    def toString() -> str:
+        pass
