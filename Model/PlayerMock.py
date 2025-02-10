@@ -1,18 +1,14 @@
-import pygame
-from Model.DungeonCharacter import DungeonCharacter
+from .DungeonCharacter import DungeonCharacter
 class PlayerMock(DungeonCharacter):
     def __init__(self):
-        super().__init__()#####
-        print(self.__myAttackDamage)
-        self.player_x = 250
-        self.player_y = 250
-        self.speed = 5
+        super().__init__(50, 100, 250, 250, 5)#####
+        print(self._myAttackDamage)
 
         self.direction = None
         self.max_size = 500 
         self.min_size = 10
 
-    def movePlayer(self, directions):  # Initial color (Green)
+    def moveCharacter(self, directions):  # Initial color (Green)
         
         dx, dy = 0, 0
 
@@ -31,8 +27,8 @@ class PlayerMock(DungeonCharacter):
             dy *= 0.707
 
         # Update position
-        self.player_x += dx * self.speed
-        self.player_y += dy * self.speed
+        self._myPositionX += dx * self._mySpeed
+        self._myPositionY += dy * self._mySpeed
 
          # Update direction if moving
         if directions:
@@ -41,22 +37,25 @@ class PlayerMock(DungeonCharacter):
     def changeColor(self, theColor):
         self.color = theColor
 
-    def moveTo(self, num1, num2):
-        self.player_x = num1
-        self.player_y = num2
+    def teleportCharacter(self, num1, num2):
+        self._myPositionX = num1
+        self._myPositionY = num2
     
-
-    def moveCharacter(theNewX: int, theNewY: int) -> None:
-        pass
-
 
     def Dies():
-        pass
+        print("*Dies*")
+
     
 
-    def getPosition() -> list:
+    def getPositionX(self) -> int:
+        return self._myPositionX
+    
+    def getPositionY(self) -> int:
+        return self._myPositionY
+    
+    
+    def update(self):
         pass
-
 
     def toString() -> str:
-        pass
+        print("*Strings*")

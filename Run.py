@@ -7,8 +7,7 @@ from typing import Final
 pygame.init()
 class Run:
     __myView: Final = MView()
-    __myPlayer: Final = PlayerMock()
-    __myController: Final = MController(__myPlayer,__myView)
+    __myController: Final = MController(__myView)
     __myClock: Final = pygame.time.Clock()
     __myRunning = True
 
