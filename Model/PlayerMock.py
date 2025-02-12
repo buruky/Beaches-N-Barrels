@@ -1,3 +1,4 @@
+from typing import Final
 from .DungeonCharacter import DungeonCharacter
 from .EventManager import EventManager
 import pygame
@@ -7,24 +8,24 @@ class PlayerMock(DungeonCharacter):
         self.__myPositionX = self._myPositionX
         self.__myPositionY = self._myPositionY
         self.__myName = "PlayerMock"
-        self.__direction = None
-        self.__max_size = 500 
-        self.__min_size = 10
+        self.__myDirection = None
+        self.__MAX_SIZE:Final = 500 #deprectated
+        self.__MIN_SIZE:Final = 10
         self.update()
 
-    def moveCharacter(self, directions):  # ngl idk what type this is 
+    def moveCharacter(self, theDirections:list) -> None:
         dx, dy = 0, 0
 
-        if "LEFT" in directions:
+        if "LEFT" in theDirections:
             dx = -1
-        if "RIGHT" in directions:
+        if "RIGHT" in theDirections:
             dx = 1
 
-        if "UP" in directions:
+        if "UP" in theDirections:
             dy = -1
             self.update()
 
-        if "DOWN" in directions:
+        if "DOWN" in theDirections:
             dy = 1
         
 
@@ -39,21 +40,18 @@ class PlayerMock(DungeonCharacter):
         if dx != 0 or dy != 0:
             self.update()
          # Update direction if moving
-        if directions:
-            self.direction = directions[-1]  # Last key pressed is priority
+        if theDirections:
+            self.__myDirection = theDirections[-1]  # Last key pressed is priority
     
     def update(self):
         pygame.event.post(pygame.event.Event(EventManager.PLAYER_MOVED, {self.__class__.__name__: self}))
-        
-    def changeColor(self, theColor):
-        self.color = theColor
 
-    def teleportCharacter(self, num1, num2):
+    def teleportCharacter(self, num1: int, num2: int) -> None:
         self.__myPositionX = num1
         self.__myPositionY = num2
         self.update()
 
-    def Dies():
+    def Dies(self) -> None:
         print("*dies*")
     
 
@@ -63,12 +61,12 @@ class PlayerMock(DungeonCharacter):
     def getPositionY(self) -> int:
         return self.__myPositionY
     
-    def getSprite(self):
+    def getSprite(self) -> pygame.Surface:
         return self._mySprite
 
 
     def getName(self):
-        return self.myName
+        return self.__myName
     
     def toString() -> str:
         print("*Strings*")

@@ -7,44 +7,29 @@ class MView:
         screen_width = 800
         screen_height = 600
         self.screen = pygame.display.set_mode((screen_width, screen_height))
-        color = pygame.Color(255, 0, 0)
-        self.myPlayerSprite = SpriteMock(color, 50, 50)
-        self.sprites = {
-            #"player": pygame.image.load("assets/player.png"),
-            "PlayerMock": SpriteMock(color, 50, 50),
-            "EnemyMock": SpriteMock(color, 50, 50)
-        }
-    
-    def viewTick(self):
-        self.screen.fill((0, 0, 0))  # Clear screen with black
-        self.myPlayerSprite.draw(self.screen)
-        pygame.display.flip()  # Update display
-
-    
-    
-    def updatePlayerSprite(self, theX, theY):
-        self.myPlayerSprite.updatePosition(theX,theY)
-    
-    
+        
     def clear(self):
         """Clear the screen before drawing the next frame."""
         self.screen.fill((0, 0, 0))  # Fill screen with black
 
-    #####
-    def addSpriteOnScreen(self, theObjectName, theSprite, theNewX, theNewY):
+    def addSpriteScreenList(self, theObjectName, theSprite, theNewX, theNewY):
         self.onscreen[theObjectName] = [theSprite, theNewX, theNewY]
 
     def update_entity(self, objectName, theSurfaceSprite, theNewX, theNewY):#need to find way to clear canvas when you draw
-        """Update only a single entity when it moves."""
+        """Adds Chracter to list and to screen with new position  """
         
-        self.addSpriteOnScreen(objectName, theSurfaceSprite, theNewX, theNewY)
+        self.addSpriteScreenList(objectName, theSurfaceSprite, theNewX, theNewY)
         
-        self.draw_entity( objectName,theSurfaceSprite, theNewX, theNewY)
+        self.drawCharacter( objectName,theSurfaceSprite, theNewX, theNewY)
+
         pygame.display.flip()
         
 
-    def draw_entity(self,theObjectname, theNewSprite,theNewX, theNewY):
-        """Draw an entity based on its class name."""
+    def drawCharacter(self,theObjectname, theNewSprite,theNewX, theNewY):
+        """ 1. clears screen
+            2. draws passed sprite in new position
+            3. draws all other sprites that were onscreen 
+        """
         self.clear()        
         
         for currentSprite in self.onscreen.keys():

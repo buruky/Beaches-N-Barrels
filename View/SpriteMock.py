@@ -2,6 +2,7 @@ import pygame
 import random
 
 class SpriteMock:
+    """will be class that holds relevent data to sprite"""
     def __init__(self, color, width, height):
         self.x = 250
         self.y = 250

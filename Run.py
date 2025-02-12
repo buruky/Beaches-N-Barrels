@@ -6,12 +6,9 @@ from typing import Final
 
 pygame.init()
 class Run:
-    
-    __myView: Final = MView()
-    __myController: Final = MController(__myView)
+    __myController: Final = MController()
     __myClock: Final = pygame.time.Clock()
     __myRunning = True
-
     while __myRunning:
         if __myController.ControllerTick() == False:
             __myRunning = False
