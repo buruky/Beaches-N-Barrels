@@ -6,6 +6,7 @@ from typing import Final
 
 pygame.init()
 class Run:
+    
     __myView: Final = MView()
     __myController: Final = MController(__myView)
     __myClock: Final = pygame.time.Clock()
@@ -15,7 +16,6 @@ class Run:
         if __myController.ControllerTick() == False:
             __myRunning = False
         __myClock.tick(60)
-        __myView.viewTick()
 
     pygame.quit()
 

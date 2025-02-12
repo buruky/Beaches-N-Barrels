@@ -1,59 +1,46 @@
 from .DungeonCharacter import DungeonCharacter
+from .EventManager import EventManager
+import pygame
 class EnemyMock(DungeonCharacter):
     def __init__(self):
-        super().__init__(50, 100, 250, 250, 5)#####
-
+        super().__init__(50, 100, 100, 100, 1)#####
+        self._myPositionX = self._myPositionY
         self.direction = None
+        self.myName = "EnemyMock"
+
         self.max_size = 500 
         self.min_size = 10
 
-    def moveCharacter(self, directions):  # Initial color (Green)
-        
-        dx, dy = 0, 0
-
-        if "LEFT" in directions:
-            dx = -1
-        if "RIGHT" in directions:
-            dx = 1
-        if "UP" in directions:
-            dy = -1
-        if "DOWN" in directions:
-            dy = 1
-
-        # Normalize diagonal movement
-        if dx != 0 and dy != 0:
-            dx *= 0.707  # 1/sqrt(2)
-            dy *= 0.707
-
-        # Update position
-        self._myPositionX += dx * self._mySpeed
-        self._myPositionY += dy * self._mySpeed
-
-         # Update direction if moving
-        if directions:
-            self.direction = directions[-1]  # Last key pressed is priority
-
-    def changeColor(self, theColor):
+    def changeColor(self):
         self.color = (25,120,0)
 
-    def moveTo(self, num1, num2):
-        self._myPositionX = num1
-        self._myPositionY = num2
-    
 
-    def Dies():
+    def Dies(self):
         print("*Dies*")
 
-    
-
     def getPositionX(self) -> int:
-        return self._myPositionX
+        return int(self._myPositionX)
     
     def getPositionY(self) -> int:
-        return self._myPositionY
+        
+        return int(self._myPositionY)
     
     
+    def update(self):
+        self.moveCharacter(self.getPositionX() + 1 * self._mySpeed, self.getPositionY())
+        self.changeColor()
+        pygame.event.post(pygame.event.Event(EventManager.ENEMY_MOVED, {"entity": self}))
 
+    def moveCharacter(self, theNewX: int, theNewY: int):
+        self._myPositionX = theNewX #no speed rn
+        self._myPositionY = theNewY
 
-    def toString() -> str:
+    def toString(self) -> str:
         print("*Strings*")
+    
+    def getName(self):
+        return self.myName
+    
+    def getSprite(self):
+
+        return self._mySprite

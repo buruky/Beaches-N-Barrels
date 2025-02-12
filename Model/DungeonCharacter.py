@@ -1,16 +1,20 @@
 from abc import ABC, abstractmethod
-
+import pygame
 class DungeonCharacter(ABC):
-    @abstractmethod
+    
     def __init__ (self, theAttackDamage: int, theHealthPoints: int,
                    thePositionX: int, thePositionY: int, theSpeed: int) -> None:
         self._myAttackDamage = theAttackDamage
         self._myHealthPoints = theHealthPoints
-        self._myPositionX = thePositionX
-        self._myPositionY = thePositionY
+        self._myPositionX = int(thePositionX)
+        self._myPositionY = int(thePositionY)
+
         self._mySpeed = theSpeed
-    
-    
+        self._myHasChanged = True
+        self._myRect = pygame.Rect(self._myPositionX, self._myPositionY, 50, 50)# will be replaced by sprite image with no location data
+        self._mySprite = pygame.Surface((self._myRect.width, self._myRect.height), pygame.SRCALPHA)
+        self._mySprite.fill((0,30,144))
+
     @abstractmethod
     def moveCharacter(theNewX: int, theNewY: int) -> None:
         pass

@@ -13,10 +13,10 @@ class MModel:
 
     def initalizeAll(self):
         #Should figure out a way to do tis based on room generation
-        player = PlayerMock()
-        #enemy1 = EnemyMock(200, 100)
-        self.myDungeonCharacterList.add_entity(player)
-        #self.myDungeonCharacterList.add_entity(enemy1)
+        #player = PlayerMock()
+        enemy1 = EnemyMock()# should have params in here but not set up rn
+        #self.myDungeonCharacterList.add_entity(player)
+        self.myDungeonCharacterList.add_entity(enemy1)
 
     def update(self):
         """Update all game entities."""

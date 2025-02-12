@@ -1,8 +1,12 @@
 import pygame
 
+from .DungeonCharacter import DungeonCharacter
+
 class EventManager:
     """Encapsulates event creation, registration, and dispatching."""
-    
+    PLAYER_MOVED = pygame.USEREVENT + 1
+    ENEMY_MOVED = pygame.USEREVENT + 2
+
     def __init__(self):
         self.event_handlers = {}
         self.event_types = {
