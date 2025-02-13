@@ -7,20 +7,22 @@ class MView:
         screen_width = 800
         screen_height = 600
         self.screen = pygame.display.set_mode((screen_width, screen_height))
-        
+        self.image = pygame.image.load("/home/patrick/Documents/HW/TCSS360/BeachesNBarrels/Beaches-N-Barrels/Assets/luffy.png")
+        self.myCoolImage = pygame.transform.scale(self.image, (50,50))
     def clear(self):
         """Clear the screen before drawing the next frame."""
         self.screen.fill((0, 0, 0))  # Fill screen with black
 
     def addSpriteScreenList(self, theObjectName, theSprite, theNewX, theNewY):
+
         self.onscreen[theObjectName] = [theSprite, theNewX, theNewY]
 
     def update_entity(self, objectName, theSurfaceSprite, theNewX, theNewY):#need to find way to clear canvas when you draw
         """Adds Chracter to list and to screen with new position  """
         
-        self.addSpriteScreenList(objectName, theSurfaceSprite, theNewX, theNewY)
+        self.addSpriteScreenList(objectName, self.myCoolImage, theNewX, theNewY)
         
-        self.drawCharacter( objectName,theSurfaceSprite, theNewX, theNewY)
+        self.drawCharacter( objectName,self.myCoolImage, theNewX, theNewY)
 
         pygame.display.flip()
         
