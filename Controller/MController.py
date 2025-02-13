@@ -55,7 +55,7 @@ class MController:
             elif event.type == EventManager.PLAYER_MOVED:
                 entity = event.dict["PlayerMock"]
                 sprite = entity.getSprite()
-                self.__myView.update_entity(id(entity), sprite, entity.getPositionX(), entity.getPositionY())
+                self.__myView.update_entity("PlayerMock", sprite, entity.getPositionX(), entity.getPositionY())
 
             elif event.type == EventManager.ENEMY_MOVED:
                 entity = event.dict["EnemyMock"]

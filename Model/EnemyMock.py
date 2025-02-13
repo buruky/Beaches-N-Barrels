@@ -1,6 +1,7 @@
 from .DungeonCharacter import DungeonCharacter
 from .EventManager import EventManager
 import pygame
+import random
 class EnemyMock(DungeonCharacter):
     def __init__(self):
         super().__init__(50, 100, 100, 100, 1)#####
@@ -25,7 +26,7 @@ class EnemyMock(DungeonCharacter):
     
 
     def update(self):
-        self.moveCharacter(self.getPositionX() + 1 * self._mySpeed, self.getPositionY())
+        self.moveCharacter(random.randint(0, 500), random.randint(0, 500))
         pygame.event.post(pygame.event.Event(EventManager.ENEMY_MOVED, {"EnemyMock": self}))
 
     def moveCharacter(self, theNewX: int, theNewY: int):
