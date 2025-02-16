@@ -1,4 +1,6 @@
 import pygame
+import os
+
 from View.SpriteMock import SpriteMock
 class MView:
     def __init__(self):
@@ -7,7 +9,12 @@ class MView:
         screen_width = 800
         screen_height = 600
         self.screen = pygame.display.set_mode((screen_width, screen_height))
-        self.image = pygame.image.load("/home/patrick/Documents/HW/TCSS360/BeachesNBarrels/Beaches-N-Barrels/Assets/luffy.png")
+
+
+        # Get the directory of the current script
+        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+        image_path = os.path.join(BASE_DIR, "..", "Assets", "luffy.png")
+        self.image = pygame.image.load(image_path)
         self.myCoolImage = pygame.transform.scale(self.image, (50,50))
     def clear(self):
         """Clear the screen before drawing the next frame."""
