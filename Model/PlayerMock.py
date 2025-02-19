@@ -1,17 +1,21 @@
 from typing import Final
 from .DungeonCharacter import DungeonCharacter
 from .EventManager import EventManager
+from CustomEvents import CustomEvents
 import pygame
+
 class PlayerMock(DungeonCharacter):
     def __init__(self):
         super().__init__(50, 100, 250, 250, 5)#####
+        
         self.__myPositionX = self._myPositionX
         self.__myPositionY = self._myPositionY
         self.__myName = "PlayerMock"
         self.__myDirection = None
         self.__MAX_SIZE:Final = 500 #deprectated
         self.__MIN_SIZE:Final = 10
-        self.update()
+        """when player is made should update sprite"""
+        self.update(CustomEvents.CHARACTER_STOPPED)
 
     def moveCharacter(self, theDirections:list) -> None:
         dx, dy = 0, 0
@@ -23,11 +27,14 @@ class PlayerMock(DungeonCharacter):
 
         if "UP" in theDirections:
             dy = -1
-            self.update()
+            
 
         if "DOWN" in theDirections:
             dy = 1
         
+        if len(theDirections) == 0:
+            """when no direction is passed that means character stopped"""
+            self.update(CustomEvents.CHARACTER_STOPPED)
 
         # Normalize diagonal movement
         if dx != 0 and dy != 0:
@@ -38,18 +45,26 @@ class PlayerMock(DungeonCharacter):
         self.__myPositionX += dx * self._mySpeed
         self.__myPositionY += dy * self._mySpeed
         if dx != 0 or dy != 0:
-            self.update()
+            """when character is moving in any direction"""
+            self.update(CustomEvents.CHARACTER_MOVED)
          # Update direction if moving
         if theDirections:
             self.__myDirection = theDirections[-1]  # Last key pressed is priority
     
-    def update(self):
-        pygame.event.post(pygame.event.Event(EventManager.PLAYER_MOVED, {self.__class__.__name__: self}))
+    def update(self, theEventName:str):
+        # event = pygame.event.Event(
+            
+        #     EventManager.event_types[theEventName],
+        #     {"name": self.getName(), "positionX": self.getPositionX(), "positionY": self.getPositionY()}        
+        #     )
+        # pygame.event.post(event)
+        pass
 
     def teleportCharacter(self, num1: int, num2: int) -> None:
         self.__myPositionX = num1
         self.__myPositionY = num2
-        self.update()
+        """If Character moves their sprite should be updated to location"""
+        self.update(CustomEvents.CHARACTER_STOPPED)#might work
 
     def Dies(self) -> None:
         print("*dies*")

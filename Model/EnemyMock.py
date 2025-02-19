@@ -1,5 +1,7 @@
 from .DungeonCharacter import DungeonCharacter
 from .EventManager import EventManager
+from CustomEvents import CustomEvents
+
 import pygame
 class EnemyMock(DungeonCharacter):
     def __init__(self):
@@ -25,8 +27,12 @@ class EnemyMock(DungeonCharacter):
     
 
     def update(self):
-        self.moveCharacter(self.getPositionX() + 1 * self._mySpeed, self.getPositionY())
-        pygame.event.post(pygame.event.Event(EventManager.ENEMY_MOVED, {"EnemyMock": self}))
+        event = pygame.event.Event(
+            
+            EventManager.event_types[CustomEvents.CHARACTER_MOVED],
+            {"name": self.getName, "positionX": self.getPositionX, "positionY": self.getPositionY}        
+            )
+        pygame.event.post(event)
 
     def moveCharacter(self, theNewX: int, theNewY: int):
         self.__myPositionX = theNewX #need to add speed!

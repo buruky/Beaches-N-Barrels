@@ -13,7 +13,8 @@ class DungeonCharacterList:
     def update_all(self) -> None:
         """Update all entities each frame."""
         for character in self.__myDungeonCharacterList:
-            character.update()
+            pass 
+            #character.update()
 
     def get_entities(self) -> None:
         """Return a list of all entities."""
