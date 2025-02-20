@@ -1,6 +1,7 @@
 from .DungeonCharacter import DungeonCharacter
 from .EventManager import EventManager
 from CustomEvents import CustomEvents
+from .GameWorld import GameWorld
 import pygame
 import random
 
@@ -14,7 +15,7 @@ class EnemyMock(DungeonCharacter):
         # Fix position initialization (previous bug with _myPositionY)
         self.__myPositionX = 100  # Starting X
         self.__myPositionY = 100  # Starting Y
-        
+    
         # Movement-related variables
         self.__myDirection = random.choice(["UP", "DOWN", "LEFT", "RIGHT"])
         self.__move_timer = pygame.time.get_ticks()  # Timer for direction change
@@ -22,8 +23,15 @@ class EnemyMock(DungeonCharacter):
         
         self.__myName = "EnemyMock"
 
+        # Get Singleton instance of GameWorld
+        self.world = GameWorld()
+        
+        # Register enemy in GameWorld
+        self.world.add_enemy(self)
+
     def Dies(self):
         print("*Dies*")
+        self.world.remove_enemy(self)
 
     def getPositionX(self) -> int:
         return int(self.__myPositionX)
@@ -35,7 +43,7 @@ class EnemyMock(DungeonCharacter):
         """ Updates the enemy's position randomly """
         current_time = pygame.time.get_ticks()
 
-        # Change direction every 2 seconds (2000ms)
+        # Change direction every 1 second (1000ms)
         if current_time - self.__move_timer > 1000:
             self.__myDirection = random.choice(["UP", "DOWN", "LEFT", "RIGHT"])
             self.__move_timer = current_time  # Reset timer
@@ -52,22 +60,24 @@ class EnemyMock(DungeonCharacter):
         elif self.__myDirection == "RIGHT":
             new_x += self.__mySpeed
 
-
         # Keep enemy inside screen bounds
-        new_x = max(0, min(new_x, self.SCREEN_WIDTH - 50))  # Ensure it stays inside width
-        new_y = max(0, min(new_y, self.SCREEN_HEIGHT - 50))  # Ensure it stays inside height
-        
-        self.moveCharacter(new_x, new_y)
-        # Post movement event
-        event = pygame.event.Event(
-            EventManager.event_types[CustomEvents.CHARACTER_MOVED],
-            {
-                "name": self.getName(),  # Call getName() correctly
-                "positionX": self.getPositionX(),
-                "positionY": self.getPositionY()
-            }
-        )
-        pygame.event.post(event)
+        new_x = max(0, min(new_x, self.SCREEN_WIDTH - 50))  # Ensure inside width
+        new_y = max(0, min(new_y, self.SCREEN_HEIGHT - 50))  # Ensure inside height
+
+        # Check for collision before moving
+        if not self.world.check_collision(pygame.Rect(new_x, new_y, 50, 50), ignore=self):
+            self.moveCharacter(new_x, new_y)
+
+            # Post movement event
+            event = pygame.event.Event(
+                EventManager.event_types[CustomEvents.CHARACTER_MOVED],
+                {
+                    "name": self.getName(),
+                    "positionX": self.getPositionX(),
+                    "positionY": self.getPositionY()
+                }
+            )
+            pygame.event.post(event)
 
     def moveCharacter(self, theNewX: int, theNewY: int):
         """ Moves the character to a new position """

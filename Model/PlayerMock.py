@@ -2,9 +2,11 @@ from typing import Final
 from .DungeonCharacter import DungeonCharacter
 from .EventManager import EventManager
 from CustomEvents import CustomEvents
+from .GameWorld import GameWorld
 import pygame
 
 class PlayerMock(DungeonCharacter):
+    
     def __init__(self):
         super().__init__(50, 100, 250, 250, 5)#####
         
@@ -14,8 +16,10 @@ class PlayerMock(DungeonCharacter):
         self.__myDirection = None
         self.__MAX_SIZE:Final = 500 #deprectated
         self.__MIN_SIZE:Final = 10
+        self.world = GameWorld()
         """when player is made should update sprite"""
         self.update(CustomEvents.CHARACTER_STOPPED)
+        self.world.add_player(self)
 
     def moveCharacter(self, theDirections:list) -> None:
         dx, dy = 0, 0
@@ -28,7 +32,6 @@ class PlayerMock(DungeonCharacter):
         if "UP" in theDirections:
             dy = -1
             
-
         if "DOWN" in theDirections:
             dy = 1
         
@@ -41,9 +44,15 @@ class PlayerMock(DungeonCharacter):
             dx *= 0.707  # 1/sqrt(2)
             dy *= 0.707
 
+        # Compute new position
+        new_x = self.__myPositionX + dx * self._mySpeed
+        new_y = self.__myPositionY + dy * self._mySpeed
+
         # Update position
-        self.__myPositionX += dx * self._mySpeed
-        self.__myPositionY += dy * self._mySpeed
+        if not self.world.check_collision(pygame.Rect(new_x, new_y, 50, 50), ignore=self):
+            self.__myPositionX = new_x
+            self.__myPositionY = new_y
+
         if dx != 0 or dy != 0:
             """when character is moving in any direction"""
             self.update(CustomEvents.CHARACTER_MOVED)
@@ -67,7 +76,10 @@ class PlayerMock(DungeonCharacter):
         self.update(CustomEvents.CHARACTER_STOPPED)#might work
 
     def Dies(self) -> None:
-        print("*dies*")
+        """Trigger the death event and post a CHARACTER_DIED event."""
+        print("*dies*")#Debugging
+        death_event = pygame.event.Event(EventManager.event_types[CustomEvents.PLAYER_DIED])
+        pygame.event.post(death_event)
     
 
     def getPositionX(self) -> int:

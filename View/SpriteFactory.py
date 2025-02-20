@@ -11,7 +11,7 @@ class SpriteFactory:
 
         # Build the relative path to the player and enemy images
         player_image_path = os.path.join(current_directory, '..', 'Assets', 'luffy.png')
-        enemy_image_path = os.path.join(current_directory, '..', 'Assets', 'luffy.png')  # New enemy sprite
+        enemy_image_path = os.path.join(current_directory, '..', 'Assets', 'speederman.png')  # New enemy sprite
 
         # Load images using pygame
         self.player_image = pygame.image.load(player_image_path)

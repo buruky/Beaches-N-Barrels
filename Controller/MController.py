@@ -51,7 +51,14 @@ class MController:
         """Events that are posted manually"""
         EventManager.registerEvent(CustomEvents.CHARACTER_MOVED, self.__myView.update_entity)
         EventManager.registerEvent(CustomEvents.CHARACTER_STOPPED, self.__myView.update_entity)
+        EventManager.registerEvent(CustomEvents.PLAYER_DIED, self.__handle_character_death)
         
+
+
+    def __handle_character_death(self, event):
+        """Displays 'Game Over' on the screen when the player dies."""
+        self.__myView.display_game_over()
+        self.__myIsRunning = False  # Stop the game loop
 
     def __quitGame(self) -> bool:
         return self.__myIsRunning

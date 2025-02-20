@@ -64,8 +64,8 @@ class SpriteSheet:
             raise Exception("SpriteSheet.setCurrentState(): THERE IS NO LIST UNDER THAT STATE!!!")
     
     def getCurrentSprite(self):
-        print(self.__myCurrentState)
-        print(self.__myCurrentSpriteIndex)
+        # print(self.__myCurrentState)
+        # print(self.__myCurrentSpriteIndex)
         return self.__mySprites[self.__myCurrentState][self.__myCurrentSpriteIndex]
     
     def getName(self):
