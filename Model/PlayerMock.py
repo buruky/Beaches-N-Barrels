@@ -52,12 +52,12 @@ class PlayerMock(DungeonCharacter):
             self.__myDirection = theDirections[-1]  # Last key pressed is priority
     
     def update(self, theEventName:str):
-        # event = pygame.event.Event(
+        event = pygame.event.Event(
             
-        #     EventManager.event_types[theEventName],
-        #     {"name": self.getName(), "positionX": self.getPositionX(), "positionY": self.getPositionY()}        
-        #     )
-        # pygame.event.post(event)
+            EventManager.event_types[theEventName],
+            {"name": self.getName(), "positionX": self.getPositionX(), "positionY": self.getPositionY()}        
+            )
+        pygame.event.post(event)
         pass
 
     def teleportCharacter(self, num1: int, num2: int) -> None:

@@ -68,14 +68,14 @@ class MController:
             if keys[key]:
                 directions.append(direction)
         #Player is handled differntly than other characters due to only one taking input
-        self.__myPlayer.moveCharacter(directions)#help
+        if len(directions) > 0:
+            self.__myPlayer.moveCharacter(directions)#help
 
     def __mouseButtonUp(self, theEvent):
         if theEvent.button == 1 or theEvent.button == 3:
             self.__myIsHoldingClick = False
 
     def __mouseButtonDown(self, theEvent):
-        print("ayo")
         if theEvent.button == 1 or theEvent.button == 3:  # press left or right click
             self.__myIsHoldingClick = True
             if theEvent.button == 1: 

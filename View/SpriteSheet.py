@@ -13,17 +13,15 @@ class SpriteSheet:
                  thePositionX:int = DEFAULT_POSITION_X , thePositionY:int = DEFAULT_POSITION_Y,
                  theSprites:dict = {"IDLE": []}):
         self.__myName = theName
-        self.__myHeight = theHeight
-        self.__myWidth = theWidth
-        self.__myPositionX = thePositionX
-        self.__myPositionY = thePositionY
         self.__mySprites = theSprites
         self.__myCurrentSpriteIndex = 0
         self.__myCurrentState = "IDLE"
-        self.rect = pygame.Rect(self.__myPositionX, self.__myPositionY, self.__myWidth, self.__myHeight)
+        self.__myRect = pygame.Rect(thePositionX, thePositionY, theWidth, theHeight)
 
     
-
+    
+    def getRect(self):
+        return self.__myRect
     def getAllImages(self) -> list:
         """gets all images in map and returns as unsorted list"""
         spriteList = []
@@ -43,8 +41,8 @@ class SpriteSheet:
     
 
     def setPosition(self, theNewX: int, theNewY: int) -> None:
-        self.__myPositionX = theNewX
-        self.__myPositionY = theNewY
+        self.__myRect.x = theNewX
+        self.__myRect.y = theNewY
     
 
     def cycleSpriteSheet(self, theIncrement:int) -> None:
@@ -66,6 +64,8 @@ class SpriteSheet:
             raise Exception("SpriteSheet.setCurrentState(): THERE IS NO LIST UNDER THAT STATE!!!")
     
     def getCurrentSprite(self):
+        print(self.__myCurrentState)
+        print(self.__myCurrentSpriteIndex)
         return self.__mySprites[self.__myCurrentState][self.__myCurrentSpriteIndex]
     
     def getName(self):
