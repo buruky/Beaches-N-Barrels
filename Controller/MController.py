@@ -37,6 +37,7 @@ class MController:
         self.__handle_mouse(self.__mySign)
         self.__myModel.update()
         
+        
         return self.__myIsRunning
     
     def __InitalizeEvents(self):

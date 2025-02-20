@@ -1,20 +1,26 @@
 from .DungeonCharacter import DungeonCharacter
 from .EventManager import EventManager
 from CustomEvents import CustomEvents
-
 import pygame
+import random
+
 class EnemyMock(DungeonCharacter):
+
+    SCREEN_WIDTH = 800  # Example boundary
+    SCREEN_HEIGHT = 600  # Example boundary
     def __init__(self):
-        super().__init__(50, 100, 100, 100, 1)#####
-        self.__myPositionX = self._myPositionY
-        self.__myPositionY = self._myPositionY
-        self.__myDirection = None
-        self.__myName = "EnemyMock"
-
+        super().__init__(50, 100, 100, 100, 1)
         
-
-    
-
+        # Fix position initialization (previous bug with _myPositionY)
+        self.__myPositionX = 100  # Starting X
+        self.__myPositionY = 100  # Starting Y
+        
+        # Movement-related variables
+        self.__myDirection = random.choice(["UP", "DOWN", "LEFT", "RIGHT"])
+        self.__move_timer = pygame.time.get_ticks()  # Timer for direction change
+        self.__mySpeed = 2  # Enemy movement speed (change as needed)
+        
+        self.__myName = "EnemyMock"
 
     def Dies(self):
         print("*Dies*")
@@ -25,24 +31,51 @@ class EnemyMock(DungeonCharacter):
     def getPositionY(self) -> int:
         return int(self.__myPositionY)
     
-
     def update(self):
+        """ Updates the enemy's position randomly """
+        current_time = pygame.time.get_ticks()
+
+        # Change direction every 2 seconds (2000ms)
+        if current_time - self.__move_timer > 1000:
+            self.__myDirection = random.choice(["UP", "DOWN", "LEFT", "RIGHT"])
+            self.__move_timer = current_time  # Reset timer
+
+        new_x, new_y = self.__myPositionX, self.__myPositionY
+
+        # Move based on the direction
+        if self.__myDirection == "UP":
+            new_y -= self.__mySpeed
+        elif self.__myDirection == "DOWN":
+            new_y += self.__mySpeed
+        elif self.__myDirection == "LEFT":
+            new_x -= self.__mySpeed
+        elif self.__myDirection == "RIGHT":
+            new_x += self.__mySpeed
+
+
+        # Keep enemy inside screen bounds
+        new_x = max(0, min(new_x, self.SCREEN_WIDTH - 50))  # Ensure it stays inside width
+        new_y = max(0, min(new_y, self.SCREEN_HEIGHT - 50))  # Ensure it stays inside height
+        
+        self.moveCharacter(new_x, new_y)
+        # Post movement event
         event = pygame.event.Event(
-            
             EventManager.event_types[CustomEvents.CHARACTER_MOVED],
-            {"name": self.getName, "positionX": self.getPositionX, "positionY": self.getPositionY}        
-            )
+            {
+                "name": self.getName(),  # Call getName() correctly
+                "positionX": self.getPositionX(),
+                "positionY": self.getPositionY()
+            }
+        )
         pygame.event.post(event)
 
     def moveCharacter(self, theNewX: int, theNewY: int):
-        self.__myPositionX = theNewX #need to add speed!
+        """ Moves the character to a new position """
+        self.__myPositionX = theNewX
         self.__myPositionY = theNewY
 
     def toString(self) -> str:
-        print("*Strings*")
+        return f"{self.__myName} at ({self.__myPositionX}, {self.__myPositionY})"
     
     def getName(self):
         return self.__myName
-    
-    def getSprite(self):
-        return self._mySprite
