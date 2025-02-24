@@ -33,7 +33,14 @@ class MView:
             3. draws all other sprites that were onscreen 
         """
         self.clear()        
+        current_directory = os.path.dirname(__file__)
+
+        # Build the relative path to the image
+        image_path = os.path.join(current_directory, '..', 'Assets', 'sandPlatfrom.png')  # Move one level up to project_root
         
+        # Load the image using pygame
+        self.image = pygame.image.load(image_path)
+        self.screen.blit(self.image, (0,0))
         for currentSprite in self.onscreen.values():
             self.screen.blit(currentSprite.getCurrentSprite(), currentSprite.getRect().topleft)
             
