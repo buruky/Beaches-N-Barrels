@@ -29,7 +29,6 @@ class GameWorld:
         
         self.enemies = []  # List of enemies
         self.player = [] # player
-        print(self.player)
         self.item = []
 
 
