@@ -1,5 +1,5 @@
 import pygame
-from Model.MController import MController
+from Controller.MController import MController
 from typing import Final
 
 pygame.init()

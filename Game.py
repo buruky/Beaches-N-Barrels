@@ -1,6 +1,6 @@
 import pygame
 from Model.Floor import Generate 
-from Room import Room
+from Model.Room import Room
 
 pygame.init()
 SCREEN_WIDTH, SCREEN_HEIGHT = 1000, 1000 

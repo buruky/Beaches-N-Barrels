@@ -1,5 +1,5 @@
 import random
-from Room import Room 
+from Model.Room import Room 
 
 class Floor:
     ROOM_SIZE = 100
@@ -78,7 +78,7 @@ class Floor:
             line = ""
             for col in range(self.grid_width):
                 if isinstance(self.grid[row][col], Room):
-                    line += str(self.grid[row][col].get_room())
+                    line += str(self.grid[row][col].getRoom())
                 else:
                     line += ". "
             print(line)
@@ -106,13 +106,13 @@ class Floor:
                             neighbor = self.grid[neighbor_row][neighbor_col]
                             #if neighbor is room
                             if isinstance(neighbor, Room):
-                                current_room.add_door(direction)  # Mark door open
+                                current_room.addDoor(direction)  # Mark door open
                                 # bidirectional connection
                                 if direction == "N":
-                                    neighbor.add_door("S")
+                                    neighbor.addDoor("S")
                                 elif direction == "S":
-                                    neighbor.add_door("N")
+                                    neighbor.addDoor("N")
                                 elif direction == "W":
-                                    neighbor.add_door("E")
+                                    neighbor.addDoor("E")
                                 elif direction == "E":
-                                    neighbor.add_door("W")
+                                    neighbor.addDoor("W")

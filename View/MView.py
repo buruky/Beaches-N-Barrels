@@ -1,8 +1,8 @@
 import os
 import pygame
+from Model.GameWorld import GameWorld
 from .SpriteSheet import SpriteSheet
 from .SpriteFactory import SpriteFactory
-from Model.GameWorld import GameWorld  # Import singleton
 class MView:
     def __init__(self):
         # self.screen = screen
@@ -13,10 +13,7 @@ class MView:
         self.mySpriteFactory = SpriteFactory()
         self.mySpriteFactory.Initalize()
         self.onscreen = self.mySpriteFactory.listOfSpriteSheets
-
-
-        # TEMPPPPP
-        self.world = GameWorld()  # Get singleton instance
+        
     def clear(self):
         """Clear the screen before drawing the next frame."""
         self.screen.fill((0, 0, 0))  # Fill screen with black
@@ -52,7 +49,7 @@ class MView:
         self.clear()        
 
         # Draw obstacles in RED for visibility
-        for obstacle in self.world.get_obstacles():
+        for obstacle in GameWorld.getInstance().get_obstacles():
             pygame.draw.rect(self.screen, (255, 0, 0), obstacle)  # RED rectangles
 
 

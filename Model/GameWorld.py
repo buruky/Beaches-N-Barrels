@@ -1,5 +1,5 @@
 import pygame
-from Floor import Floor
+from .Floor import Floor
 class GameWorld:
     """Singleton class representing the game world with obstacles and enemies."""
 
@@ -27,14 +27,18 @@ class GameWorld:
             pygame.Rect(450, 250, 50, 50),  # Randomly placed
         ]
         self.__myFloor = Floor()
-        self.currentRoom = Floor.getStartRoom()
+        self.currentRoom = self.__myFloor.getStartRoom()
+        self.__myFloor.connect_rooms() 
+        self.__myFloor.print_dungeon() 
+        grid = self.__myFloor.get_dungeon()
+             
         self.enemies = []  # List of enemies
         self.player = [] # player
         self.item = []
         self.doors = []
 
     @classmethod
-    def get_instance(cls):
+    def getInstance(cls):
         """Getter for the singleton instance."""
         return cls._instance
 

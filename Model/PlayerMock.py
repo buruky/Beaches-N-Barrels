@@ -49,7 +49,7 @@ class PlayerMock(DungeonCharacter):
         new_y = self.__myPositionY + dy * self._mySpeed
 
         # Update position
-        if not GameWorld.get_instance().check_collision(pygame.Rect(new_x, new_y, 50, 50), ignore=self):
+        if not GameWorld.getInstance().check_collision(pygame.Rect(new_x, new_y, 50, 50), ignore=self):
             self.__myPositionX = new_x
             self.__myPositionY = new_y
 

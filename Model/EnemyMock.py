@@ -22,12 +22,10 @@ class EnemyMock(DungeonCharacter):
         self.__mySpeed = 2  # Enemy movement speed (change as needed)
         
         self.__myName = "EnemyMock"
-
-        # Get Singleton instance of GameWorld
-        self.world = GameWorld()
         
         # Register enemy in GameWorld
-        self.world.add_enemy(self)
+        print(GameWorld.getInstance())
+        GameWorld.getInstance().add_enemy(self)
 
     def Dies(self):
         print("*Dies*")
@@ -65,7 +63,7 @@ class EnemyMock(DungeonCharacter):
         new_y = max(0, min(new_y, self.SCREEN_HEIGHT - 50))  # Ensure inside height
 
         # Check for collision before moving
-        if not self.world.check_collision(pygame.Rect(new_x, new_y, 50, 50), ignore=self):
+        if not GameWorld.getInstance().check_collision(pygame.Rect(new_x, new_y, 50, 50), ignore=self):
             self.moveCharacter(new_x, new_y)
 
             # Post movement event
