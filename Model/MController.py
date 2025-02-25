@@ -1,7 +1,9 @@
 from typing import Final
 import pygame
 import random
-from .MModel import MModel
+
+from Model import GameWorld
+from ..Controller.MModel import MModel
 from Model import *
 from View import *
 from CustomEvents import CustomEvents
@@ -16,7 +18,9 @@ class MController:
         self.__myModel:Final = MModel()
         self.__myView:Final = MView()
         self.__InitalizeEvents()
+        self.__myWorld = GameWorld()
         self.__myPlayer:Final = PlayerMock()
+        
         
         self.__myIsHoldingClick = False
         self.__mySign = 1#direction?

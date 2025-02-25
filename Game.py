@@ -1,5 +1,5 @@
 import pygame
-from dungeongen1 import Generate 
+from Model.Floor import Generate 
 from Room import Room
 
 pygame.init()

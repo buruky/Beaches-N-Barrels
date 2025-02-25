@@ -1,5 +1,5 @@
 import pygame
-
+from Floor import Floor
 class GameWorld:
     """Singleton class representing the game world with obstacles and enemies."""
 
@@ -15,7 +15,7 @@ class GameWorld:
     def _init_once(self):
         """Initialize the game world only once."""
         self.obstacles = [
-            pygame.Rect(150, 150, 50, 50),  # Top-left corner
+            pygame.Rect(150, 150, 50, 500),  # Top-left corner
             pygame.Rect(300, 200, 50, 50),  # Near center
             pygame.Rect(500, 100, 50, 50),  # Top-right area
             pygame.Rect(150, 400, 50, 50),  # Left side
@@ -26,11 +26,17 @@ class GameWorld:
             pygame.Rect(350, 450, 50, 50),  # Middle-right
             pygame.Rect(450, 250, 50, 50),  # Randomly placed
         ]
-        
+        self.__myFloor = Floor()
+        self.currentRoom = Floor.getStartRoom()
         self.enemies = []  # List of enemies
         self.player = [] # player
         self.item = []
+        self.doors = []
 
+    @classmethod
+    def get_instance(cls):
+        """Getter for the singleton instance."""
+        return cls._instance
 
     def get_obstacles(self):
         """Return the list of obstacles."""

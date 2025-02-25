@@ -16,10 +16,10 @@ class PlayerMock(DungeonCharacter):
         self.__myDirection = None
         self.__MAX_SIZE:Final = 500 #deprectated
         self.__MIN_SIZE:Final = 10
-        self.world = GameWorld()
+        
         """when player is made should update sprite"""
         self.update(CustomEvents.CHARACTER_STOPPED)
-        self.world.add_player(self)
+        GameWorld.getInstance().add_player(self)
 
     def moveCharacter(self, theDirections:list) -> None:
         dx, dy = 0, 0
@@ -49,7 +49,7 @@ class PlayerMock(DungeonCharacter):
         new_y = self.__myPositionY + dy * self._mySpeed
 
         # Update position
-        if not self.world.check_collision(pygame.Rect(new_x, new_y, 50, 50), ignore=self):
+        if not GameWorld.get_instance().check_collision(pygame.Rect(new_x, new_y, 50, 50), ignore=self):
             self.__myPositionX = new_x
             self.__myPositionY = new_y
 

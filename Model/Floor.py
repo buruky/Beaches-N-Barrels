@@ -1,7 +1,7 @@
 import random
 from Room import Room 
 
-class Generate:
+class Floor:
     ROOM_SIZE = 100
     def __init__(self, level=5):
         self.grid_width = 11
@@ -55,6 +55,8 @@ class Generate:
                     continue
                 
                 #add new coord as a room 
+
+                ##### add door
                 grid[neighbor[0]][neighbor[1]] = Room("n ", neighbor[0] * ROOM_SIZE, neighbor[1] * ROOM_SIZE, ROOM_SIZE/2, ROOM_SIZE/2)  
                 rooms.append(neighbor)
                 queue.append(neighbor)
@@ -68,6 +70,9 @@ class Generate:
     def get_dungeon(self):
         return self.grid  
 
+    def getStartRoom(self):
+        return self.start_pos
+    
     def print_dungeon(self):
         for row in range(self.grid_height):
             line = ""
