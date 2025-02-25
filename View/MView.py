@@ -18,7 +18,8 @@ class MView:
         """Clear the screen before drawing the next frame."""
         self.screen.fill((0, 0, 0))  # Fill screen with black
 
-    
+    def updateRoom(self, Event:pygame.event):
+        print("gamer is gaming")
     def update_entity(self,theEvent:pygame.event):#need to find way to clear canvas when you draw
         """Adds Chracter to list and to screen with new position  """
         character = self.onscreen[theEvent.name]

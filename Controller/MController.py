@@ -54,7 +54,7 @@ class MController:
         EventManager.registerEvent(CustomEvents.CHARACTER_MOVED, self.__myView.update_entity)
         EventManager.registerEvent(CustomEvents.CHARACTER_STOPPED, self.__myView.update_entity)
         EventManager.registerEvent(CustomEvents.PLAYER_DIED, self.__handle_character_death)
-        
+        EventManager.registerEvent(CustomEvents.CHANGED_ROOM, self.__myView.updateRoom)
 
 
     def __handle_character_death(self, event):

@@ -78,7 +78,7 @@ class GameWorld:
                         ignore.Dies()
                     print(f"Collision with another enemy at ({enemy.getPositionX()}, {enemy.getPositionY()})")  # Debugging
                     return True
-        
+                
         for player in self.player:
             if player != ignore:  # Don't check collision with itself
                 my_rect = pygame.Rect(player.getPositionX(), player.getPositionY(), 50, 50)
@@ -89,3 +89,4 @@ class GameWorld:
                     return True
 
             return False  # No collision
+        
