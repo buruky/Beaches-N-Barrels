@@ -1,6 +1,8 @@
 import random
 from Model.Room import Room 
-
+from .EventManager import EventManager
+from CustomEvents import CustomEvents
+import pygame
 class Floor:
     ROOM_SIZE = 100
     def __init__(self, level=5):
@@ -8,6 +10,7 @@ class Floor:
         self.grid_height = 11
         self.start_pos = (5, 5)  # Center of the grid
         self.grid = self.generate_dungeon(level)  # Store the grid in an instance variable
+        self.update()
 
     def generate_dungeon(self, level):
         ROOM_SIZE = 100
@@ -17,7 +20,8 @@ class Floor:
         grid = [[False for _ in range(self.grid_width)] for _ in range(self.grid_height)]
         
         #takes start position and creates a starting room there
-        grid[self.start_pos[0]][self.start_pos[1]] = Room("s ", self.start_pos[0] * ROOM_SIZE, self.start_pos[1] * ROOM_SIZE, ROOM_SIZE/2, ROOM_SIZE/2)  
+        grid[self.start_pos[0]][self.start_pos[1]] = Room("s ", self.start_pos[0] * ROOM_SIZE, self.start_pos[1] * ROOM_SIZE, ROOM_SIZE/2, ROOM_SIZE/2)
+         
         
        
         queue = [self.start_pos]
@@ -67,12 +71,23 @@ class Floor:
 
         return grid  
 
+
+    def update(self):
+        event = pygame.event.Event(
+            
+            EventManager.event_types[CustomEvents.CHANGED_ROOM],
+            {"name": "startRoom"}        
+            )
+        pygame.event.post(event)
+        pass
+
     def get_dungeon(self):
         return self.grid  
 
     def getStartRoom(self):
         return self.start_pos
     
+
     def print_dungeon(self):
         for row in range(self.grid_height):
             line = ""

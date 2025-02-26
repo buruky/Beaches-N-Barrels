@@ -6,6 +6,7 @@ class SpriteFactory:
     def __init__(self):
         self.listOfSpriteSheets = {}
 
+
         # Get the current working directory
         current_directory = os.path.dirname(__file__)
 
@@ -23,6 +24,8 @@ class SpriteFactory:
 
         self.enemyImage = pygame.transform.scale(self.enemy_image, (50,50))
         self.enemyImage2 = pygame.transform.flip(self.enemyImage, True, False)  # Flipped enemy sprite
+
+
 
     def add(self, theSpriteSheet):
         self.listOfSpriteSheets[theSpriteSheet.getName()] = theSpriteSheet

@@ -11,17 +11,18 @@ class MController:
     
     def __init__(self):
         
-        self.__myIsRunning = True
-        self.__myWorld = GameWorld()
-
-        self.__myModel:Final = MModel()
+        
         self.__myView:Final = MView()
         self.__InitalizeEvents()
+        self.__myIsRunning = True
+        self.__myWorld = GameWorld()
+        self.__myModel:Final = MModel() 
+        
         self.__myPlayer:Final = PlayerMock()
         
         
         self.__myIsHoldingClick = False
-        self.__mySign = 1#direction?
+        self.__mySign = 1 
         self.__myKeyMap:Final = {
             pygame.K_w: "UP",
             pygame.K_s: "DOWN",

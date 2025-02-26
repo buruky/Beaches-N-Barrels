@@ -20,6 +20,9 @@ class Room:
         self.width, self.height = width, height
         self.rect = pygame.Rect(theX, theY, width, height)
         self.doors = {}  # Stores Door objects
+        self.inRoom = []
+
+
     
     def addDoor(self, direction):
         door_width = 20

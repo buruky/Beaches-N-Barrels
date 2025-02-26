@@ -14,23 +14,24 @@ class GameWorld:
 
     def _init_once(self):
         """Initialize the game world only once."""
-        self.obstacles = [
-            pygame.Rect(150, 150, 50, 500),  # Top-left corner
-            pygame.Rect(300, 200, 50, 50),  # Near center
-            pygame.Rect(500, 100, 50, 50),  # Top-right area
-            pygame.Rect(150, 400, 50, 50),  # Left side
-            pygame.Rect(400, 500, 50, 50),  # Bottom-center
-            pygame.Rect(600, 300, 50, 50),  # Right side
-            pygame.Rect(700, 500, 50, 50),  # Bottom-right
-            pygame.Rect(250, 350, 50, 50),  # Slightly off-center
-            pygame.Rect(350, 450, 50, 50),  # Middle-right
-            pygame.Rect(450, 250, 50, 50),  # Randomly placed
-        ]
+        # self.obstacles = [
+        #     pygame.Rect(150, 150, 50, 500),  # Top-left corner
+        #     pygame.Rect(300, 200, 50, 50),  # Near center
+        #     pygame.Rect(500, 100, 50, 50),  # Top-right area
+        #     pygame.Rect(150, 400, 50, 50),  # Left side
+        #     pygame.Rect(400, 500, 50, 50),  # Bottom-center
+        #     pygame.Rect(600, 300, 50, 50),  # Right side
+        #     pygame.Rect(700, 500, 50, 50),  # Bottom-right
+        #     pygame.Rect(250, 350, 50, 50),  # Slightly off-center
+        #     pygame.Rect(350, 450, 50, 50),  # Middle-right
+        #     pygame.Rect(450, 250, 50, 50),  # Randomly placed
+        # ]
         self.__myFloor = Floor()
         self.currentRoom = self.__myFloor.getStartRoom()
         self.__myFloor.connect_rooms() 
         self.__myFloor.print_dungeon() 
         grid = self.__myFloor.get_dungeon()
+        
              
         self.enemies = []  # List of enemies
         self.player = [] # player
@@ -65,10 +66,10 @@ class GameWorld:
 
     def check_collision(self, rect, ignore=None):
         """Check if a given rectangle collides with any obstacle or enemy."""
-        for obstacle in self.obstacles:
-            if rect.colliderect(obstacle):
-                print(f"Collision with obstacle at {obstacle}")  # Debugging
-                return True  # Collision detected
+        # for obstacle in self.obstacles:
+        #     if rect.colliderect(obstacle):
+        #         print(f"Collision with obstacle at {obstacle}")  # Debugging
+        #         return True  # Collision detected
 
         for enemy in self.enemies:
             if enemy != ignore:  # Don't check collision with itself
