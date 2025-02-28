@@ -93,7 +93,7 @@ class GameWorld:
         #         print(f"Collision with obstacle at {obstacle}")  # Debugging
         #         return True  # Collision detected
 
-        for enemy in self.enemies:
+        for enemy in self.currentRoom.getEnemyList():
             if enemy != ignore:  # Don't check collision with itself
                 enemy_rect = pygame.Rect(enemy.getPositionX(), enemy.getPositionY(), 50, 50)
                 if rect.colliderect(enemy_rect):

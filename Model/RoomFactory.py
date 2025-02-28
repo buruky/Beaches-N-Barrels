@@ -1,15 +1,16 @@
 from .Room import Room
 from .EnemyFactory import EnemyFactory
+from .DungeonCharacterList import DungeonCharacterList
 class RoomFactory():
-    def createRoom(self, theRoomType, theX, theY):
+    def createRoom(theRoomType, theX, theY):
         if theRoomType == "s ":
-            self.createStartRoom(theRoomType, theX, theY)
+            RoomFactory.createStartRoom(theRoomType, theX, theY)
         elif theRoomType == "n ":
-            self.createNormalRoom(theRoomType, theX, theY)
+            RoomFactory.createNormalRoom(theRoomType, theX, theY)
 
-    def createStartRoom(self, theRoomType, theX, theY):
-        return Room(theRoomType, theX, theY, [])
+    def createStartRoom(theRoomType:str, theX, theY):
+        return Room(theRoomType, theX, theY, DungeonCharacterList())
     
-    def createNormalRoom(self, theRoomType, theX, theY):
+    def createNormalRoom(theRoomType, theX, theY):
         enemylist = EnemyFactory.createNormalTemplate()
         return Room(theRoomType, theX, theY, [])

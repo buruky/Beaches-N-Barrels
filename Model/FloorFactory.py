@@ -47,8 +47,11 @@ class FloorFactory:
         grid = [[False for _ in range(theWidth)] for _ in range(theHeight)]
         
         #takes start position and creates a starting room there
-        grid[startx][starty] = Room("s ", startx, starty)
-         
+        startRoom = "s "
+        
+        
+        grid[startx][starty] = RoomFactory.createStartRoom(startRoom, startx, starty)
+         #Room("s ", startx, starty, EnemyFactory.)
         
        
         queue = [Floor._START_POS]

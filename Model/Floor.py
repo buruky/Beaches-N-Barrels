@@ -18,7 +18,7 @@ class Floor:
     def get_dungeon(self) -> list[list]:
         return self.__myGrid  
     
-    def getTheDoorList(self) -> list[Door]:
+    def getDoorList(self) -> list[Door]:
         return self.__myDoorList
     
     def getStartRoom(self):
