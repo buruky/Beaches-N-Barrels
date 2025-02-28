@@ -4,7 +4,7 @@ import pygame
 
 class Room:
     
-    def __init__(self, theRoomType, theX, theY, theEnemyList:list):
+    def __init__(self, theRoomType, theX, theY, theEnemyList):
         self.__myRoomType = theRoomType
         self.__myX, self.__myY = theX, theY
         

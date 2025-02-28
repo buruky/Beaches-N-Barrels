@@ -88,12 +88,9 @@ class GameWorld:
         """Lets know doors and entities in room that should be shown on screen"""
     def check_collision(self, rect, ignore=None):
         """Check if a given rectangle collides with any obstacle or enemy."""
-        # for obstacle in self.obstacles:
-        #     if rect.colliderect(obstacle):
-        #         print(f"Collision with obstacle at {obstacle}")  # Debugging
-        #         return True  # Collision detected
+        
 
-        for enemy in self.currentRoom.getEnemyList():
+        for enemy in self.currentRoom.getEnemyList().get_entities():
             if enemy != ignore:  # Don't check collision with itself
                 enemy_rect = pygame.Rect(enemy.getPositionX(), enemy.getPositionY(), 50, 50)
                 if rect.colliderect(enemy_rect):

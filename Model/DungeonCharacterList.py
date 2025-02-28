@@ -16,6 +16,6 @@ class DungeonCharacterList:
             #pass 
             character.update()
 
-    def get_entities(self) -> None:
+    def get_entities(self) -> list:
         """Return a list of all entities."""
         return self.__myDungeonCharacterList

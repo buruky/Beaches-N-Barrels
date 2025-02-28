@@ -22,7 +22,7 @@ class FloorFactory:
         self.grid_width = 11
         self.grid_height = 11
         self.start_pos = (5, 5)  # Center of the grid
-    
+        self.roomFact = RoomFactory()
         #self.grid = self.generate_dungeon(level)  # Store the grid in an instance variable
         #self.update()
     @classmethod
@@ -50,7 +50,7 @@ class FloorFactory:
         startRoom = "s "
         
         
-        grid[startx][starty] = RoomFactory.createStartRoom(startRoom, startx, starty)
+        grid[startx][starty] = self.roomFact.createStartRoom(startRoom, startx, starty)
          #Room("s ", startx, starty, EnemyFactory.)
         
        
@@ -91,7 +91,7 @@ class FloorFactory:
                 #add new coord as a room 
 
                 ##### add door
-                grid[neighbor[0]][neighbor[1]] = RoomFactory.createRoom("n ", neighbor[0], neighbor[1])  
+                grid[neighbor[0]][neighbor[1]] = self.roomFact.createRoom("n ", neighbor[0], neighbor[1])  
                 rooms.append(neighbor)
                 queue.append(neighbor)
                 added_room = True
