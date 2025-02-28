@@ -6,7 +6,6 @@ from Model import *
 from View import *
 from CustomEvents import CustomEvents
 
-COLOR_CHANGE_EVENT = pygame.USEREVENT + 3
 class MController:
     
     def __init__(self):
@@ -15,8 +14,8 @@ class MController:
         self.__myView:Final = MView()
         self.__InitalizeEvents()
         self.__myIsRunning = True
-        self.__myWorld = GameWorld()
-        self.__myModel:Final = MModel() 
+        self.__myWorld = GameWorld.getInstance()
+        #self.__myModel:Final = MModel() 
         
         self.__myPlayer:Final = PlayerMock()
         
@@ -38,7 +37,7 @@ class MController:
         self.__handleEvents()
         self.__handle_keyboard()
         self.__handle_mouse(self.__mySign)
-        self.__myModel.update()
+        self.__myWorld.tick()
         
         
         return self.__myIsRunning

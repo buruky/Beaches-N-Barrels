@@ -1,6 +1,6 @@
 import os
 import pygame
-from Model.GameWorld import GameWorld
+#from Model.GameWorld import GameWorld
 from .SpriteSheet import SpriteSheet
 from .SpriteFactory import SpriteFactory
 class MView:

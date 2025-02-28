@@ -9,23 +9,23 @@ class EnemyMock(DungeonCharacter):
 
     SCREEN_WIDTH = 800  # Example boundary
     SCREEN_HEIGHT = 600  # Example boundary
-    def __init__(self):
-        super().__init__(50, 100, 100, 100, 1)
+    def __init__(self, theAttackDamage: int, theHealthPoints: int,
+                   thePositionX: int, thePositionY: int, theSpeed: int) -> None:
+        #super().__init__(theAttackDamage, theHealthPoints, thePositionX, thePositionY, theSpeed=)
         
         # Fix position initialization (previous bug with _myPositionY)
-        self.__myPositionX = 100  # Starting X
-        self.__myPositionY = 100  # Starting Y
+        self.__myPositionX = thePositionX  # Starting X100
+        self.__myPositionY = thePositionY  # Starting Y
     
         # Movement-related variables
         self.__myDirection = random.choice(["UP", "DOWN", "LEFT", "RIGHT"])
         self.__move_timer = pygame.time.get_ticks()  # Timer for direction change
-        self.__mySpeed = 2  # Enemy movement speed (change as needed)
+        self.__mySpeed = theSpeed # Enemy movement speed (change as needed)2
         
         self.__myName = "EnemyMock"
-        
         # Register enemy in GameWorld
-        print(GameWorld.getInstance())
-        GameWorld.getInstance().add_enemy(self)
+        #print(GameWorld.getInstance())
+        #GameWorld.getInstance().add_enemy(self)
 
     def Dies(self):
         print("*Dies*")
@@ -63,6 +63,7 @@ class EnemyMock(DungeonCharacter):
         new_y = max(0, min(new_y, self.SCREEN_HEIGHT - 50))  # Ensure inside height
 
         # Check for collision before moving
+
         if not GameWorld.getInstance().check_collision(pygame.Rect(new_x, new_y, 50, 50), ignore=self):
             self.moveCharacter(new_x, new_y)
 

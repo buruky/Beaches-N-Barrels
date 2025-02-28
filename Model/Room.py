@@ -1,26 +1,16 @@
 import pygame
 
-class Door:
-    def __init__(self, theX, theY, width, height, direction):
-        self.rect = pygame.Rect(theX, theY, width, height)
-        self.direction = direction  # "N", "S", "E", "W"
-    
-    def draw(self, screen, color=(0, 0, 0)):
-        pygame.draw.rect(screen, color, self.rect)
-    
-    def collides_with(self, player_rect):
-        return self.rect.colliderect(player_rect)
 
 
 class Room:
-    all_doors = []
-    def __init__(self, __theRoomType, theX, theY, width, height):
-        self.__myRoomType = __theRoomType
+    
+    def __init__(self, theRoomType, theX, theY, theEnemyList:list):
+        self.__myRoomType = theRoomType
         self.__myX, self.__myY = theX, theY
-        self.width, self.height = width, height
-        self.rect = pygame.Rect(theX, theY, width, height)
+        
+        self.rect = pygame.Rect(0,0,800,600)
         self.doors = {}  # Stores Door objects
-        self.inRoom = []
+        self.__myEnemyList = theEnemyList
 
 
     
@@ -47,9 +37,9 @@ class Room:
            
         
      # Create Door object
-        door = Door(door___myX, door_y, door_width, door_height, direction)
-        self.doors[direction] = door
-        Room.all_doors.append(door)
+        #door = Door(door___myX, door_y, door_width, door_height, direction)
+        #self.doors[direction] = door
+        #Room.all_doors.append(door)
     
     # def draw(self, screen, color=(255, 255, 255)):
     #     pygame.draw.rect(screen, color, self.rect, 2)  
@@ -57,10 +47,14 @@ class Room:
     #         pygame.draw.rect(screen, (0,0,0), self.rect, 2) 
     #     for door in self.doors.values():
     #         door.draw(screen)
-    
+    def getRoomType(self):
+        return self.__myRoomType
+    def getEnemyList(self):
+        return self.__myEnemyList
     def getRoom(self):
         return self
     
     def __str__(self):
         # return f"Room({self.__myRoomType}, Doors: {self.doors})"
         return self.__myRoomType
+    
