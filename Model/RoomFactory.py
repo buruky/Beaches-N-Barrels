@@ -16,7 +16,7 @@ class RoomFactory():
 
     def createRoom(self, theRoomType, theX, theY):
         if theRoomType == self.s:
-            return self.createStartRoom(theRoomType, theX, theY)
+            return self.createNormalRoom(theRoomType, theX, theY)
         elif theRoomType == self.n:
             return self.createNormalRoom(theRoomType, theX, theY)
 
@@ -24,6 +24,5 @@ class RoomFactory():
         return Room(theRoomType, theX, theY, DungeonCharacterList())
     
     def createNormalRoom(self, theRoomType, theX, theY):
-        print("heller")
         enemylist = EnemyFactory.createNormalTemplate()
         return Room(theRoomType, theX, theY, enemylist)

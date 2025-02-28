@@ -31,13 +31,11 @@ class FloorFactory:
         return cls._instance
 
     def createFloor(self, theWidth:int, theHeight:int) -> Floor:
-        print("createFloor",theWidth)
         grid = self.generateGrid(theWidth, theHeight)
         doors = self.connect_rooms(grid)
         return Floor(grid, doors)
         
     def generateGrid(self, theWidth:int, theHeight:int) -> list[list]:
-        print(theWidth)
         startx = Floor._START_POS[0]
         
         starty = Floor._START_POS[1]
@@ -50,7 +48,7 @@ class FloorFactory:
         startRoom = "s "
         
         
-        grid[startx][starty] = self.roomFact.createStartRoom(startRoom, startx, starty)
+        grid[startx][starty] = self.roomFact.createRoom(startRoom, startx, starty)
          #Room("s ", startx, starty, EnemyFactory.)
         
        

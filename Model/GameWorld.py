@@ -36,7 +36,7 @@ class GameWorld:
         
         self.__myFloor.print_dungeon() 
         #grid = self.__myFloorFactory.get_dungeon()
-        
+        print("here boyyy", self.currentRoom.getEnemyList().get_entities())
              
         self.enemies = []  # List of enemies
         self.player = [] # player
@@ -107,18 +107,9 @@ class GameWorld:
                         player.Dies()
                     print(f"Collision with the player at ({player.getPositionX()}, {player.getPositionY()})")  # Debugging
                     return True
-                
-        for door in self.__myFloor.getDoorList():
-            if player != ignore:  # Don't check collision with itself
-                my_rect = pygame.Rect(door.getPositionX(), door.getPositionY(), 50, 50)
-                if rect.colliderect(my_rect):
-                
-                        
-                    print(f"Collision with door at ({player.getPositionX()}, {player.getPositionY()})")  # Debugging
-                    return True
-        
-        
             return False  # No collision
+        
+        
     def collideWithDoor(self, theRect):
         for door in self.__myFloor.getDoorList():
             my_rect = pygame.Rect(door.getPositionX(), door.getPositionY(), 50, 50)

@@ -1,15 +1,16 @@
 import pygame
-
+from .DungeonCharacterList import DungeonCharacterList
 
 
 class Room:
     
-    def __init__(self, theRoomType, theX, theY, theEnemyList):
+    def __init__(self, theRoomType, theX, theY, theEnemyList: DungeonCharacterList):
         self.__myRoomType = theRoomType
         self.__myX, self.__myY = theX, theY
         
         self.rect = pygame.Rect(0,0,800,600)
         self.doors = {}  # Stores Door objects
+        print("Grahhh", theRoomType, theEnemyList.get_entities())
         self.__myEnemyList = theEnemyList
 
 
