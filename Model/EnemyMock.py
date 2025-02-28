@@ -72,6 +72,7 @@ class EnemyMock(DungeonCharacter):
                 EventManager.event_types[CustomEvents.CHARACTER_MOVED],
                 {
                     "name": self.getName(),
+                    "id": self.__str__(),
                     "positionX": self.getPositionX(),
                     "positionY": self.getPositionY()
                 }

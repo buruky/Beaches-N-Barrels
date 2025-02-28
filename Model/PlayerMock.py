@@ -64,7 +64,7 @@ class PlayerMock(DungeonCharacter):
         event = pygame.event.Event(
             
             EventManager.event_types[theEventName],
-            {"name": self.getName(), "positionX": self.getPositionX(), "positionY": self.getPositionY()}        
+            {"name": self.getName(), "positionX": self.getPositionX(), "positionY": self.getPositionY(), "id": self.__str__()}        
             )
         pygame.event.post(event)
         pass

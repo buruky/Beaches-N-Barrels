@@ -12,7 +12,8 @@ class MView:
         self.screen = pygame.display.set_mode((screen_width, screen_height))
         self.mySpriteFactory = SpriteFactory()
         self.mySpriteFactory.Initalize()
-        self.onscreen = self.mySpriteFactory.listOfSpriteSheets
+        self.allSprites = self.mySpriteFactory.listOfSpriteSheets
+        self.onScreenChar = []
         self.theRoom = pygame.Rect(0,0,  screen_width, screen_height) 
         self.theNewRoom = (0,0,0)
         
@@ -30,7 +31,9 @@ class MView:
 
     def update_entity(self,theEvent:pygame.event):#need to find way to clear canvas when you draw
         """Adds Chracter to list and to screen with new position  """
-        character = self.onscreen[theEvent.name]
+        if not theEvent.id in self.onScreenChar:
+            self.onScreenChar.append(theEvent.id)
+        character = self.allSprites[theEvent.name]
         
         character.setPosition(theEvent.positionX, theEvent.positionY)
         
@@ -61,8 +64,7 @@ class MView:
         # for obstacle in GameWorld.getInstance().get_obstacles():
         #     pygame.draw.rect(self.screen, (255, 0, 0), obstacle)  # RED rectangles
         pygame.draw.rect(self.screen, self.theNewRoom, self.theRoom, 50) 
-
-        for currentSprite in self.onscreen.values():
+        for currentSprite in self.allSprites.values():
             self.screen.blit(currentSprite.getCurrentSprite(), currentSprite.getRect().topleft)
             
         pygame.display.flip()

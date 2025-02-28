@@ -103,13 +103,13 @@ class GameWorld:
             if player != ignore:  # Don't check collision with itself
                 my_rect = pygame.Rect(player.getPositionX(), player.getPositionY(), 50, 50)
                 if rect.colliderect(my_rect):
-                    if ignore in self.currentRoom.getEnemyList():
+                    if ignore in self.currentRoom.getEnemyList().get_entities():
                         player.Dies()
                     print(f"Collision with the player at ({player.getPositionX()}, {player.getPositionY()})")  # Debugging
                     return True
             return False  # No collision
         
-        
+
     def collideWithDoor(self, theRect):
         for door in self.__myFloor.getDoorList():
             my_rect = pygame.Rect(door.getPositionX(), door.getPositionY(), 50, 50)
