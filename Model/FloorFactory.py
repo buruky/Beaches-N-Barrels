@@ -1,8 +1,6 @@
 import random
 from typing import Final
-
 from .RoomFactory import RoomFactory
-
 from .Door import Door
 from .Floor import Floor
 from .Room import Room 
@@ -11,6 +9,8 @@ from CustomEvents import CustomEvents
 import pygame
 class FloorFactory:
     _FLOOR_LEVEL = 5
+    _instance = None  # Stores the single instance
+
     def __new__(cls):
         """Ensure only one instance is created."""
         if cls._instance is None:

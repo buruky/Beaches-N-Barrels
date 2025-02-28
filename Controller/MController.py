@@ -14,9 +14,8 @@ class MController:
         self.__myView:Final = MView()
         self.__InitalizeEvents()
         self.__myIsRunning = True
-        self.__myWorld = GameWorld.getInstance()
-        #self.__myModel:Final = MModel() 
-        
+        self.__myWorld = GameWorld()
+        # self.__myModel:Final = MModel() 
         self.__myPlayer:Final = PlayerMock()
         
         

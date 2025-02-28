@@ -1,7 +1,7 @@
 from .DungeonCharacter import DungeonCharacter
 from .EventManager import EventManager
 from CustomEvents import CustomEvents
-from .GameWorld import GameWorld
+# from .GameWorld import GameWorld
 import pygame
 import random
 
@@ -63,7 +63,7 @@ class EnemyMock(DungeonCharacter):
         new_y = max(0, min(new_y, self.SCREEN_HEIGHT - 50))  # Ensure inside height
 
         # Check for collision before moving
-
+        from .GameWorld import GameWorld
         if not GameWorld.getInstance().check_collision(pygame.Rect(new_x, new_y, 50, 50), ignore=self):
             self.moveCharacter(new_x, new_y)
 

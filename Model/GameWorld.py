@@ -6,9 +6,9 @@ from .FloorFactory import FloorFactory
 from .Door import Door
 class GameWorld:
     """Singleton class representing the game world with obstacles and enemies."""
-
-    _instance = None  # Stores the single instance
     _FLOOR_SIDE_LENGTH:Final = 11
+    _instance = None  # Stores the single instance
+
     def __new__(cls):
         """Ensure only one instance is created."""
         if cls._instance is None:
@@ -30,7 +30,7 @@ class GameWorld:
         #     pygame.Rect(350, 450, 50, 50),  # Middle-right
         #     pygame.Rect(450, 250, 50, 50),  # Randomly placed
         # ]
-        self.__myFloorFactory = FloorFactory.getInstance()
+        self.__myFloorFactory = FloorFactory()
         self.__myFloor = self.__myFloorFactory.createFloor(GameWorld._FLOOR_SIDE_LENGTH, GameWorld._FLOOR_SIDE_LENGTH)
         self.currentRoom = self.__myFloor.getStartRoom()
         
