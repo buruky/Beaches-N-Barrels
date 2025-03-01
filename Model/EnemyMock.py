@@ -23,6 +23,7 @@ class EnemyMock(DungeonCharacter):
         self.__mySpeed = theSpeed # Enemy movement speed (change as needed)2
         
         self.__myName = "EnemyMock"
+        self.testTick = 0
         # Register enemy in GameWorld
         #print(GameWorld.getInstance())
         #GameWorld.getInstance().add_enemy(self)
@@ -40,13 +41,15 @@ class EnemyMock(DungeonCharacter):
     def update(self):
         """ Updates the enemy's position randomly """
         current_time = pygame.time.get_ticks()
-
         # Change direction every 1 second (1000ms)
         if current_time - self.__move_timer > 1000:
+            print(self.__myDirection)
             self.__myDirection = random.choice(["UP", "DOWN", "LEFT", "RIGHT"])
             self.__move_timer = current_time  # Reset timer
 
         new_x, new_y = self.__myPositionX, self.__myPositionY
+        
+
 
         # Move based on the direction
         if self.__myDirection == "UP":
@@ -72,7 +75,7 @@ class EnemyMock(DungeonCharacter):
                 EventManager.event_types[CustomEvents.CHARACTER_MOVED],
                 {
                     "name": self.getName(),
-                    "id": self.__str__(),
+                    "id": id(self),
                     "positionX": self.getPositionX(),
                     "positionY": self.getPositionY()
                 }

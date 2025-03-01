@@ -3,20 +3,20 @@ import pygame
 #from Model.GameWorld import GameWorld
 from .SpriteSheet import SpriteSheet
 from .SpriteFactory import SpriteFactory
+from ViewUnits import ViewUnits
 class MView:
     def __init__(self):
         # self.screen = screen
         
-        screen_width = 800
-        screen_height = 600
+        screen_width = ViewUnits.SCREEN_WIDTH
+        screen_height = ViewUnits.SCREEN_HEIGHT
         self.screen = pygame.display.set_mode((screen_width, screen_height))
         self.mySpriteFactory = SpriteFactory()
-        self.mySpriteFactory.Initalize()
-        self.allSprites = self.mySpriteFactory.listOfSpriteSheets
         self.onScreenChar = []
         self.theRoom = pygame.Rect(0,0,  screen_width, screen_height) 
         self.theNewRoom = (0,0,0)
-        
+    
+    
     def clear(self):
         """Clear the screen before drawing the next frame."""
         self.screen.fill((0, 0, 0))  # Fill screen with black
@@ -28,17 +28,25 @@ class MView:
             else:
                 self.theNewRoom = self.background_color = (150, 40, 400)  # Change background color
 
-
+    def addCharacterToScreenList(self, theEvent:pygame.event):
+        newCharSprite = self.mySpriteFactory.createSpriteSheet(theEvent.id, theEvent.name, theEvent.positionX,theEvent.positionY)
+        self.onScreenChar.append(newCharSprite)
     def update_entity(self,theEvent:pygame.event):#need to find way to clear canvas when you draw
         """Adds Chracter to list and to screen with new position  """
-        if not theEvent.id in self.onScreenChar:
-            self.onScreenChar.append(theEvent.id)
-        character = self.allSprites[theEvent.name]
+        isIdInSpriteList = False
+        for characterSprite in self.onScreenChar:
+            if theEvent.id == characterSprite.getId():
+                
+                isIdInSpriteList = True
+                
+        if not isIdInSpriteList:
+            self.addCharacterToScreenList(theEvent)
+            
+        """Updates position of sprite associated with event passed in"""
+        for characterSprite in self.onScreenChar:
+            if theEvent.id == characterSprite.getId():
+                characterSprite.setPosition(theEvent.positionX, theEvent.positionY)
         
-        character.setPosition(theEvent.positionX, theEvent.positionY)
-        
-
-
         self.redrawCharacter()
 
     def display_game_over(self):
@@ -60,13 +68,12 @@ class MView:
         """
         self.clear()        
 
-        # Draw obstacles in RED for visibility
-        # for obstacle in GameWorld.getInstance().get_obstacles():
-        #     pygame.draw.rect(self.screen, (255, 0, 0), obstacle)  # RED rectangles
-        pygame.draw.rect(self.screen, self.theNewRoom, self.theRoom, 50) 
-        for currentSprite in self.allSprites.values():
+        pygame.draw.rect(self.screen, self.theNewRoom, self.theRoom, 50)
+        for currentSprite in self.onScreenChar:
             self.screen.blit(currentSprite.getCurrentSprite(), currentSprite.getRect().topleft)
-            
+            print("hehe")
+            print(currentSprite.getId())
+            print("hehe")
         pygame.display.flip()
 
     

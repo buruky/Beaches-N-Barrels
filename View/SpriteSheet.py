@@ -2,26 +2,28 @@ from typing import Final
 import pygame
 import random
 
+from ViewUnits import ViewUnits
+
 class SpriteSheet:
     """Holds all sprites for charcter and holds which is currently showing for animation """
-    DEFAULT_HEIGHT:Final = 50
-    DEFAULT_WIDTH:Final = 50
-    DEFAULT_POSITION_X:Final = 0
-    DEFAULT_POSITION_Y:Final = 0
-
-    def __init__(self, theName:str, theHeight:int = DEFAULT_HEIGHT, theWidth:int = DEFAULT_WIDTH, 
-                 thePositionX:int = DEFAULT_POSITION_X , thePositionY:int = DEFAULT_POSITION_Y,
-                 theSprites:dict = {"IDLE": []}):
+    
+    
+    def __init__(self,theId:int, theName:str,
+                 theSprites:dict = ViewUnits.DEFAULT_DICT,
+                 theRect:pygame.Rect = ViewUnits.DEFAULT_RECT,):
+        
+        self.__myId = theId
         self.__myName = theName
         self.__mySprites = theSprites
         self.__myCurrentSpriteIndex = 0
         self.__myCurrentState = "IDLE"
-        self.__myRect = pygame.Rect(thePositionX, thePositionY, theWidth, theHeight)
+        self.__myRect = theRect
 
     
     
     def getRect(self):
         return self.__myRect
+    
     def getAllImages(self) -> list:
         """gets all images in map and returns as unsorted list"""
         spriteList = []
@@ -62,6 +64,10 @@ class SpriteSheet:
             self.__myCurrentSpriteIndex = 0
         else:
             raise Exception("SpriteSheet.setCurrentState(): THERE IS NO LIST UNDER THAT STATE!!!")
+    
+
+    def getId(self):
+        return self.__myId
     
     def getCurrentSprite(self):
         # print(self.__myCurrentState)
