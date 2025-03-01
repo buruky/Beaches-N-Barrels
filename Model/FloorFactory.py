@@ -22,12 +22,14 @@ class FloorFactory:
         self.grid_width = 11
         self.grid_height = 11
         self.start_pos = (5, 5)  # Center of the grid
-        self.roomFact = RoomFactory()
+        self.roomFact = RoomFactory.getInstance()
         #self.grid = self.generate_dungeon(level)  # Store the grid in an instance variable
         #self.update()
     @classmethod
     def getInstance(cls):
         """Getter for the singleton instance."""
+        if cls._instance is None:  # Ensure an instance exists
+            cls._instance = cls()  # This triggers __new__()
         return cls._instance
 
     def createFloor(self, theWidth:int, theHeight:int) -> Floor:

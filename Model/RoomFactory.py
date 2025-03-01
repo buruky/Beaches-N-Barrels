@@ -10,9 +10,18 @@ class RoomFactory():
             cls._instance = super(RoomFactory, cls).__new__(cls)
             cls._instance._init_once()
         return cls._instance
+    
     def _init_once(self):
         self.s = "s "
         self.n = "n "
+        self.__myEnemyFactory = EnemyFactory.getInstance()
+
+    @classmethod
+    def getInstance(cls):
+        """Getter for the singleton instance."""
+        if cls._instance is None:  # Ensure an instance exists
+            cls._instance = cls()  # This triggers __new__()
+        return cls._instance
 
     def createRoom(self, theRoomType, theX, theY):
         if theRoomType == self.s:
@@ -24,5 +33,5 @@ class RoomFactory():
         return Room(theRoomType, theX, theY, DungeonCharacterList())
     
     def createNormalRoom(self, theRoomType, theX, theY):
-        enemylist = EnemyFactory.createNormalTemplate()
+        enemylist = self.__myEnemyFactory.createNormalTemplate()
         return Room(theRoomType, theX, theY, enemylist)

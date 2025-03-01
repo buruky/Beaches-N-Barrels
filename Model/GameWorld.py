@@ -30,14 +30,11 @@ class GameWorld:
         #     pygame.Rect(350, 450, 50, 50),  # Middle-right
         #     pygame.Rect(450, 250, 50, 50),  # Randomly placed
         # ]
-        self.__myFloorFactory = FloorFactory()
+        self.__myFloorFactory = FloorFactory.getInstance()
         self.__myFloor = self.__myFloorFactory.createFloor(GameWorld._FLOOR_SIDE_LENGTH, GameWorld._FLOOR_SIDE_LENGTH)
         self.currentRoom = self.__myFloor.getStartRoom()
         
-        self.__myFloor.print_dungeon() 
-        #grid = self.__myFloorFactory.get_dungeon()
-        print("here boyyy", self.currentRoom.getEnemyList().get_entities())
-             
+        self.__myFloor.print_dungeon()              
         self.enemies = []  # List of enemies
         self.player = [] # player
         self.item = []
@@ -46,6 +43,8 @@ class GameWorld:
     @classmethod
     def getInstance(cls):
         """Getter for the singleton instance."""
+        if cls._instance is None:  # Ensure an instance exists
+            cls._instance = cls()  # This triggers __new__()
         return cls._instance
 
     def tick(self):
