@@ -1,3 +1,4 @@
+import copy
 import os
 import pygame
 from .SpriteSheet import SpriteSheet
@@ -51,20 +52,21 @@ class SpriteFactory:
         self.add(SpriteSheet("PlayerMock", 50, 50, 100, 100, playerDict))
         self.add(SpriteSheet("EnemyMock", 50, 50, 100, 100, enemyDict))
         """
-        playerRect = ViewUnits.DEFAULT_RECT
+        playerRect = copy.copy(ViewUnits.DEFAULT_RECT)
         playerRect.x = thePositionX
         playerRect.y = thePositionY
+        print("spritefactory,playerRectID",id(playerRect))
 
         return SpriteSheet(theId, ViewUnits.PLAYER_SPRITE_NAME, imageDict, playerRect)
-    
+
 
     def createEnemySpriteSheet(self, theId, thePositionX, thePositionY):
         imageDict = dict()
         imageDict[ViewUnits.DEFAULT_STATE_NAME] = [self.enemyImage2, self.enemyImage]
-        enemyRect = ViewUnits.DEFAULT_RECT
+        enemyRect = copy.copy(ViewUnits.DEFAULT_RECT)
         enemyRect.x = thePositionX
         enemyRect.y = thePositionY
-
+        print("spritefactory,enemyRectid",id(enemyRect))
         return SpriteSheet(theId, ViewUnits.ENEMY_SPRITE_NAME, imageDict, enemyRect)
     
 

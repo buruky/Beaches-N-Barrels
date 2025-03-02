@@ -31,6 +31,7 @@ class MView:
     def addCharacterToScreenList(self, theEvent:pygame.event):
         newCharSprite = self.mySpriteFactory.createSpriteSheet(theEvent.id, theEvent.name, theEvent.positionX,theEvent.positionY)
         self.onScreenChar.append(newCharSprite)
+
     def update_entity(self,theEvent:pygame.event):#need to find way to clear canvas when you draw
         """Adds Chracter to list and to screen with new position  """
         isIdInSpriteList = False
@@ -71,9 +72,10 @@ class MView:
         pygame.draw.rect(self.screen, self.theNewRoom, self.theRoom, 50)
         for currentSprite in self.onScreenChar:
             self.screen.blit(currentSprite.getCurrentSprite(), currentSprite.getRect().topleft)
-            print("hehe")
-            print(currentSprite.getId())
-            print("hehe")
+        #     print("hehe")
+        #     print(id(currentSprite.getRect()))
+        #    # print(currentSprite.getId())
+        #     print("hehe")
         pygame.display.flip()
 
     

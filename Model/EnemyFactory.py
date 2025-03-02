@@ -32,11 +32,11 @@ class EnemyFactory():
                            150, #positionX
                            100, #positionY
                            EnemyFactory._DEFAULT_SPEED)
-        # enemy2 = EnemyMock(EnemyFactory._DEFAULT_ATTACK_DAMAGE, 
-        #                    EnemyFactory._DEFAULT_HEALTH,
-        #                    400, #positionX
-        #                    100, #positionY
-        #                    EnemyFactory._DEFAULT_SPEED)
+        enemy2 = EnemyMock(EnemyFactory._DEFAULT_ATTACK_DAMAGE, 
+                           EnemyFactory._DEFAULT_HEALTH,
+                           400, #positionX
+                           100, #positionY
+                           EnemyFactory._DEFAULT_SPEED)
         enemyList.add_entity(enemy1)
-        #enemyList.add_entity(enemy2)
+        enemyList.add_entity(enemy2)
         return enemyList
