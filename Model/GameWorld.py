@@ -24,7 +24,7 @@ class GameWorld:
         event = pygame.event.Event(
                 EventManager.event_types[CustomEvents.CHANGED_ROOM],
                 {
-                    "roomName": self.currentRoom.getRoomType(),
+                    "roomtype": self.currentRoom.getRoomType(),
                     "direction": None
                 }
             )
@@ -41,22 +41,23 @@ class GameWorld:
             cls._instance = cls()  # This triggers __new__()
         return cls._instance
 
-    def go(self):
-        doorMap = self.currentRoom.getDoorMap()
-        print(doorMap)
-        for direction in doorMap.keys():
-            if doorMap[direction] != None:
-                newRoom = doorMap[direction].getConnectedRoom(self.currentRoom)
-                self.currentRoom = newRoom
-                print("aaaaaaaaaaaaaaaaaaaaaaaaaa",self.currentRoom)
-        event = pygame.event.Event(
-                EventManager.event_types[CustomEvents.CHANGED_ROOM],
-                {
-                    "roomName": self.currentRoom.getRoomType(),
-                    "direction": self.currentRoom
-                }
-            )
-        pygame.event.post(event)
+    # def go(self):
+    #     doorMap = self.currentRoom.getDoorMap()
+    #     for direction in doorMap.keys():
+    #         print()
+    #         if doorMap[direction] is not None:
+    #             print("go:map ",self.currentRoom.getDoorMap())
+    #             print("direction: ",direction)
+    #             newRoom = doorMap[direction].getConnectedRoom(self.currentRoom)
+    #             self.currentRoom = newRoom
+    #     event = pygame.event.Event(
+    #             EventManager.event_types[CustomEvents.CHANGED_ROOM],
+    #             {
+    #                 "roomName": self.currentRoom.getRoomType(),
+    #                 "direction": self.currentRoom
+    #             }
+    #         )
+    #     pygame.event.post(event)
 
 
 
@@ -81,15 +82,18 @@ class GameWorld:
         if enemy in self.enemies:
             self.enemies.remove(enemy)
 
+    def getCurrentRoom(self):
+        return self.currentRoom
+    
     def changeCurrentRoom(self, theDoor:Door):
         newRoom = theDoor.getConnectedRoom(self.currentRoom)
+        oldRoom = self.currentRoom
         self.currentRoom = newRoom
-        self.activateRoom(self.currentRoom)
         event = pygame.event.Event(
                 EventManager.event_types[CustomEvents.CHANGED_ROOM],
                 {
-                    "roomName": self.currentRoom.getRoomType(),
-                    "direction": theDoor.getConnectedDoorDirection(self.currentRoom)
+                    "roomtype": self.currentRoom.getRoomType(),
+                    "direction": theDoor.getConnectedDoorDirection(oldRoom)
                 }
             )
         pygame.event.post(event)
@@ -119,9 +123,12 @@ class GameWorld:
             return False  # No collision
         
 
-    def collideWithDoor(self, theRect):
-        for door in self.__myFloor.getDoorList():
-            my_rect = pygame.Rect(door.getPositionX(), door.getPositionY(), 50, 50)
-            if theRect.colliderect(my_rect):
-                self.changeCurrentRoom(door)
+    def collideWithDoor(self, thePlayerRect) -> str:
+        for door in self.currentRoom.getDoorMap().values():
+            if door is not None:
+                myRectTuple = door.getBothRect()
+                if thePlayerRect.colliderect(myRectTuple[0]) or thePlayerRect.colliderect(myRectTuple[1]):
+                    self.changeCurrentRoom(door)
+                    return door.getConnectedDoorDirection(self.currentRoom)#maybe return cords
+        return None
                     

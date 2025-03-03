@@ -6,9 +6,6 @@ from .SpriteFactory import SpriteFactory
 from ViewUnits import ViewUnits
 class MView:
     def __init__(self):
-
-
-
         # self.screen = screen
         current_directory = os.path.dirname(__file__)
 
@@ -25,6 +22,7 @@ class MView:
         self.screen = pygame.display.set_mode((screen_width, screen_height))
         self.mySpriteFactory = SpriteFactory()
         self.onScreenChar = []
+        print(self.onScreenChar)
         self.theRoom = pygame.Rect(0,0,  screen_width, screen_height) 
         # self.theNewRoom = (10,10,10)
     
@@ -34,27 +32,42 @@ class MView:
         self.screen.fill((0, 0, 0))  # Fill screen with black
 
     def updateRoom(self, event: pygame.event.Event):
-            print("gamer is gaming")  # Console output
-            if event.roomName == "s ":
-                print("start room")
-                self.theNewRoom = self.theTest  # Change background color
-            else:
-                print("not start room")
-                self.theNewRoom = self.theTest2  # Change background color
+        print("gamer is gaming")  # Console output
+        if event.roomtype == "s ":
+            self.theNewRoom = self.theTest  # Change background color
+        else:
+            self.theNewRoom = self.theTest2  # Change background color
+        if len(self.onScreenChar) != 0:
+
+            playerSprite = None
+
+            for i in range(len(self.onScreenChar)):
+                if self.onScreenChar[i].getName() == ViewUnits.PLAYER_SPRITE_NAME:
+                    playerSprite = self.onScreenChar[i]
+            
+            self.onScreenChar = [playerSprite]
 
     def addCharacterToScreenList(self, theEvent:pygame.event):
+        #print("addid",theEvent.id)
+        #print(self.onScreenChar)
         newCharSprite = self.mySpriteFactory.createSpriteSheet(theEvent.id, theEvent.name, theEvent.positionX,theEvent.positionY)
+        #print("addchar: ",newCharSprite.getName())
         self.onScreenChar.append(newCharSprite)
+        #print("waaa",self.onScreenChar)
 
     def update_entity(self,theEvent:pygame.event):#need to find way to clear canvas when you draw
         """Adds Chracter to list and to screen with new position  """
+    
         isIdInSpriteList = False
         for characterSprite in self.onScreenChar:
-            if theEvent.id == characterSprite.getId():
-                
-                isIdInSpriteList = True
+            #print(theEvent)
+            if characterSprite is not None :
+                #print(characterSprite)
+                if theEvent.id == characterSprite.getId():
+                    isIdInSpriteList = True
                 
         if not isIdInSpriteList:
+            
             self.addCharacterToScreenList(theEvent)
             
         """Updates position of sprite associated with event passed in"""

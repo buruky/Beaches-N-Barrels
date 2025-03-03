@@ -21,6 +21,7 @@ class Door:
         
     def __getDoorPositionRect(self, theDirection):
         return pygame.Rect(Door.theCordMap[theDirection], (50,50))
+    
     def getConnectedRoom(self, theOtherRoom:Room) -> Room:
         if theOtherRoom is self.__myFirstRoom:
             return self.__myEndRoom
@@ -28,11 +29,18 @@ class Door:
             return self.__myFirstRoom
         else:
             raise Exception("Door.getConnectedRoom:",
-                        "THE OTHER ROOM IS NOT CONNECTED TO THIS DOOR!!!") 
+                        "THE ROOM PASSED IS NOT CONNECTED TO THIS DOOR!!!") 
         
-        
-    def getRect(self):
-        return self.rect
+    def getBothRect(self) ->tuple:
+        return (self.__myFirstDoorRect, self.__myEndDoorRect)
+    
+    def getRect(self,theDirection):
+        if theDirection == self.__myFirstDirection:
+            return self.__myFirstDoorRect
+        elif theDirection == self.__myEndDirection:
+            return self.__myEndDoorRect
+        raise Exception("Door.getRECT:",
+                        "THERE IS NO RECT WITH THAT DIRECTION IN THIS DOOR")
     
     def getConnectedDoorDirection(self, theOtherRoom:Room):
         if theOtherRoom is self.__myFirstRoom:

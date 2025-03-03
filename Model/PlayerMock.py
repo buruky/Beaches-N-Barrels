@@ -53,6 +53,11 @@ class PlayerMock(DungeonCharacter):
             self.__myPositionX = new_x
             self.__myPositionY = new_y
 
+        collidedDoor = GameWorld.getInstance().collideWithDoor(pygame.Rect(new_x, new_y, 50, 50))
+        if collidedDoor is not None:
+            print("heyo we walkin here")
+            
+
         if dx != 0 or dy != 0:
             """when character is moving in any direction"""
             self.update(CustomEvents.CHARACTER_MOVED)
@@ -64,7 +69,10 @@ class PlayerMock(DungeonCharacter):
         event = pygame.event.Event(
             
             EventManager.event_types[theEventName],
-            {"name": self.getName(), "positionX": self.getPositionX(), "positionY": self.getPositionY(), "id": id(self)}        
+            {"name": self.getName(),
+             "positionX": self.getPositionX(),
+             "positionY": self.getPositionY(),
+             "id": id(self)}        
             )
         pygame.event.post(event)
         pass

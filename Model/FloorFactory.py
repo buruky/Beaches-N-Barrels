@@ -25,6 +25,7 @@ class FloorFactory:
         self.roomFact = RoomFactory.getInstance()
         #self.grid = self.generate_dungeon(level)  # Store the grid in an instance variable
         #self.update()
+        
     @classmethod
     def getInstance(cls):
         """Getter for the singleton instance."""
@@ -35,7 +36,7 @@ class FloorFactory:
     def createFloor(self, theWidth:int, theHeight:int) -> Floor:
         grid = self.generateGrid(theWidth, theHeight)
         doors = self.connect_rooms(grid)
-        print(Floor(grid, doors).getStartRoom().getDoorMap())
+        #print(Floor(grid, doors).getStartRoom().getDoorMap())
         return Floor(grid, doors)
         
     def generateGrid(self, theWidth:int, theHeight:int) -> list[list]:

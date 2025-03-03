@@ -10,6 +10,7 @@ class Room:
         "S":None,
         "W":None
     }
+
     def __init__(self, theRoomType, theX, theY, theEnemyList: DungeonCharacterList):
         self.__myDoorMap = copy.copy(Room.DoorMap)
         self.__myRoomType = theRoomType
@@ -17,7 +18,6 @@ class Room:
         
         self.rect = pygame.Rect(0,0,ViewUnits.SCREEN_WIDTH, ViewUnits.SCREEN_HEIGHT)
         self.__myEnemyList = theEnemyList
-
 
     
     def addDoor(self, theDirection, theDoor):

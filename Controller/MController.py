@@ -93,21 +93,21 @@ class MController:
                 self.__mySign = -1
 
     def __handle_mouse(self, theSign: int):
-        if self.__myIsHoldingClick:
-            if theSign > 0:
-                event = pygame.event.Event(
-                    EventManager.event_types[CustomEvents.CHANGED_ROOM],
-                    {
-                        "roomName": "s ",
-                        "direction": None
-                    }
-                )
-                pygame.event.post(event)
-                # randX = random.randint(0, 500)
-                # randY = random.randint(0, 500)
-                # self.__myPlayer.teleportCharacter(randX, randY)
-            else:
-                self.__myWorld.go()
-
+        # if self.__myIsHoldingClick:
+        #     if theSign > 0:
+            #     # event = pygame.event.Event(
+            #     #     EventManager.event_types[CustomEvents.CHANGED_ROOM],
+            #     #     {
+            #     #         "roomName": "s ",
+            #     #         "direction": None
+            #     #     }
+            #     # )
+            #     # pygame.event.post(event)
+            #     # randX = random.randint(0, 500)
+            #     # randY = random.randint(0, 500)
+            #     # self.__myPlayer.teleportCharacter(randX, randY)
+            # else:
+            #     self.__myWorld.go()
+        pass
     
     
