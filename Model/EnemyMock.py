@@ -43,7 +43,6 @@ class EnemyMock(DungeonCharacter):
         current_time = pygame.time.get_ticks()
         # Change direction every 1 second (1000ms)
         if current_time - self.__move_timer > 1000:
-            print(self.__myDirection)
             self.__myDirection = random.choice(["UP", "DOWN", "LEFT", "RIGHT"])
             self.__move_timer = current_time  # Reset timer
 

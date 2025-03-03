@@ -29,6 +29,8 @@ class Door:
         else:
             raise Exception("Door.getConnectedRoom:",
                         "THE OTHER ROOM IS NOT CONNECTED TO THIS DOOR!!!") 
+        
+        
     def getRect(self):
         return self.rect
     

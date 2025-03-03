@@ -18,27 +18,21 @@ class GameWorld:
 
     def _init_once(self):
         """Initialize the game world only once."""
-        # self.obstacles = [
-        #     pygame.Rect(150, 150, 50, 500),  # Top-left corner
-        #     pygame.Rect(300, 200, 50, 50),  # Near center
-        #     pygame.Rect(500, 100, 50, 50),  # Top-right area
-        #     pygame.Rect(150, 400, 50, 50),  # Left side
-        #     pygame.Rect(400, 500, 50, 50),  # Bottom-center
-        #     pygame.Rect(600, 300, 50, 50),  # Right side
-        #     pygame.Rect(700, 500, 50, 50),  # Bottom-right
-        #     pygame.Rect(250, 350, 50, 50),  # Slightly off-center
-        #     pygame.Rect(350, 450, 50, 50),  # Middle-right
-        #     pygame.Rect(450, 250, 50, 50),  # Randomly placed
-        # ]
         self.__myFloorFactory = FloorFactory.getInstance()
         self.__myFloor = self.__myFloorFactory.createFloor(GameWorld._FLOOR_SIDE_LENGTH, GameWorld._FLOOR_SIDE_LENGTH)
         self.currentRoom = self.__myFloor.getStartRoom()
-        
+        event = pygame.event.Event(
+                EventManager.event_types[CustomEvents.CHANGED_ROOM],
+                {
+                    "roomName": self.currentRoom.getRoomType(),
+                    "direction": None
+                }
+            )
+        pygame.event.post(event)
         self.__myFloor.print_dungeon()              
         self.enemies = []  # List of enemies
         self.player = [] # player
         self.item = []
-        self.doors = []
 
     @classmethod
     def getInstance(cls):
@@ -47,12 +41,28 @@ class GameWorld:
             cls._instance = cls()  # This triggers __new__()
         return cls._instance
 
+    def go(self):
+        doorMap = self.currentRoom.getDoorMap()
+        print(doorMap)
+        for direction in doorMap.keys():
+            if doorMap[direction] != None:
+                newRoom = doorMap[direction].getConnectedRoom(self.currentRoom)
+                self.currentRoom = newRoom
+                print("aaaaaaaaaaaaaaaaaaaaaaaaaa",self.currentRoom)
+        event = pygame.event.Event(
+                EventManager.event_types[CustomEvents.CHANGED_ROOM],
+                {
+                    "roomName": self.currentRoom.getRoomType(),
+                    "direction": self.currentRoom
+                }
+            )
+        pygame.event.post(event)
+
+
+
     def tick(self):
         self.currentRoom.getEnemyList().update_all()
 
-    def get_obstacles(self):
-        """Return the list of obstacles."""
-        return self.obstacles
 
     def get_enemies(self):
         """Return the list of enemies."""
@@ -83,12 +93,12 @@ class GameWorld:
                 }
             )
         pygame.event.post(event)
+
     def activateRoom(self, theCurrentRoom):
         """Lets know doors and entities in room that should be shown on screen"""
+
     def check_collision(self, rect, ignore=None):
         """Check if a given rectangle collides with any obstacle or enemy."""
-        
-
         for enemy in self.currentRoom.getEnemyList().get_entities():
             if enemy != ignore:  # Don't check collision with itself
                 enemy_rect = pygame.Rect(enemy.getPositionX(), enemy.getPositionY(), 50, 50)

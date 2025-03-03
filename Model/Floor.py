@@ -15,6 +15,7 @@ class Floor:
         self.__myDoorList = theDoorList
         self.__myStartCord = Floor._START_POS
 
+
     def get_dungeon(self) -> list[list]:
         return self.__myGrid  
     
@@ -24,12 +25,15 @@ class Floor:
     def getStartRoom(self):
         return self.__myGrid[self.__myStartCord[0]][self.__myStartCord[1]]
     
+    
+
+
     def print_dungeon(self):
         for row in range(len(self.__myGrid)):
             line = ""
             for col in range(len(self.__myGrid[0])):
                 if isinstance(self.__myGrid[row][col], Room):
-                    line += str(self.__myGrid[row][col].getRoom())
+                    line += str(self.__myGrid[row][col])
                 else:
                     line += ". "
             print(line)

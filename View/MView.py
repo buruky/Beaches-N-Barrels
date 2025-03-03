@@ -6,15 +6,27 @@ from .SpriteFactory import SpriteFactory
 from ViewUnits import ViewUnits
 class MView:
     def __init__(self):
+
+
+
         # self.screen = screen
-        
+        current_directory = os.path.dirname(__file__)
+
+        # Build the relative path to the player and enemy images
+        player_image_path = os.path.join(current_directory, '..', 'Assets', 'TestBackround.png')
+        self.myRawPlayerImage = pygame.image.load(player_image_path)
+        self.theTest = pygame.transform.scale(self.myRawPlayerImage, (800,600))
+        player_image_path2 = os.path.join(current_directory, '..', 'Assets', 'Testbackround2.png')
+        self.myRawPlayerImage2 = pygame.image.load(player_image_path2)
+        self.theTest2 = pygame.transform.scale(self.myRawPlayerImage2, (800,600))
+
         screen_width = ViewUnits.SCREEN_WIDTH
         screen_height = ViewUnits.SCREEN_HEIGHT
         self.screen = pygame.display.set_mode((screen_width, screen_height))
         self.mySpriteFactory = SpriteFactory()
         self.onScreenChar = []
         self.theRoom = pygame.Rect(0,0,  screen_width, screen_height) 
-        self.theNewRoom = (0,0,0)
+        # self.theNewRoom = (10,10,10)
     
     
     def clear(self):
@@ -23,10 +35,12 @@ class MView:
 
     def updateRoom(self, event: pygame.event.Event):
             print("gamer is gaming")  # Console output
-            if event.name == "startRoom":
-                self.theNewRoom = self.background_color = (150, 150, 10)  # Change background color
+            if event.roomName == "s ":
+                print("start room")
+                self.theNewRoom = self.theTest  # Change background color
             else:
-                self.theNewRoom = self.background_color = (150, 40, 400)  # Change background color
+                print("not start room")
+                self.theNewRoom = self.theTest2  # Change background color
 
     def addCharacterToScreenList(self, theEvent:pygame.event):
         newCharSprite = self.mySpriteFactory.createSpriteSheet(theEvent.id, theEvent.name, theEvent.positionX,theEvent.positionY)
@@ -61,7 +75,7 @@ class MView:
         self.screen.blit(text_surface, text_rect)
         pygame.display.flip()
 
-        pygame.time.delay(9000)  # Pause for 9 seconds before quitting
+        pygame.time.delay(3000)  # Pause for 9 seconds before quitting
     def redrawCharacter(self):
         """ 1. clears screen
             2. draws passed sprite in new position
@@ -69,13 +83,11 @@ class MView:
         """
         self.clear()        
 
-        pygame.draw.rect(self.screen, self.theNewRoom, self.theRoom, 50)
+        self.screen.blit(self.theNewRoom, (0, 0))
+
         for currentSprite in self.onScreenChar:
             self.screen.blit(currentSprite.getCurrentSprite(), currentSprite.getRect().topleft)
-        #     print("hehe")
-        #     print(id(currentSprite.getRect()))
-        #    # print(currentSprite.getId())
-        #     print("hehe")
+
         pygame.display.flip()
 
     

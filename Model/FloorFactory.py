@@ -35,6 +35,7 @@ class FloorFactory:
     def createFloor(self, theWidth:int, theHeight:int) -> Floor:
         grid = self.generateGrid(theWidth, theHeight)
         doors = self.connect_rooms(grid)
+        print(Floor(grid, doors).getStartRoom().getDoorMap())
         return Floor(grid, doors)
         
     def generateGrid(self, theWidth:int, theHeight:int) -> list[list]:
@@ -132,25 +133,22 @@ class FloorFactory:
                         neighbor_row, neighbor_col = row + dr, col + dc
                         #inbounds
                         if 0 <= neighbor_row < self.grid_height and 0 <= neighbor_col < self.grid_width:
-                            neighbor = theGrid[neighbor_row][neighbor_col]
+                            neighborRoom = theGrid[neighbor_row][neighbor_col]
                             #if neighbor is room
-                            if isinstance(neighbor, Room):
-                                doorDirection = ""
-                                #current_room.addDoor(direction)  # Mark door open
+                            if isinstance(neighborRoom, Room):
+                                flipDir ={
+                                    "N":"S",
+                                    "E":"W",
+                                    "S":"N",
+                                    "W":"E"
+                                }
+                                newDoor = Door(direction, flipDir[direction], current_room, neighborRoom)
+
+                                doors.append(newDoor)
+                                current_room.addDoor(direction,newDoor)  # Mark door open
                                 # bidirectional connection
                                 
-                                if direction == "N":
-                                    #neighbor.addDoor("S")
-                                    doorDirection = "S"
-                                elif direction == "S":
-                                    #neighbor.addDoor("N")
-                                    doorDirection = "N"
-                                elif direction == "W":
-                                    #neighbor.addDoor("E")
-                                    doorDirection = "E"
-                                elif direction == "E":
-                                    #neighbor.addDoor("W")
-                                    doorDirection = "W"
-                                doors.append(Door(direction,  doorDirection, current_room, neighbor,))
+                                neighborRoom.addDoor(flipDir[direction],newDoor)
+                                
 
         return doors

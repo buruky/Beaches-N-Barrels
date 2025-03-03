@@ -55,7 +55,7 @@ class SpriteFactory:
         playerRect = copy.copy(ViewUnits.DEFAULT_RECT)
         playerRect.x = thePositionX
         playerRect.y = thePositionY
-        print("spritefactory,playerRectID",id(playerRect))
+        # print("spritefactory,playerRectID",id(playerRect))
 
         return SpriteSheet(theId, ViewUnits.PLAYER_SPRITE_NAME, imageDict, playerRect)
 
@@ -66,7 +66,7 @@ class SpriteFactory:
         enemyRect = copy.copy(ViewUnits.DEFAULT_RECT)
         enemyRect.x = thePositionX
         enemyRect.y = thePositionY
-        print("spritefactory,enemyRectid",id(enemyRect))
+        # print("spritefactory,enemyRectid",id(enemyRect))
         return SpriteSheet(theId, ViewUnits.ENEMY_SPRITE_NAME, imageDict, enemyRect)
     
 

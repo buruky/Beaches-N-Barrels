@@ -25,7 +25,7 @@ class RoomFactory():
 
     def createRoom(self, theRoomType, theX, theY):
         if theRoomType == self.s:
-            return self.createNormalRoom(theRoomType, theX, theY)
+            return self.createStartRoom(theRoomType, theX, theY)
         elif theRoomType == self.n:
             return self.createNormalRoom(theRoomType, theX, theY)
 
