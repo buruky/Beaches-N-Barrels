@@ -32,7 +32,6 @@ class MView:
         self.screen.fill((0, 0, 0))  # Fill screen with black
 
     def updateRoom(self, event: pygame.event.Event):
-        print("gamer is gaming")  # Console output
         if event.roomtype == "s ":
             self.theNewRoom = self.theTest  # Change background color
         else:

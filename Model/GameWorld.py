@@ -1,6 +1,7 @@
 from typing import Final
 import pygame
 from CustomEvents import CustomEvents
+from .Room import Room
 from .EventManager import EventManager
 from .FloorFactory import FloorFactory
 from .Door import Door
@@ -86,7 +87,10 @@ class GameWorld:
         return self.currentRoom
     
     def changeCurrentRoom(self, theDoor:Door):
+        print("changeCurrentRoom")
         newRoom = theDoor.getConnectedRoom(self.currentRoom)
+        #self.printCheckDirection(theDoor.getCardinalDirection(self.currentRoom))
+        #print(self.currentRoom.getCords()," -> ", newRoom.getCords())
         oldRoom = self.currentRoom
         self.currentRoom = newRoom
         event = pygame.event.Event(
@@ -109,7 +113,7 @@ class GameWorld:
                 if rect.colliderect(enemy_rect):
                     if ignore in self.player:
                         ignore.Dies()
-                    print(f"Collision with another enemy at ({enemy.getPositionX()}, {enemy.getPositionY()})")  # Debugging
+                    #print(f"Collision with another enemy at ({enemy.getPositionX()}, {enemy.getPositionY()})")  # Debugging
                     return True
                 
         for player in self.player:
@@ -118,17 +122,58 @@ class GameWorld:
                 if rect.colliderect(my_rect):
                     if ignore in self.currentRoom.getEnemyList().get_entities():
                         player.Dies()
-                    print(f"Collision with the player at ({player.getPositionX()}, {player.getPositionY()})")  # Debugging
+                    #print(f"Collision with the player at ({player.getPositionX()}, {player.getPositionY()})")  # Debugging
                     return True
             return False  # No collision
         
 
     def collideWithDoor(self, thePlayerRect) -> str:
-        for door in self.currentRoom.getDoorMap().values():
+        doormap = self.currentRoom.getDoorMap()
+        for dir, door in doormap.items():
             if door is not None:
-                myRectTuple = door.getBothRect()
-                if thePlayerRect.colliderect(myRectTuple[0]) or thePlayerRect.colliderect(myRectTuple[1]):
+                
+                doorRect = door.getDoorRect(dir)
+                
+                if thePlayerRect.colliderect(doorRect):
+                    
                     self.changeCurrentRoom(door)
+                    #self.printConnectedDoors(self.currentRoom)
                     return door.getConnectedDoorDirection(self.currentRoom)#maybe return cords
         return None
                     
+
+    def printCheckDirection(self,theDir):
+        if theDir == "N":
+            print("N (-1,0)")
+        elif theDir == "S":
+            print("S (1,0)")
+
+        elif theDir == "W":
+            print("W (0,-1)")
+        elif theDir == "E":
+            print("E (0,1)")
+
+    def printConnectedDoors(self,theRoom:Room):
+        '''prints rooms adjacent to room passed in using doors'''
+        adjacentDoors = [
+            [".",       None,       "."],
+            [None,theRoom.getCords(),None],
+            [".",       None,       "."]
+        ]
+        
+        doormap = theRoom.getDoorMap()
+        for dir in doormap.keys():
+            if doormap[dir] != None:
+                cords = doormap[dir].getConnectedRoom(theRoom).getCords()
+                if dir == "N":
+                    adjacentDoors[0][1] = cords
+                elif dir == "S":
+                    adjacentDoors[2][1] = cords
+                elif dir == "W":
+                    adjacentDoors[1][0] = cords
+                elif dir == "E":
+                    adjacentDoors[1][2] = cords
+
+        print(adjacentDoors[0])
+        print(adjacentDoors[1])
+        print(adjacentDoors[2])

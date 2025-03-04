@@ -1,4 +1,6 @@
 from typing import Final
+
+from ViewUnits import ViewUnits
 from .DungeonCharacter import DungeonCharacter
 from .EventManager import EventManager
 from CustomEvents import CustomEvents
@@ -55,7 +57,7 @@ class PlayerMock(DungeonCharacter):
 
         collidedDoor = GameWorld.getInstance().collideWithDoor(pygame.Rect(new_x, new_y, 50, 50))
         if collidedDoor is not None:
-            print("heyo we walkin here")
+            self.teleportCharacter(ViewUnits.SCREEN_WIDTH//2, ViewUnits.SCREEN_HEIGHT//2)
             
 
         if dx != 0 or dy != 0:

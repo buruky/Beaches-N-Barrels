@@ -22,10 +22,16 @@ class Door:
     def __getDoorPositionRect(self, theDirection):
         return pygame.Rect(Door.theCordMap[theDirection], (50,50))
     
+    
     def getConnectedRoom(self, theOtherRoom:Room) -> Room:
+        str1 = str(theOtherRoom.getCords()) + " "
         if theOtherRoom is self.__myFirstRoom:
+            str1 += str(self.__myFirstDirection) + " -> " + str(self.__myEndRoom.getCords()) + " " + str(self.__myEndDirection)
+            print(str1)
             return self.__myEndRoom
         elif theOtherRoom is self.__myEndRoom:
+            str1 += str(self.__myEndDirection) + " -> " + str(self.__myFirstRoom.getCords()) + " " + str(self.__myFirstDirection)
+            print(str1)
             return self.__myFirstRoom
         else:
             raise Exception("Door.getConnectedRoom:",
@@ -47,6 +53,23 @@ class Door:
             return self.__myFirstDirection
         elif theOtherRoom is self.__myEndRoom:
             return self.__myEndDirection
+        else:
+            raise Exception("Door.getConnectedDirection:",
+                        "THE OTHER ROOM IS NOT CONNECTED TO THIS DOOR!!!")
+    
+    def getDoorRect(self, theDirection:str) -> pygame.Rect:
+        if theDirection == self.__myFirstDirection:
+            return self.__myEndDoorRect
+        elif theDirection == self.__myEndDirection:
+            return self.__myFirstDoorRect
+        else:
+            raise Exception("Door.getDoorRect:",
+                        "NO direction associated with this door!!!")
+    def getCardinalDirection(self, theOtherRoom:Room):
+        if theOtherRoom is self.__myFirstRoom:
+            return self.__myEndDirection
+        elif theOtherRoom is self.__myEndRoom:
+            return self.__myFirstDirection
         else:
             raise Exception("Door.getConnectedDirection:",
                         "THE OTHER ROOM IS NOT CONNECTED TO THIS DOOR!!!")

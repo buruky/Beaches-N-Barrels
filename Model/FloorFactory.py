@@ -118,10 +118,10 @@ class FloorFactory:
     def connect_rooms(self, theGrid):
         doors = []
         directions = {
-            "N": (0, -1),
-            "S": (0, 1),
-            "W": (-1, 0),
-            "E": (1, 0)
+            "N": (-1, 0),
+            "S": (1, 0),
+            "W": (0, -1),
+            "E": (0, 1)
         }
 
         for row in range(self.grid_height):
@@ -143,7 +143,13 @@ class FloorFactory:
                                     "S":"N",
                                     "W":"E"
                                 }
+                                print("******************")
+                                print(direction)
+                                print(current_room.getCords())
+                                print(flipDir[direction])
+                                print(neighborRoom.getCords())
                                 newDoor = Door(direction, flipDir[direction], current_room, neighborRoom)
+                                
 
                                 doors.append(newDoor)
                                 current_room.addDoor(direction,newDoor)  # Mark door open
