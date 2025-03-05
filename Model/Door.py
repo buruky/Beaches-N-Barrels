@@ -3,10 +3,10 @@ from .Room import Room
 
 class Door:
     theCordMap ={
-        "N":(350,0),
-        "E":(800,250),
-        "S":(350,600),
-        "W":(0,250)
+        "S":(350,0),
+        "W":(800,250),
+        "N":(350,600),
+        "E":(0,250)
     }
     def __init__(self, theFirstDirection:str,theEndDirection:str, theFirstRoom:Room = None,  theEndRoom:Room = None):
         
