@@ -1,5 +1,7 @@
 from abc import ABC, abstractmethod
 import pygame
+from ViewUnits import ViewUnits
+
 class DungeonCharacter(ABC):
     
     def __init__ (self, theAttackDamage: int, theHealthPoints: int,
@@ -11,7 +13,7 @@ class DungeonCharacter(ABC):
 
         self._mySpeed = theSpeed
         self._myHasChanged = True
-        self._myRect = pygame.Rect(self._myPositionX, self._myPositionY, 50, 50)# will be replaced by sprite image with no location data
+        self._myRect = pygame.Rect(self._myPositionX, self._myPositionY,ViewUnits.DEFAULT_WIDTH, ViewUnits.DEFAULT_HEIGHT)# will be replaced by sprite image with no location data
         self._mySprite = pygame.Surface((self._myRect.width, self._myRect.height), pygame.SRCALPHA)
         self._mySprite.fill((0,30,144))
 
