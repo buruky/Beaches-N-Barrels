@@ -61,7 +61,8 @@ class MController:
         self.__myView.display_game_over()
         self.__myIsRunning = False  # Stop the game loop
 
-    def __quitGame(self) -> bool:
+    def __quitGame(self, event) -> bool:
+        self.__myIsRunning = False  # Properly stop the game loop
         return self.__myIsRunning
     
     

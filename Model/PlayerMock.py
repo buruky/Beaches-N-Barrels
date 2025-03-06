@@ -49,6 +49,10 @@ class PlayerMock(DungeonCharacter):
         # Compute new position
         new_x = self.__myPositionX + dx * self._mySpeed
         new_y = self.__myPositionY + dy * self._mySpeed
+        
+
+        new_x = max(0, min(ViewUnits.SCREEN_WIDTH - ViewUnits.DEFAULT_WIDTH, new_x))
+        new_y = max(0, min(ViewUnits.SCREEN_HEIGHT - ViewUnits.DEFAULT_HEIGHT, new_y))
 
         # Update position
         if not GameWorld.getInstance().check_collision(pygame.Rect(new_x, new_y, 50, 50), ignore=self):

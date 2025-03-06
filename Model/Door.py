@@ -1,13 +1,15 @@
 import pygame
 from .Room import Room
+from ViewUnits import ViewUnits
 
 class Door:
-    theCordMap ={
-        "S":(350,0),
-        "W":(800,250),
-        "N":(350,600),
-        "E":(0,250)
+    theCordMap = {
+        "S": (ViewUnits.SOUTH_DOOR_CORD),  # Centered at the top
+        "W": (ViewUnits.WEST_DOOR_CORD),  # Right side
+        "N": (ViewUnits.NORTH_DOOR_CORD),  # Bottom
+        "E": (ViewUnits.EAST_DOOR_CORD)  # Left side
     }
+
     def __init__(self, theFirstDirection:str,theEndDirection:str, theFirstRoom:Room = None,  theEndRoom:Room = None):
         
         self.__myFirstDirection = theFirstDirection  # "N", "S", "E", "W"
@@ -20,6 +22,7 @@ class Door:
         self.__myEndDoorRect = self.__getDoorPositionRect(self.__myEndDirection)
         
     def __getDoorPositionRect(self, theDirection):
+        print("AAAAAAAAAA",Door.theCordMap[theDirection])
         return pygame.Rect(Door.theCordMap[theDirection], (50,50))
     
     

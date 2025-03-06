@@ -1,14 +1,15 @@
 from .DungeonCharacter import DungeonCharacter
 from .EventManager import EventManager
 from CustomEvents import CustomEvents
-# from .GameWorld import GameWorld
+from ViewUnits import ViewUnits
+
 import pygame
 import random
 
 class EnemyMock(DungeonCharacter):
 
-    SCREEN_WIDTH = 800  # Example boundary
-    SCREEN_HEIGHT = 600  # Example boundary
+    SCREEN_WIDTH = ViewUnits.SCREEN_WIDTH  # Example boundary
+    SCREEN_HEIGHT = ViewUnits.SCREEN_HEIGHT  # Example boundary
     def __init__(self, theAttackDamage: int, theHealthPoints: int,
                    thePositionX: int, thePositionY: int, theSpeed: int) -> None:
         #super().__init__(theAttackDamage, theHealthPoints, thePositionX, thePositionY, theSpeed=)

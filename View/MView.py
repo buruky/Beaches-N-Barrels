@@ -12,10 +12,10 @@ class MView:
         # Build the relative path to the player and enemy images
         player_image_path = os.path.join(current_directory, '..', 'Assets', 'TestBackround.png')
         self.myRawPlayerImage = pygame.image.load(player_image_path)
-        self.theTest = pygame.transform.scale(self.myRawPlayerImage, (800,600))
+        self.theTest = pygame.transform.scale(self.myRawPlayerImage, (ViewUnits.SCREEN_WIDTH,ViewUnits.SCREEN_HEIGHT))
         player_image_path2 = os.path.join(current_directory, '..', 'Assets', 'Testbackround2.png')
         self.myRawPlayerImage2 = pygame.image.load(player_image_path2)
-        self.theTest2 = pygame.transform.scale(self.myRawPlayerImage2, (800,600))
+        self.theTest2 = pygame.transform.scale(self.myRawPlayerImage2, (ViewUnits.SCREEN_WIDTH,ViewUnits.SCREEN_HEIGHT))
 
         screen_width = ViewUnits.SCREEN_WIDTH
         screen_height = ViewUnits.SCREEN_HEIGHT
