@@ -3,19 +3,25 @@ from typing import Final
 import pygame
 
 class ViewUnits:
-    pygame.init()
+    pygame.init()  # Initialize pygame to get display info
 
-    # Get the screen resolution
+
+     # Get actual screen resolution
     info = pygame.display.Info()
-    SCREEN_WIDTH = info.current_w
-    SCREEN_HEIGHT = info.current_h
+    screen_w = info.current_w
+    screen_h = info.current_h
 
-    # Define the window size as a percentage of the screen
-    SCREEN_WIDTH = int(SCREEN_WIDTH * 0.75)   # 75% of screen width
-    SCREEN_HEIGHT = int(SCREEN_HEIGHT * 0.85) # 85% of screen height
-    DEFAULT_WIDTH = 75
-    DEFAULT_HEIGHT = 75
+    # Set screen dimensions close to 1000x1100 pixels but adapt to the actual resolution
+    TARGET_WIDTH = 950  # Approximate target width
+    TARGET_HEIGHT = 850  # Approximate target height
 
+    # Ensure the screen size is proportionally close to the target without exceeding real screen
+    SCREEN_WIDTH: Final = min(max(TARGET_WIDTH, screen_w // 2), screen_w)  # Adjusted within range
+    SCREEN_HEIGHT: Final = min(max(TARGET_HEIGHT, screen_h // 2), screen_h)  # Adjusted within range
+
+    # Define relative sizes as a percentage of the screen
+    DEFAULT_HEIGHT: Final = SCREEN_HEIGHT // 10  # 10% of screen height
+    DEFAULT_WIDTH: Final = SCREEN_WIDTH // 12  # 8.33% of screen width
     DEFAULT_POSITION_X:Final = 0
     DEFAULT_POSITION_Y:Final = 0
     DEFAULT_RECT:Final = pygame.Rect((DEFAULT_POSITION_X,
