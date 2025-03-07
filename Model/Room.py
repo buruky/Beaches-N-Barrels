@@ -19,7 +19,17 @@ class Room:
         self.rect = pygame.Rect(0,0,ViewUnits.SCREEN_WIDTH, ViewUnits.SCREEN_HEIGHT)
         self.__myEnemyList = theEnemyList
 
+    def checkState(self):
+        if len(self.__myEnemyList.get_entities()) > 0:
+            self.__myEnemyList.update_all()
+        else:
+            self.openRooms()
     
+    def openRooms(self):
+        for door in self.__myDoorMap.values():
+            if door is not None:
+                door.toggleDoor(True)
+
     def addDoor(self, theDirection, theDoor):
         self.__myDoorMap[theDirection] = theDoor
     def randomKillEnemy(self):

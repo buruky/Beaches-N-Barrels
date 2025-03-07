@@ -63,7 +63,7 @@ class GameWorld:
 
 
     def tick(self):
-        self.currentRoom.getEnemyList().update_all()
+        self.currentRoom.checkState()
 
     def testRandomKillEnemy(self):
         self.currentRoom.randomKillEnemy()
@@ -88,7 +88,7 @@ class GameWorld:
         return self.currentRoom
     
     def changeCurrentRoom(self, theDoor:Door):
-        print("changeCurrentRoom")
+        #print("changeCurrentRoom")
         newRoom = theDoor.getConnectedRoom(self.currentRoom)
         #self.printCheckDirection(theDoor.getCardinalDirection(self.currentRoom))
         #print(self.currentRoom.getCords()," -> ", newRoom.getCords())
@@ -134,8 +134,7 @@ class GameWorld:
             if door is not None:
                 
                 doorRect = door.getDoorRect(dir)
-                
-                if thePlayerRect.colliderect(doorRect):
+                if thePlayerRect.colliderect(doorRect) and door.getState():
                     
                     self.changeCurrentRoom(door)
                     #self.printConnectedDoors(self.currentRoom)

@@ -20,26 +20,29 @@ class Door:
         
         self.__myFirstDoorRect = self.__getDoorPositionRect(self.__myFirstDirection)
         self.__myEndDoorRect = self.__getDoorPositionRect(self.__myEndDirection)
-        
+        self.isOpen = False
     def __getDoorPositionRect(self, theDirection):
-        print("AAAAAAAAAA",Door.theCordMap[theDirection])
+        #print("AAAAAAAAAA",Door.theCordMap[theDirection])
         return pygame.Rect(Door.theCordMap[theDirection], (50,50))
     
     
     def getConnectedRoom(self, theOtherRoom:Room) -> Room:
         str1 = str(theOtherRoom.getCords()) + " "
         if theOtherRoom is self.__myFirstRoom:
-            str1 += str(self.__myFirstDirection) + " -> " + str(self.__myEndRoom.getCords()) + " " + str(self.__myEndDirection)
-            print(str1)
+            
             return self.__myEndRoom
         elif theOtherRoom is self.__myEndRoom:
-            str1 += str(self.__myEndDirection) + " -> " + str(self.__myFirstRoom.getCords()) + " " + str(self.__myFirstDirection)
-            print(str1)
+            
             return self.__myFirstRoom
         else:
             raise Exception("Door.getConnectedRoom:",
                         "THE ROOM PASSED IS NOT CONNECTED TO THIS DOOR!!!") 
         
+    def toggleDoor(self, theNewState:bool):
+        self.isOpen = theNewState
+
+    def getState(self):
+        return self.isOpen
     def getBothRect(self) ->tuple:
         return (self.__myFirstDoorRect, self.__myEndDoorRect)
     
