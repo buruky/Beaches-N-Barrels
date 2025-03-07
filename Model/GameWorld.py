@@ -65,7 +65,8 @@ class GameWorld:
     def tick(self):
         self.currentRoom.getEnemyList().update_all()
 
-
+    def testRandomKillEnemy(self):
+        self.currentRoom.randomKillEnemy()
     def get_enemies(self):
         """Return the list of enemies."""
         return self.enemies

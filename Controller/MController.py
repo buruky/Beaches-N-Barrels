@@ -48,7 +48,6 @@ class MController:
         EventManager.RegisterExistingEvent(CustomEvents.QUIT,pygame.QUIT, self.__quitGame)
         EventManager.RegisterExistingEvent(CustomEvents.MOUSE_BUTTON_DOWN,pygame.MOUSEBUTTONDOWN, self.__mouseButtonDown)
         EventManager.RegisterExistingEvent(CustomEvents.MOUSE_BUTTON_UP,pygame.MOUSEBUTTONUP, self.__mouseButtonUp)
-
         """Events that are posted manually"""
         EventManager.registerEvent(CustomEvents.CHARACTER_MOVED, self.__myView.update_entity)
         EventManager.registerEvent(CustomEvents.CHARACTER_STOPPED, self.__myView.update_entity)
@@ -80,7 +79,9 @@ class MController:
         #Player is handled differntly than other characters due to only one taking input
         if len(directions) > 0:
             self.__myPlayer.moveCharacter(directions)#help
-
+        if keys[pygame.K_k]:
+            self.__myWorld.testRandomKillEnemy()
+            
     def __mouseButtonUp(self, theEvent):
         if theEvent.button == 1 or theEvent.button == 3:
             self.__myIsHoldingClick = False

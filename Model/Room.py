@@ -22,7 +22,12 @@ class Room:
     
     def addDoor(self, theDirection, theDoor):
         self.__myDoorMap[theDirection] = theDoor
-        
+    def randomKillEnemy(self):
+        if len(self.__myEnemyList.get_entities()) > 0:
+            self.__myEnemyList.deleteEnemy()
+        else:
+            print("They are dead!")
+
     def getRoomType(self):
         return self.__myRoomType
     def getEnemyList(self):

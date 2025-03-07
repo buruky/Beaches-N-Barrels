@@ -15,7 +15,10 @@ class DungeonCharacterList:
         for character in self.__myDungeonCharacterList:
             #pass 
             character.update()
+    def deleteEnemy(self):
+        enemy = self.__myDungeonCharacterList.pop()
+        enemy
 
-    def get_entities(self) -> list:
+    def get_entities(self):
         """Return a list of all entities."""
         return self.__myDungeonCharacterList
