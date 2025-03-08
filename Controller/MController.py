@@ -6,6 +6,7 @@ from Model.Dolphin import Dolphin
 from Model import *
 from View import *
 from CustomEvents import CustomEvents
+from View.TitleScreen import TitleScreen
 
 class MController:
     
@@ -14,8 +15,11 @@ class MController:
         
         self.__myView:Final = MView()
         self.__InitalizeEvents()
-        
+
         self.__myIsRunning = True
+         # Show title screen before starting the game
+        title_screen = TitleScreen(self.__myView.screen)
+        title_screen.run()  # Display title screen before game starts
         self.__myWorld = GameWorld.getInstance()
         # self.__myModel:Final = MModel() 
         self.__myPlayer:Final = Dolphin()
