@@ -26,6 +26,7 @@ class GameWorld:
                 EventManager.event_types[CustomEvents.CHANGED_ROOM],
                 {
                     "roomtype": self.currentRoom.getRoomType(),
+                    "doors":  self.currentRoom.getDoorMap(),
                     "direction": None
                 }
             )
@@ -81,7 +82,8 @@ class GameWorld:
                 EventManager.event_types[CustomEvents.CHANGED_ROOM],
                 {
                     "roomtype": self.currentRoom.getRoomType(),
-                    "direction": theDoor.getConnectedDoorDirection(oldRoom)
+                    "direction": theDoor.getConnectedDoorDirection(oldRoom),
+                    "doors":  self.currentRoom.getDoorMap()
                 }
             )
         pygame.event.post(event)
@@ -90,13 +92,14 @@ class GameWorld:
         """Lets know doors and entities in room that should be shown on screen"""
 
     def check_collision(self, rect, ignore=None):
+        
         """Check if a given rectangle collides with any obstacle or enemy."""
         for enemy in self.currentRoom.getEnemyList().get_entities():
             if enemy != ignore:  # Don't check collision with itself
                 enemy_rect = pygame.Rect(enemy.getPositionX(), enemy.getPositionY(), 50, 50)
                 if rect.colliderect(enemy_rect):
                     if ignore is self.player:
-                        ignore.Dies()
+                        ignore.takeDamage(150)
                     #print(f"Collision with another enemy at ({enemy.getPositionX()}, {enemy.getPositionY()})")  # Debugging
                     return True
                 
@@ -104,7 +107,7 @@ class GameWorld:
             my_rect = pygame.Rect(self.player.getPositionX(), self.player.getPositionY(), 50, 50)
             if rect.colliderect(my_rect):
                 if ignore in self.currentRoom.getEnemyList().get_entities():
-                    self.player.Dies()
+                    self.player.takeDamage(150)
                 #print(f"Collision with the player at ({player.getPositionX()}, {player.getPositionY()})")  # Debugging
                 return True
             return False  # No collision

@@ -20,7 +20,9 @@ class Door:
         
         self.__myFirstDoorRect = self.__getDoorPositionRect(self.__myFirstDirection)
         self.__myEndDoorRect = self.__getDoorPositionRect(self.__myEndDirection)
-        
+    
+
+    
     def __getDoorPositionRect(self, theDirection):
         print("AAAAAAAAAA",Door.theCordMap[theDirection])
         return pygame.Rect(Door.theCordMap[theDirection], (50,50))

@@ -1,9 +1,10 @@
 import pygame
-
+import random
+from ViewUnits import ViewUnits
 class Ability:
     """Base class for all abilities."""
     
-    def __init__(self, player, duration=4000):  # Duration in milliseconds
+    def __init__(self, player, duration=3000):  # Duration in milliseconds
         self.player = player
         self.duration = duration
         self.active = False
@@ -32,7 +33,9 @@ class Ability:
 
 class SpeedBoostAbility(Ability):
     """Temporarily increases speed."""
-    
+    def __init__(self, player):
+        super().__init__(player, duration=3000)  # Set specific duration for speed boost
+
     def activate(self):
         print("Speed Boost Activated!")
         self.player._mySpeed *= 2  # Double speed
@@ -44,24 +47,31 @@ class SpeedBoostAbility(Ability):
 
 class InvincibilityAbility(Ability):
     """Temporarily makes the player invincible."""
+    def __init__(self, player):
+        super().__init__(player, duration=6000)  # Set specific duration for speed boost
+
     
     def activate(self):
         print("Invincibility Activated!")
-        self.player._myHealth += 999  # Simulating invincibility
+        self.player._canDie = False  # Simulating invincibility
 
     def deactivate(self):
         print("Invincibility Ended.")
-        self.player._myHealth -= 999
+        self.player._canDie = True
         super().deactivate()
 
 class LowGravityAbility(Ability):
     """Simulates low gravity jumping."""
+    def __init__(self, player):
+        super().__init__(player, duration=4000)  # Set specific duration for speed boost
     
     def activate(self):
         print("Low Gravity Activated!")
-        self.player._mySpeed *= 0.5  # Slower movement but higher jumps
+        randX = random.randint(0, ViewUnits.SCREEN_WIDTH)
+        randY = random.randint(0, ViewUnits.SCREEN_HEIGHT)
+        self.player.teleportCharacter(randX, randY)
 
     def deactivate(self):
         print("Low Gravity Ended.")
-        self.player._mySpeed /= 0.5
+        # self.player._mySpeed /= 0.5
         super().deactivate()

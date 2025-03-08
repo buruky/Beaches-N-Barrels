@@ -13,7 +13,9 @@ class SpriteFactory:
 
         # Load Player Images
         self.myRawPlayerImage = pygame.image.load(os.path.join(assets_path, 'luffy.png'))
-        self.myRawDolphinImage = pygame.image.load(os.path.join(assets_path, 'Dolphin.png'))  # NEW
+        self.myRawDolphinImage = pygame.image.load(os.path.join(assets_path, 'Dolphin.png'))  
+        self.myRawBuddhaImage = pygame.image.load(os.path.join(assets_path, 'Buddha.jpg'))  # NEW
+        self.myRawAstronautImage = pygame.image.load(os.path.join(assets_path, 'Astronaut.jpg'))  # NEW
 
         # Load Enemy Images
         self.myRawEnemyImage = pygame.image.load(os.path.join(assets_path, 'speederman.png'))
@@ -24,8 +26,14 @@ class SpriteFactory:
         self.myPlayerImage = pygame.transform.scale(self.myRawPlayerImage, ViewUnits.DEFAULT_SPRITE_DIM)
         self.myPlayerImage2 = pygame.transform.flip(self.myPlayerImage, True, False)
 
-        self.dolphinImage = pygame.transform.scale(self.myRawDolphinImage, ViewUnits.DEFAULT_SPRITE_DIM)  # NEW
-        self.dolphinImage2 = pygame.transform.flip(self.dolphinImage, True, False)  # NEW
+        self.dolphinImage = pygame.transform.scale(self.myRawDolphinImage, ViewUnits.DEFAULT_SPRITE_DIM)  
+        self.dolphinImage2 = pygame.transform.flip(self.dolphinImage, True, False)  
+
+        self.buddhaImage = pygame.transform.scale(self.myRawBuddhaImage, ViewUnits.DEFAULT_SPRITE_DIM)  # NEW
+        self.buddhaImage2 = pygame.transform.flip(self.buddhaImage, True, False)  # NEW
+
+        self.astronautImage = pygame.transform.scale(self.myRawAstronautImage, ViewUnits.DEFAULT_SPRITE_DIM)  # NEW
+        self.astronautImage2 = pygame.transform.flip(self.astronautImage, True, False)  # NEW
 
         self.enemyImage = pygame.transform.scale(self.myRawEnemyImage, ViewUnits.DEFAULT_SPRITE_DIM)
         self.enemyImage2 = pygame.transform.flip(self.enemyImage, True, False)
@@ -41,7 +49,11 @@ class SpriteFactory:
         if theName == ViewUnits.PLAYER_SPRITE_NAME:
             return self.createPlayerSpriteSheet(theId, thePositionX, thePositionY)
         elif theName == "Dolphin":
-            return self.createDolphinSpriteSheet(theId, thePositionX, thePositionY)  # NEW
+            return self.createDolphinSpriteSheet(theId, thePositionX, thePositionY)  
+        elif theName == "Buddha":
+            return self.createBuddhaSpriteSheet(theId, thePositionX, thePositionY)  # NEW
+        elif theName == "Astronaut":
+            return self.createAstronautSpriteSheet(theId, thePositionX, thePositionY)  # NEW
         elif theName == "Pirate":
             return self.createPirateSpriteSheet(theId, thePositionX, thePositionY)
         elif theName == "Crab":
@@ -60,12 +72,30 @@ class SpriteFactory:
 
     def createDolphinSpriteSheet(self, theId, thePositionX, thePositionY):
         """Creates a Dolphin sprite sheet."""
-        imageDict = {ViewUnits.DEFAULT_STATE_NAME: [self.dolphinImage, self.dolphinImage2]}  # NEW
+        imageDict = {ViewUnits.DEFAULT_STATE_NAME: [self.dolphinImage, self.dolphinImage2]}  
         dolphinRect = copy.copy(ViewUnits.DEFAULT_RECT)
         dolphinRect.x = thePositionX
         dolphinRect.y = thePositionY
 
-        return SpriteSheet(theId, "Dolphin", imageDict, dolphinRect)  # NEW
+        return SpriteSheet(theId, "Dolphin", imageDict, dolphinRect)  
+
+    def createBuddhaSpriteSheet(self, theId, thePositionX, thePositionY):
+        """Creates a Buddha sprite sheet."""  # NEW
+        imageDict = {ViewUnits.DEFAULT_STATE_NAME: [self.buddhaImage, self.buddhaImage2]}  
+        buddhaRect = copy.copy(ViewUnits.DEFAULT_RECT)
+        buddhaRect.x = thePositionX
+        buddhaRect.y = thePositionY
+
+        return SpriteSheet(theId, "Buddha", imageDict, buddhaRect)  # NEW
+
+    def createAstronautSpriteSheet(self, theId, thePositionX, thePositionY):
+        """Creates an Astronaut sprite sheet."""  # NEW
+        imageDict = {ViewUnits.DEFAULT_STATE_NAME: [self.astronautImage, self.astronautImage2]}  
+        astronautRect = copy.copy(ViewUnits.DEFAULT_RECT)
+        astronautRect.x = thePositionX
+        astronautRect.y = thePositionY
+
+        return SpriteSheet(theId, "Astronaut", imageDict, astronautRect)  # NEW
 
     def createEnemySpriteSheet(self, theId, thePositionX, thePositionY):
         """Creates a generic enemy sprite sheet."""
@@ -93,7 +123,7 @@ class SpriteFactory:
         crabRect.y = thePositionY
 
         return SpriteSheet(theId, "Crab", imageDict, crabRect)
-    
+
     def add(self, theSpriteSheet):
         """Adds a sprite sheet to the internal list."""
-        self.listOfSpriteSheets[theSpriteSheet.getName()] = theSpriteSheet
+        self.listOfSpriteSheets[theSpriteSheet.getName()] = theSpriteSheet  

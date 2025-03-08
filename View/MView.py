@@ -17,6 +17,10 @@ class MView:
         self.myRawPlayerImage2 = pygame.image.load(player_image_path2)
         self.theTest2 = pygame.transform.scale(self.myRawPlayerImage2, (ViewUnits.SCREEN_WIDTH,ViewUnits.SCREEN_HEIGHT))
 
+
+        door_image_path = os.path.join(current_directory, '..', 'Assets', 'door.png')
+        self.mydoor = pygame.image.load(door_image_path)
+        
         screen_width = ViewUnits.SCREEN_WIDTH
         screen_height = ViewUnits.SCREEN_HEIGHT
         self.screen = pygame.display.set_mode((screen_width, screen_height))
@@ -24,8 +28,11 @@ class MView:
         self.onScreenChar = []
         print(self.onScreenChar)
         self.theRoom = pygame.Rect(0,0,  screen_width, screen_height) 
+        self.theNewRoom = self.theTest
         # self.theNewRoom = (10,10,10)
     
+    def getScreen(self):
+        return self.screen
     
     def clear(self):
         """Clear the screen before drawing the next frame."""
@@ -41,7 +48,7 @@ class MView:
             playerSprite = None
 
             for i in range(len(self.onScreenChar)):
-                if self.onScreenChar[i].getName() == "Dolphin": #ViewUnits.PLAYER_SPRITE_NAME:
+                if self.onScreenChar[i].getName() == "Dolphin" or self.onScreenChar[i].getName() == "Buddha" or self.onScreenChar[i].getName() == "Astronaut": #ViewUnits.PLAYER_SPRITE_NAME:
                     playerSprite = self.onScreenChar[i]
             
             self.onScreenChar = [playerSprite]

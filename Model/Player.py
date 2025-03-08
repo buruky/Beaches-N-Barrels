@@ -11,6 +11,7 @@ class Player(DungeonCharacter):
     
     def __init__(self, name: str, speed: int, health: int):
         super().__init__(50, health, 250, 250, speed)  # Default attackDamage = 50
+        self._myHealth = health
         self._name = name
         self._direction = None
         self._ability = None  # To be set by subclasses
@@ -68,9 +69,15 @@ class Player(DungeonCharacter):
         self._myPositionY = num2
         """If Character moves their sprite should be updated to location"""
         self.update(CustomEvents.CHARACTER_STOPPED)#might work
-        
+    
+    def takeDamage(self, damage: int):
+        self._myHealth -= damage
+        print("health after damage: ",self._myHealth)
+        if self._myHealth <= 0:
+            self.Dies()
+
+            
     def activate_ability(self):
-        
         """Triggers the player's special ability when 'E' is pressed."""
         if self._ability:
             self._ability.use()

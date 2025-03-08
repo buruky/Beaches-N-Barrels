@@ -3,6 +3,8 @@ import pygame
 import random
 from .MModel import MModel
 from Model.Dolphin import Dolphin
+from Model.Buddha import Buddha
+from Model.Astronaut import Astronaut
 from Model import *
 from View import *
 from CustomEvents import CustomEvents
@@ -15,14 +17,26 @@ class MController:
         
         self.__myView:Final = MView()
         self.__InitalizeEvents()
-
         self.__myIsRunning = True
+
          # Show title screen before starting the game
-        title_screen = TitleScreen(self.__myView.screen)
-        title_screen.run()  # Display title screen before game starts
+        title_screen = TitleScreen(self.__myView.getScreen())
+        selected_character = title_screen.run()  # This returns "Dolphin", "Buddha", or "Astronaut"
+        print(selected_character,"the character")
+
+            # Assign the correct player class based on selection
+        if selected_character == "Dolphin":
+            self.__myPlayer:Final = Dolphin()
+        elif selected_character == "Buddha":
+            self.__myPlayer:Final = Buddha()
+        elif selected_character == "Astronaut":
+            self.__myPlayer:Final = Astronaut()
+        else:
+            print("Error: Invalid character selection. Defaulting to Dolphin.")
+            self.__myPlayer:Final = Dolphin()  # Default choice
+
         self.__myWorld = GameWorld.getInstance()
-        # self.__myModel:Final = MModel() 
-        self.__myPlayer:Final = Dolphin()
+
         self.__myWorld.setPlayer(self.__myPlayer)
         
         self.__myIsHoldingClick = False

@@ -5,5 +5,5 @@ class Astronaut(Player):
     """Astronaut hero that can jump with low gravity effect."""
     
     def __init__(self):
-        super().__init__("Astronaut", speed=5, health=150)  # Balanced stats
+        super().__init__("Astronaut", speed=5, health=125)  # Balanced stats
         self._ability = LowGravityAbility(self)

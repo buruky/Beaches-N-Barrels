@@ -39,6 +39,7 @@ class TitleScreen:
         self.start_image = pygame.image.load(os.path.join(assets_path, 'start.png'))
         self.load_image = pygame.image.load(os.path.join(assets_path, 'Load.png'))
         self.quit_image = pygame.image.load(os.path.join(assets_path, 'exit.png'))
+        self.back_image = pygame.image.load(os.path.join(assets_path, 'back.png'))  # NEW
 
         # Resize buttons if necessary
         button_width = ViewUnits.SCREEN_WIDTH // 4
@@ -46,6 +47,7 @@ class TitleScreen:
         self.start_image = pygame.transform.scale(self.start_image, (button_width, button_height))
         self.load_image = pygame.transform.scale(self.load_image, (button_width, button_height))
         self.quit_image = pygame.transform.scale(self.quit_image, (button_width, button_height))
+        self.back_image = pygame.transform.scale(self.back_image, (button_width // 1.5, button_height // 1.5))  # Smaller back button
 
     def draw(self):
         """Draws the title screen UI elements with images."""
@@ -86,11 +88,69 @@ class TitleScreen:
                     exit()
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if self.start_button.collidepoint(event.pos):
-                        return  # Exit title screen and start game
+                        selected_character = self.character_selection_screen()  # NEW
+                        if selected_character:
+                            return selected_character  # Return selected character
                     elif self.load_button.collidepoint(event.pos):
                         print("Load button clicked! (No function yet)")  # Placeholder action
                     elif self.quit_button.collidepoint(event.pos):
                         print("Quit button clicked!")  # Debugging line
-                        Quit_event = pygame.event.Event(EventManager.event_types[CustomEvents.QUIT])
-                        pygame.event.post(Quit_event)
+                        pygame.quit()
                         exit()
+
+    def character_selection_screen(self):
+        """Displays the character selection screen and returns the chosen class or None if 'Back' is pressed."""
+        current_directory = os.path.dirname(__file__)
+        assets_path = os.path.join(current_directory, '..', 'Assets')
+
+        # Load character selection images
+        dolphin_img = pygame.image.load(os.path.join(assets_path, 'Dolphin.png'))
+        buddha_img = pygame.image.load(os.path.join(assets_path, 'Buddha.jpg'))
+        astronaut_img = pygame.image.load(os.path.join(assets_path, 'Astronaut.jpg'))
+
+        # Scale images to fit
+        img_width = ViewUnits.SCREEN_WIDTH // 4
+        img_height = ViewUnits.SCREEN_HEIGHT // 5
+        dolphin_img = pygame.transform.scale(dolphin_img, (img_width, img_height))
+        buddha_img = pygame.transform.scale(buddha_img, (img_width, img_height))
+        astronaut_img = pygame.transform.scale(astronaut_img, (img_width, img_height))
+
+        # Button positions
+        spacing = ViewUnits.SCREEN_WIDTH // 10
+        start_x = (ViewUnits.SCREEN_WIDTH - (3 * img_width + 2 * spacing)) // 2
+        center_y = ViewUnits.SCREEN_HEIGHT // 2
+
+        dolphin_button = pygame.Rect(start_x, center_y, img_width, img_height)
+        buddha_button = pygame.Rect(start_x + img_width + spacing, center_y, img_width, img_height)
+        astronaut_button = pygame.Rect(start_x + 2 * (img_width + spacing), center_y, img_width, img_height)
+
+        # Back button
+        back_button = pygame.Rect(ViewUnits.SCREEN_WIDTH // 10, ViewUnits.SCREEN_HEIGHT // 10,
+                                  self.back_image.get_width(), self.back_image.get_height())
+
+        while True:
+            self.screen.blit(self.background, (0, 0))  # Redraw background
+
+            # Draw character buttons
+            self.screen.blit(dolphin_img, dolphin_button.topleft)
+            self.screen.blit(buddha_img, buddha_button.topleft)
+            self.screen.blit(astronaut_img, astronaut_button.topleft)
+
+            # Draw back button
+            self.screen.blit(self.back_image, back_button.topleft)
+
+            pygame.display.flip()
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+                elif event.type == pygame.MOUSEBUTTONDOWN:
+                    if dolphin_button.collidepoint(event.pos):
+                        return "Dolphin"
+                    elif buddha_button.collidepoint(event.pos):
+                        return "Buddha"
+                    elif astronaut_button.collidepoint(event.pos):
+                        return "Astronaut"
+                    elif back_button.collidepoint(event.pos):
+                        return None  # Return to title screen
