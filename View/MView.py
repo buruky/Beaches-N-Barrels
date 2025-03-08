@@ -41,7 +41,7 @@ class MView:
             playerSprite = None
 
             for i in range(len(self.onScreenChar)):
-                if self.onScreenChar[i].getName() == ViewUnits.PLAYER_SPRITE_NAME:
+                if self.onScreenChar[i].getName() == "Dolphin": #ViewUnits.PLAYER_SPRITE_NAME:
                     playerSprite = self.onScreenChar[i]
             
             self.onScreenChar = [playerSprite]

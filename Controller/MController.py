@@ -2,6 +2,7 @@ from typing import Final
 import pygame
 import random
 from .MModel import MModel
+from Model.Dolphin import Dolphin
 from Model import *
 from View import *
 from CustomEvents import CustomEvents
@@ -13,10 +14,11 @@ class MController:
         
         self.__myView:Final = MView()
         self.__InitalizeEvents()
+        
         self.__myIsRunning = True
         self.__myWorld = GameWorld.getInstance()
         # self.__myModel:Final = MModel() 
-        self.__myPlayer:Final = PlayerMock()
+        self.__myPlayer:Final = Dolphin()
         self.__myWorld.setPlayer(self.__myPlayer)
         
         self.__myIsHoldingClick = False
@@ -38,6 +40,8 @@ class MController:
         self.__handle_mouse(self.__mySign)
         self.__myWorld.tick()
         
+        if self.__myPlayer._ability:
+            self.__myPlayer._ability.update()
         
         return self.__myIsRunning
     
@@ -74,6 +78,10 @@ class MController:
         """Handles keyboard input for moving the player rectangle."""
         keys = pygame.key.get_pressed()
         directions = []
+        if keys[pygame.K_e]:  # Press 'E' to activate ability
+            print("Player Used Ability")
+            self.__myPlayer.activate_ability()
+            
         for key, direction in self.__myKeyMap.items():
             if keys[key]:
                 directions.append(direction)

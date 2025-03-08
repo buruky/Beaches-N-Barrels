@@ -11,8 +11,9 @@ class SpriteFactory:
         current_directory = os.path.dirname(__file__)
         assets_path = os.path.join(current_directory, '..', 'Assets')
 
-        # Load Player Image
+        # Load Player Images
         self.myRawPlayerImage = pygame.image.load(os.path.join(assets_path, 'luffy.png'))
+        self.myRawDolphinImage = pygame.image.load(os.path.join(assets_path, 'Dolphin.png'))  # NEW
 
         # Load Enemy Images
         self.myRawEnemyImage = pygame.image.load(os.path.join(assets_path, 'speederman.png'))
@@ -22,6 +23,9 @@ class SpriteFactory:
         # Resize and Flip Sprites
         self.myPlayerImage = pygame.transform.scale(self.myRawPlayerImage, ViewUnits.DEFAULT_SPRITE_DIM)
         self.myPlayerImage2 = pygame.transform.flip(self.myPlayerImage, True, False)
+
+        self.dolphinImage = pygame.transform.scale(self.myRawDolphinImage, ViewUnits.DEFAULT_SPRITE_DIM)  # NEW
+        self.dolphinImage2 = pygame.transform.flip(self.dolphinImage, True, False)  # NEW
 
         self.enemyImage = pygame.transform.scale(self.myRawEnemyImage, ViewUnits.DEFAULT_SPRITE_DIM)
         self.enemyImage2 = pygame.transform.flip(self.enemyImage, True, False)
@@ -36,6 +40,8 @@ class SpriteFactory:
         """Creates a sprite sheet based on the character type."""
         if theName == ViewUnits.PLAYER_SPRITE_NAME:
             return self.createPlayerSpriteSheet(theId, thePositionX, thePositionY)
+        elif theName == "Dolphin":
+            return self.createDolphinSpriteSheet(theId, thePositionX, thePositionY)  # NEW
         elif theName == "Pirate":
             return self.createPirateSpriteSheet(theId, thePositionX, thePositionY)
         elif theName == "Crab":
@@ -51,6 +57,15 @@ class SpriteFactory:
         playerRect.y = thePositionY
 
         return SpriteSheet(theId, ViewUnits.PLAYER_SPRITE_NAME, imageDict, playerRect)
+
+    def createDolphinSpriteSheet(self, theId, thePositionX, thePositionY):
+        """Creates a Dolphin sprite sheet."""
+        imageDict = {ViewUnits.DEFAULT_STATE_NAME: [self.dolphinImage, self.dolphinImage2]}  # NEW
+        dolphinRect = copy.copy(ViewUnits.DEFAULT_RECT)
+        dolphinRect.x = thePositionX
+        dolphinRect.y = thePositionY
+
+        return SpriteSheet(theId, "Dolphin", imageDict, dolphinRect)  # NEW
 
     def createEnemySpriteSheet(self, theId, thePositionX, thePositionY):
         """Creates a generic enemy sprite sheet."""
