@@ -25,11 +25,7 @@ class MView:
         print(self.onScreenChar)
         self.theRoom = pygame.Rect(0,0,  screen_width, screen_height) 
         # self.theNewRoom = (10,10,10)
-    
-    
-    def clear(self):
-        """Clear the screen before drawing the next frame."""
-        self.screen.fill((0, 0, 0))  # Fill screen with black
+
 
     def updateRoom(self, event: pygame.event.Event):
         if event.roomtype == "s ":
@@ -75,6 +71,11 @@ class MView:
                 characterSprite.setPosition(theEvent.positionX, theEvent.positionY)
         
         self.redrawCharacter()
+
+    
+    def clear(self):
+        """Clear the screen before drawing the next frame."""
+        self.screen.fill((0, 0, 0))  # Fill screen with black
 
     def display_game_over(self):
         """Display 'Game Over' and stop the game."""

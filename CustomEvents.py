@@ -11,3 +11,4 @@ class CustomEvents:
     COLLISIONS:Final = "COLLISION"
     PLAYER_DIED:Final = "PLAYER_DIED"
     CHANGED_ROOM:Final = "CHANGED_ROOM"
+    START_GAME: Final = "START_GAME"

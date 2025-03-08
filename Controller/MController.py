@@ -5,20 +5,22 @@ from .MModel import MModel
 from Model import *
 from View import *
 from CustomEvents import CustomEvents
+from View.TitleScreen import TitleScreen
 
 class MController:
     
     def __init__(self):
         
-        
         self.__myView:Final = MView()
         self.__InitalizeEvents()
         self.__myIsRunning = True
+
+        # Show title screen before starting the game
+        title_screen = TitleScreen(self.__myView.screen)
+        title_screen.run()  # Display title screen before game starts
+        
         self.__myWorld = GameWorld.getInstance()
-        # self.__myModel:Final = MModel() 
         self.__myPlayer:Final = PlayerMock()
-        
-        
         self.__myIsHoldingClick = False
         self.__mySign = 1 
         self.__myKeyMap:Final = {
@@ -27,9 +29,9 @@ class MController:
             pygame.K_a: "LEFT",
             pygame.K_d: "RIGHT"
         }
-        #pygame.time.set_timer(COLOR_CHANGE_EVENT, 500)  # Fire event every 500ms (30 ticks @ 60 FPS)
         
 
+        
 
     def ControllerTick(self):
 
@@ -37,7 +39,6 @@ class MController:
         self.__handle_keyboard()
         self.__handle_mouse(self.__mySign)
         self.__myWorld.tick()
-        
         
         return self.__myIsRunning
     
@@ -49,12 +50,17 @@ class MController:
         EventManager.RegisterExistingEvent(CustomEvents.MOUSE_BUTTON_DOWN,pygame.MOUSEBUTTONDOWN, self.__mouseButtonDown)
         EventManager.RegisterExistingEvent(CustomEvents.MOUSE_BUTTON_UP,pygame.MOUSEBUTTONUP, self.__mouseButtonUp)
 
+
         """Events that are posted manually"""
         EventManager.registerEvent(CustomEvents.CHARACTER_MOVED, self.__myView.update_entity)
         EventManager.registerEvent(CustomEvents.CHARACTER_STOPPED, self.__myView.update_entity)
         EventManager.registerEvent(CustomEvents.PLAYER_DIED, self.__handle_character_death)
         EventManager.registerEvent(CustomEvents.CHANGED_ROOM, self.__myView.updateRoom)
 
+
+    def __startGame(self, event):
+        """Handles transition from title screen to game start."""
+        self.__myIsRunning = True
 
     def __handle_character_death(self, event):
         """Displays 'Game Over' on the screen when the player dies."""
