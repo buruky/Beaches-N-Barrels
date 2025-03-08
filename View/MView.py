@@ -76,18 +76,20 @@ class MView:
         
         self.redrawCharacter()
 
+
+
     def display_game_over(self):
         """Display 'Game Over' and stop the game."""
         self.clear()
         
         font = pygame.font.Font(None, 72)  # Default font, size 72
         text_surface = font.render("Game Over", True, (255, 0, 0))  # Red text
-        text_rect = text_surface.get_rect(center=(400, 300))  # Centered
+        text_rect = text_surface.get_rect(center=(ViewUnits.SCREEN_WIDTH // 2, ViewUnits.SCREEN_HEIGHT // 2))  # Centered dynamically
 
         self.screen.blit(text_surface, text_rect)
         pygame.display.flip()
 
-        pygame.time.delay(3000)  # Pause for 9 seconds before quitting
+        pygame.time.delay(3000)  # Pause for some seconds before quitting
     def redrawCharacter(self):
         """ 1. clears screen
             2. draws passed sprite in new position

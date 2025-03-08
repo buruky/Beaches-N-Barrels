@@ -21,7 +21,6 @@ class PlayerMock(DungeonCharacter):
         
         """when player is made should update sprite"""
         self.update(CustomEvents.CHARACTER_STOPPED)
-        GameWorld.getInstance().add_player(self)
 
     def moveCharacter(self, theDirections:list) -> None:
         dx, dy = 0, 0

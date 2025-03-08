@@ -17,7 +17,7 @@ class MController:
         self.__myWorld = GameWorld.getInstance()
         # self.__myModel:Final = MModel() 
         self.__myPlayer:Final = PlayerMock()
-        
+        self.__myWorld.setPlayer(self.__myPlayer)
         
         self.__myIsHoldingClick = False
         self.__mySign = 1 

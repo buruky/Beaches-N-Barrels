@@ -1,5 +1,7 @@
 from typing import Final
-from .EnemyMock import EnemyMock
+from .Enemy import Enemy
+from .Crab import Crab
+from .Pirate import Pirate
 from .DungeonCharacterList import DungeonCharacterList
 
 class EnemyFactory():
@@ -27,12 +29,12 @@ class EnemyFactory():
     
     def createNormalTemplate(self):
         enemyList = DungeonCharacterList()
-        enemy1 = EnemyMock(EnemyFactory._DEFAULT_ATTACK_DAMAGE, 
+        enemy1 = Crab(EnemyFactory._DEFAULT_ATTACK_DAMAGE, 
                            EnemyFactory._DEFAULT_HEALTH,
                            150, #positionX
                            100, #positionY
                            EnemyFactory._DEFAULT_SPEED)
-        enemy2 = EnemyMock(EnemyFactory._DEFAULT_ATTACK_DAMAGE, 
+        enemy2 = Pirate(EnemyFactory._DEFAULT_ATTACK_DAMAGE, 
                            EnemyFactory._DEFAULT_HEALTH,
                            400, #positionX
                            100, #positionY

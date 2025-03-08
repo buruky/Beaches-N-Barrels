@@ -32,7 +32,7 @@ class GameWorld:
         pygame.event.post(event)
         self.__myFloor.print_dungeon()              
         self.enemies = []  # List of enemies
-        self.player = [] # player
+        self.player = None # player
         self.item = []
 
     @classmethod
@@ -41,26 +41,6 @@ class GameWorld:
         if cls._instance is None:  # Ensure an instance exists
             cls._instance = cls()  # This triggers __new__()
         return cls._instance
-
-    # def go(self):
-    #     doorMap = self.currentRoom.getDoorMap()
-    #     for direction in doorMap.keys():
-    #         print()
-    #         if doorMap[direction] is not None:
-    #             print("go:map ",self.currentRoom.getDoorMap())
-    #             print("direction: ",direction)
-    #             newRoom = doorMap[direction].getConnectedRoom(self.currentRoom)
-    #             self.currentRoom = newRoom
-    #     event = pygame.event.Event(
-    #             EventManager.event_types[CustomEvents.CHANGED_ROOM],
-    #             {
-    #                 "roomName": self.currentRoom.getRoomType(),
-    #                 "direction": self.currentRoom
-    #             }
-    #         )
-    #     pygame.event.post(event)
-
-
 
     def tick(self):
         self.currentRoom.getEnemyList().update_all()
@@ -74,11 +54,15 @@ class GameWorld:
         """Add an enemy to the game world."""
         self.enemies.append(enemy)
 
-    def add_player(self, player):
+    def setPlayer(self, player):
         """Add an enemy to the game world."""
-        self.player.append(player)
+        self.player = player
 
-    def remove_enemy(self, enemy):
+    def getPlayer(self):
+        """Returns the player object."""
+        return self.player
+    
+    def removeEnemy(self, enemy):
         """Remove an enemy from the game world."""
         if enemy in self.enemies:
             self.enemies.remove(enemy)
@@ -111,19 +95,18 @@ class GameWorld:
             if enemy != ignore:  # Don't check collision with itself
                 enemy_rect = pygame.Rect(enemy.getPositionX(), enemy.getPositionY(), 50, 50)
                 if rect.colliderect(enemy_rect):
-                    if ignore in self.player:
+                    if ignore is self.player:
                         ignore.Dies()
                     #print(f"Collision with another enemy at ({enemy.getPositionX()}, {enemy.getPositionY()})")  # Debugging
                     return True
                 
-        for player in self.player:
-            if player != ignore:  # Don't check collision with itself
-                my_rect = pygame.Rect(player.getPositionX(), player.getPositionY(), 50, 50)
-                if rect.colliderect(my_rect):
-                    if ignore in self.currentRoom.getEnemyList().get_entities():
-                        player.Dies()
-                    #print(f"Collision with the player at ({player.getPositionX()}, {player.getPositionY()})")  # Debugging
-                    return True
+        if self.player != ignore:  # Don't check collision with itself
+            my_rect = pygame.Rect(self.player.getPositionX(), self.player.getPositionY(), 50, 50)
+            if rect.colliderect(my_rect):
+                if ignore in self.currentRoom.getEnemyList().get_entities():
+                    self.player.Dies()
+                #print(f"Collision with the player at ({player.getPositionX()}, {player.getPositionY()})")  # Debugging
+                return True
             return False  # No collision
         
 

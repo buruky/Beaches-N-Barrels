@@ -7,70 +7,78 @@ from ViewUnits import ViewUnits
 class SpriteFactory:
     
     def __init__(self):
-
-        # Get the current working directory
+        """Loads all sprites and prepares them for use."""
         current_directory = os.path.dirname(__file__)
+        assets_path = os.path.join(current_directory, '..', 'Assets')
 
-        # Build the relative path to the player and enemy images
-        player_image_path = os.path.join(current_directory, '..', 'Assets', 'luffy.png')
-        enemy_image_path = os.path.join(current_directory, '..', 'Assets', 'speederman.png')  # New enemy sprite
+        # Load Player Image
+        self.myRawPlayerImage = pygame.image.load(os.path.join(assets_path, 'luffy.png'))
 
-        # Load images using pygame
-        self.myRawPlayerImage = pygame.image.load(player_image_path)
-        self.myRawEnemyImage = pygame.image.load(enemy_image_path)
+        # Load Enemy Images
+        self.myRawEnemyImage = pygame.image.load(os.path.join(assets_path, 'speederman.png'))
+        self.myRawPirateImage = pygame.image.load(os.path.join(assets_path, 'pirate.png'))
+        self.myRawCrabImage = pygame.image.load(os.path.join(assets_path, 'crab.png'))
 
-        # Resize images
+        # Resize and Flip Sprites
         self.myPlayerImage = pygame.transform.scale(self.myRawPlayerImage, ViewUnits.DEFAULT_SPRITE_DIM)
-        self.myPlayerImage2 = pygame.transform.flip(self.myPlayerImage, True, False)  # Flipped player sprite
+        self.myPlayerImage2 = pygame.transform.flip(self.myPlayerImage, True, False)
 
         self.enemyImage = pygame.transform.scale(self.myRawEnemyImage, ViewUnits.DEFAULT_SPRITE_DIM)
-        self.enemyImage2 = pygame.transform.flip(self.enemyImage, True, False)  # Flipped enemy sprite
+        self.enemyImage2 = pygame.transform.flip(self.enemyImage, True, False)
 
+        self.pirateImage = pygame.transform.scale(self.myRawPirateImage, ViewUnits.DEFAULT_SPRITE_DIM)
+        self.pirateImage2 = pygame.transform.flip(self.pirateImage, True, False)
 
-    def createSpriteSheet(self,theId, theName, thePositionX, thePositionY):
+        self.crabImage = pygame.transform.scale(self.myRawCrabImage, ViewUnits.DEFAULT_SPRITE_DIM)
+        self.crabImage2 = pygame.transform.flip(self.crabImage, True, False)
+
+    def createSpriteSheet(self, theId, theName, thePositionX, thePositionY):
+        """Creates a sprite sheet based on the character type."""
         if theName == ViewUnits.PLAYER_SPRITE_NAME:
-            return self.createPlayerSpriteSheet(theId, thePositionX,thePositionY)
-        elif theName == ViewUnits.ENEMY_SPRITE_NAME:
+            return self.createPlayerSpriteSheet(theId, thePositionX, thePositionY)
+        elif theName == "Pirate":
+            return self.createPirateSpriteSheet(theId, thePositionX, thePositionY)
+        elif theName == "Crab":
+            return self.createCrabSpriteSheet(theId, thePositionX, thePositionY)
+        else:  # Default to generic enemy
             return self.createEnemySpriteSheet(theId, thePositionX, thePositionY)
 
     def createPlayerSpriteSheet(self, theId, thePositionX, thePositionY):
-        imageDict = dict()
-        imageDict[ViewUnits.DEFAULT_STATE_NAME] = [self.myPlayerImage, self.myPlayerImage2]
-        """
-            def Initalize(self):
-        # Player Sprites
-        playerDict = {
-            "IDLE": [self.myCoolImage, self.myCoolImage2]  # Player idle animation
-        }
-
-        # Enemy Sprites
-        enemyDict = {
-            "IDLE": [self.enemyImage2, self.enemyImage]  # Enemy idle animation
-        }
-
-        # Add both player and enemy to the sprite list
-        self.add(SpriteSheet("PlayerMock", 50, 50, 100, 100, playerDict))
-        self.add(SpriteSheet("EnemyMock", 50, 50, 100, 100, enemyDict))
-        """
+        """Creates a player sprite sheet."""
+        imageDict = {ViewUnits.DEFAULT_STATE_NAME: [self.myPlayerImage, self.myPlayerImage2]}
         playerRect = copy.copy(ViewUnits.DEFAULT_RECT)
         playerRect.x = thePositionX
         playerRect.y = thePositionY
-        # print("spritefactory,playerRectID",id(playerRect))
 
         return SpriteSheet(theId, ViewUnits.PLAYER_SPRITE_NAME, imageDict, playerRect)
 
-
     def createEnemySpriteSheet(self, theId, thePositionX, thePositionY):
-        imageDict = dict()
-        imageDict[ViewUnits.DEFAULT_STATE_NAME] = [self.enemyImage2, self.enemyImage]
+        """Creates a generic enemy sprite sheet."""
+        imageDict = {ViewUnits.DEFAULT_STATE_NAME: [self.enemyImage2, self.enemyImage]}
         enemyRect = copy.copy(ViewUnits.DEFAULT_RECT)
         enemyRect.x = thePositionX
         enemyRect.y = thePositionY
-        # print("spritefactory,enemyRectid",id(enemyRect))
+
         return SpriteSheet(theId, ViewUnits.ENEMY_SPRITE_NAME, imageDict, enemyRect)
-    
 
+    def createPirateSpriteSheet(self, theId, thePositionX, thePositionY):
+        """Creates a Pirate sprite sheet."""
+        imageDict = {ViewUnits.DEFAULT_STATE_NAME: [self.pirateImage2, self.pirateImage]}
+        pirateRect = copy.copy(ViewUnits.DEFAULT_RECT)
+        pirateRect.x = thePositionX
+        pirateRect.y = thePositionY
+
+        return SpriteSheet(theId, "Pirate", imageDict, pirateRect)
+
+    def createCrabSpriteSheet(self, theId, thePositionX, thePositionY):
+        """Creates a Crab sprite sheet."""
+        imageDict = {ViewUnits.DEFAULT_STATE_NAME: [self.crabImage2, self.crabImage]}
+        crabRect = copy.copy(ViewUnits.DEFAULT_RECT)
+        crabRect.x = thePositionX
+        crabRect.y = thePositionY
+
+        return SpriteSheet(theId, "Crab", imageDict, crabRect)
+    
     def add(self, theSpriteSheet):
+        """Adds a sprite sheet to the internal list."""
         self.listOfSpriteSheets[theSpriteSheet.getName()] = theSpriteSheet
-
-    
