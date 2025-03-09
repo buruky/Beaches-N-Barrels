@@ -1,15 +1,9 @@
 import os
 import pygame
-<<<<<<< HEAD
-import os
-
-from View.SpriteMock import SpriteMock
-=======
 #from Model.GameWorld import GameWorld
 from .SpriteSheet import SpriteSheet
 from .SpriteFactory import SpriteFactory
 from ViewUnits import ViewUnits
->>>>>>> 5748c345a5327dcac7cf0c8a7d59daaec9504d28
 class MView:
     def __init__(self):
         # self.screen = screen
@@ -26,23 +20,12 @@ class MView:
         screen_width = ViewUnits.SCREEN_WIDTH
         screen_height = ViewUnits.SCREEN_HEIGHT
         self.screen = pygame.display.set_mode((screen_width, screen_height))
-<<<<<<< HEAD
-
-
-        # Get the directory of the current script
-        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-        image_path = os.path.join(BASE_DIR, "..", "Assets", "luffy.png")
-        self.image = pygame.image.load(image_path)
-        self.myCoolImage = pygame.transform.scale(self.image, (50,50))
-=======
         self.mySpriteFactory = SpriteFactory()
         self.onScreenChar = []
         print(self.onScreenChar)
         self.theRoom = pygame.Rect(0,0,  screen_width, screen_height) 
         # self.theNewRoom = (10,10,10)
     
-    
->>>>>>> 5748c345a5327dcac7cf0c8a7d59daaec9504d28
     def clear(self):
         """Clear the screen before drawing the next frame."""
         self.screen.fill((0, 0, 0))  # Fill screen with black
