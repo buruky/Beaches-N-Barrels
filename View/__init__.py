@@ -1,5 +1,5 @@
 from .MView import MView
-from .SpriteMock import SpriteMock
+from .SpriteSheet import SpriteSheet
 
 # Define what is available when importing `model`
-__all__ = ["MView", "SpriteMock"]
+__all__ = ["MView", "SpriteSheet"]
