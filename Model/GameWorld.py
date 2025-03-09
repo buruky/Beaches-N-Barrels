@@ -87,7 +87,6 @@ class GameWorld:
         return self.currentRoom
     
     def changeCurrentRoom(self, theDoor:Door):
-        print("changeCurrentRoom")
         newRoom = theDoor.getConnectedRoom(self.currentRoom)
         #self.printCheckDirection(theDoor.getCardinalDirection(self.currentRoom))
         #print(self.currentRoom.getCords()," -> ", newRoom.getCords())

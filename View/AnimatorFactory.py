@@ -1,12 +1,16 @@
 import copy
 import os
 import pygame
+
 from .SpriteSheet import SpriteSheet
+from .SpriteAnimator import SpriteAnimator
 from ViewUnits import ViewUnits
 
-class SpriteFactory:
+class AnimatorFactory:
     
     def __init__(self):
+        
+        self.sprites = SpriteSheet()
 
         # Get the current working directory
         current_directory = os.path.dirname(__file__)

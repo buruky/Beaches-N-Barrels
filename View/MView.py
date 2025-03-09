@@ -1,8 +1,8 @@
 import os
 import pygame
 #from Model.GameWorld import GameWorld
-from .SpriteSheet import SpriteSheet
-from .SpriteFactory import SpriteFactory
+from .SpriteAnimator import SpriteSheet
+from .AnimatorFactory import SpriteFactory
 from ViewUnits import ViewUnits
 class MView:
     def __init__(self):

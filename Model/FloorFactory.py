@@ -143,11 +143,7 @@ class FloorFactory:
                                     "S":"N",
                                     "W":"E"
                                 }
-                                print("******************")
-                                print(direction)
-                                print(current_room.getCords())
-                                print(flipDir[direction])
-                                print(neighborRoom.getCords())
+                                
                                 newDoor = Door(direction, flipDir[direction], current_room, neighborRoom)
                                 
 
