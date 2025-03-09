@@ -27,6 +27,7 @@ class GameWorld:
                 {
                     "roomtype": self.currentRoom.getRoomType(),
                     "doors":  self.currentRoom.getDoorMap(),
+                    "cords": self.currentRoom.getCords(),
                     "direction": None
                 }
             )
@@ -85,6 +86,7 @@ class GameWorld:
                 {
                     "roomtype": self.currentRoom.getRoomType(),
                     "direction": theDoor.getConnectedDoorDirection(oldRoom),
+                    "cords": self.currentRoom.getCords(),
                     "doors":  self.currentRoom.getDoorMap()
                 }
             )
