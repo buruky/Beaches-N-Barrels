@@ -26,7 +26,6 @@ class MView:
         self.screen = pygame.display.set_mode((screen_width, screen_height))
         self.mySpriteFactory = SpriteFactory()
         self.onScreenChar = []
-        print(self.onScreenChar)
         self.theRoom = pygame.Rect(0,0,  screen_width, screen_height) 
         self.theNewRoom = self.theTest
         # self.theNewRoom = (10,10,10)

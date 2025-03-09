@@ -9,7 +9,6 @@ from Model import *
 from View import *
 from CustomEvents import CustomEvents
 from View.TitleScreen import TitleScreen
-from GameStateManager import GameStateManager
 
 class MController:
     
@@ -34,7 +33,7 @@ class MController:
         # Load or create new game
         self.__myWorld = GameWorld.getInstance()
         if selected_character == "Load":
-            print("load not implemented")
+            print()
         else:
             self.__setup_new_game(selected_character)
 
@@ -79,8 +78,6 @@ class MController:
 
     def __quitGame(self, event) -> bool:
         """Handles quitting the game, ensuring state is saved."""
-        print("Quitting... Saving game state.")
-        self.save_game()
         self.__myIsRunning = False
         return self.__myIsRunning
 
@@ -97,7 +94,6 @@ class MController:
         directions = []
 
         if keys[pygame.K_e]:  # Press 'E' to activate ability
-            print("Player Used Ability")
             self.__myPlayer.activate_ability()
         
         for key, direction in self.__myKeyMap.items():

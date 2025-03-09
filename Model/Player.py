@@ -54,7 +54,6 @@ class Player(DungeonCharacter):
 
         collidedDoor = GameWorld.getInstance().collideWithDoor(pygame.Rect(new_x, new_y, 50, 50))
         if collidedDoor is not None:
-            print("HERE")
             self.teleportCharacter(ViewUnits.SCREEN_WIDTH//2, ViewUnits.SCREEN_HEIGHT//2)
 
         if dx != 0 or dy != 0:
@@ -76,7 +75,7 @@ class Player(DungeonCharacter):
         if self._myHealth <= 0:
             self.Dies()
 
-            
+
     def activate_ability(self):
         """Triggers the player's special ability when 'E' is pressed."""
         if self._ability:
