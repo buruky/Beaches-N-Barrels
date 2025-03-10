@@ -20,6 +20,7 @@ class Door:
         
         self.__myFirstDoorRect = self.__getDoorPositionRect(self.__myFirstDirection)
         self.__myEndDoorRect = self.__getDoorPositionRect(self.__myEndDirection)
+        self.isOpen = False
     
 
     
@@ -40,6 +41,11 @@ class Door:
         else:
             raise Exception("Door.getConnectedRoom:",
                         "THE ROOM PASSED IS NOT CONNECTED TO THIS DOOR!!!") 
+    def toggleDoor(self, theNewState:bool):
+        self.isOpen = theNewState
+
+    def getState(self):
+        return self.isOpen
         
     def getBothRect(self) ->tuple:
         return (self.__myFirstDoorRect, self.__myEndDoorRect)

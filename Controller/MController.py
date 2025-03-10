@@ -86,6 +86,8 @@ class MController:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN and event.key == pygame.K_l:
                 print("Saving game...")  # Press "L" to save anytime
+            elif event.type == pygame.KEYDOWN and event.key == pygame.K_k:
+                self.__myWorld.testRandomKillEnemy()
             EventManager.dispatch_event(event)
 
     def __handle_keyboard(self):

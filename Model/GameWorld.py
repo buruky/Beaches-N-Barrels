@@ -20,7 +20,7 @@ class GameWorld:
     def _init_once(self):
         """Initialize the game world only once."""
         self.__myFloorFactory = FloorFactory.getInstance()
-        self.__myFloor = self.__myFloorFactory.createFloor(GameWorld._FLOOR_SIDE_LENGTH, GameWorld._FLOOR_SIDE_LENGTH)
+        self.__myFloor = self.__myFloorFactory.createFloor()
         self.currentRoom = self.__myFloor.getStartRoom()
         event = pygame.event.Event(
                 EventManager.event_types[CustomEvents.CHANGED_ROOM],
@@ -47,7 +47,7 @@ class GameWorld:
         return cls._instance
 
     def tick(self):
-        self.currentRoom.getEnemyList().update_all()
+        self.currentRoom.checkState()
 
 
     def get_enemies(self):
@@ -71,6 +71,9 @@ class GameWorld:
         if enemy in self.enemies:
             self.enemies.remove(enemy)
 
+    def testRandomKillEnemy(self):
+        self.currentRoom.randomKillEnemy()
+        
     def getCurrentRoom(self):
         return self.currentRoom
     
@@ -127,7 +130,7 @@ class GameWorld:
                 
                 doorRect = door.getDoorRect(dir)
                 
-                if thePlayerRect.colliderect(doorRect):
+                if thePlayerRect.colliderect(doorRect) and door.getState():
                     
                     self.changeCurrentRoom(door)
                     #self.printConnectedDoors(self.currentRoom)
