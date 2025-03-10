@@ -29,6 +29,7 @@ class Room:
         return self.__myEnemyList
     def getCords(self):
         return [self.__myX,self.__myY]
+    
     def getDoorMap(self):
         return self.__myDoorMap
     def __str__(self):

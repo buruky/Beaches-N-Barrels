@@ -20,9 +20,10 @@ class Door:
         
         self.__myFirstDoorRect = self.__getDoorPositionRect(self.__myFirstDirection)
         self.__myEndDoorRect = self.__getDoorPositionRect(self.__myEndDirection)
-        
+    
+
+    
     def __getDoorPositionRect(self, theDirection):
-        print("AAAAAAAAAA",Door.theCordMap[theDirection])
         return pygame.Rect(Door.theCordMap[theDirection], (50,50))
     
     
@@ -30,11 +31,11 @@ class Door:
         str1 = str(theOtherRoom.getCords()) + " "
         if theOtherRoom is self.__myFirstRoom:
             str1 += str(self.__myFirstDirection) + " -> " + str(self.__myEndRoom.getCords()) + " " + str(self.__myEndDirection)
-            print(str1)
+            # print(str1)
             return self.__myEndRoom
         elif theOtherRoom is self.__myEndRoom:
             str1 += str(self.__myEndDirection) + " -> " + str(self.__myFirstRoom.getCords()) + " " + str(self.__myFirstDirection)
-            print(str1)
+            # print(str1)
             return self.__myFirstRoom
         else:
             raise Exception("Door.getConnectedRoom:",
