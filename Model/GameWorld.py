@@ -1,13 +1,11 @@
 from typing import Final
 import pygame
 from CustomEvents import CustomEvents
-from .Room import Room
 from .EventManager import EventManager
 from .FloorFactory import FloorFactory
 from .Door import Door
 class GameWorld:
     """Singleton class representing the game world with obstacles and enemies."""
-    _FLOOR_SIDE_LENGTH:Final = 11
     _instance = None  # Stores the single instance
 
     def __new__(cls):
@@ -20,7 +18,7 @@ class GameWorld:
     def _init_once(self):
         """Initialize the game world only once."""
         self.__myFloorFactory = FloorFactory.getInstance()
-        self.__myFloor = self.__myFloorFactory.createFloor(GameWorld._FLOOR_SIDE_LENGTH, GameWorld._FLOOR_SIDE_LENGTH)
+        self.__myFloor = self.__myFloorFactory.createFloor()
         self.currentRoom = self.__myFloor.getStartRoom()
         event = pygame.event.Event(
                 EventManager.event_types[CustomEvents.CHANGED_ROOM],
@@ -73,8 +71,6 @@ class GameWorld:
     def changeCurrentRoom(self, theDoor:Door):
         print("changeCurrentRoom")
         newRoom = theDoor.getConnectedRoom(self.currentRoom)
-        #self.printCheckDirection(theDoor.getCardinalDirection(self.currentRoom))
-        #print(self.currentRoom.getCords()," -> ", newRoom.getCords())
         oldRoom = self.currentRoom
         self.currentRoom = newRoom
         event = pygame.event.Event(
@@ -97,7 +93,6 @@ class GameWorld:
                 if rect.colliderect(enemy_rect):
                     if ignore is self.player:
                         ignore.Dies()
-                    #print(f"Collision with another enemy at ({enemy.getPositionX()}, {enemy.getPositionY()})")  # Debugging
                     return True
                 
         if self.player != ignore:  # Don't check collision with itself
@@ -105,7 +100,6 @@ class GameWorld:
             if rect.colliderect(my_rect):
                 if ignore in self.currentRoom.getEnemyList().get_entities():
                     self.player.Dies()
-                #print(f"Collision with the player at ({player.getPositionX()}, {player.getPositionY()})")  # Debugging
                 return True
             return False  # No collision
         
@@ -136,7 +130,7 @@ class GameWorld:
         elif theDir == "E":
             print("E (0,1)")
 
-    def printConnectedDoors(self,theRoom:Room):
+    # def printConnectedDoors(self,theRoom:Room):
         '''prints rooms adjacent to room passed in using doors'''
         adjacentDoors = [
             [".",       None,       "."],

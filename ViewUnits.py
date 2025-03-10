@@ -15,6 +15,7 @@ class ViewUnits:
     TARGET_WIDTH = 950  # Approximate target width
     TARGET_HEIGHT = 850  # Approximate target height
 
+    FLOOR_SIDE_LENGTH:Final = 11
     # Ensure the screen size is proportionally close to the target without exceeding real screen
     SCREEN_WIDTH: Final = min(max(TARGET_WIDTH, screen_w // 2), screen_w)  # Adjusted within range
     SCREEN_HEIGHT: Final = min(max(TARGET_HEIGHT, screen_h // 2), screen_h)  # Adjusted within range

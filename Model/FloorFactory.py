@@ -4,9 +4,8 @@ from .RoomFactory import RoomFactory
 from .Door import Door
 from .Floor import Floor
 from .Room import Room 
-from .EventManager import EventManager
-from CustomEvents import CustomEvents
-import pygame
+from ViewUnits import ViewUnits
+
 class FloorFactory:
     _FLOOR_LEVEL = 5
     _instance = None  # Stores the single instance
@@ -33,16 +32,18 @@ class FloorFactory:
             cls._instance = cls()  # This triggers __new__()
         return cls._instance
 
-    def createFloor(self, theWidth:int, theHeight:int) -> Floor:
-        grid = self.generateGrid(theWidth, theHeight)
+    def createFloor(self) -> Floor:
+        grid = self.generateGrid()
         doors = self.connect_rooms(grid)
         #print(Floor(grid, doors).getStartRoom().getDoorMap())
         return Floor(grid, doors)
         
-    def generateGrid(self, theWidth:int, theHeight:int) -> list[list]:
+    def generateGrid(self) -> list[list]:
         startx = Floor._START_POS[0]
         
         starty = Floor._START_POS[1]
+        theHeight = ViewUnits.FLOOR_SIDE_LENGTH
+        theWidth = ViewUnits.FLOOR_SIDE_LENGTH
         #binding of isaac formula 
         num_rooms = random.randint(2, 3) + 5 + int(FloorFactory._FLOOR_LEVEL * 2.6)
         #fills entire frid with falsh

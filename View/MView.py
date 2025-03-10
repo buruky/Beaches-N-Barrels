@@ -1,7 +1,5 @@
 import os
 import pygame
-#from Model.GameWorld import GameWorld
-from .SpriteSheet import SpriteSheet
 from .SpriteFactory import SpriteFactory
 from ViewUnits import ViewUnits
 class MView:
