@@ -26,9 +26,9 @@ class MView:
         self.screen = pygame.display.set_mode((screen_width, screen_height))
         self.mySpriteFactory = SpriteFactory()
         self.onScreenChar = []
-        print(self.onScreenChar)
         self.theRoom = pygame.Rect(0,0,  screen_width, screen_height) 
         self.theNewRoom = self.theTest
+        self.cords = None
         # self.theNewRoom = (10,10,10)
     
     def getScreen(self):
@@ -39,19 +39,20 @@ class MView:
         self.screen.fill((0, 0, 0))  # Fill screen with black
 
     def updateRoom(self, event: pygame.event.Event):
+        """Updates the room background and displays room coordinates at the center."""
         if event.roomtype == "s ":
-            self.theNewRoom = self.theTest  # Change background color
+            self.theNewRoom = self.theTest  # Set background for start room
         else:
-            self.theNewRoom = self.theTest2  # Change background color
+            self.theNewRoom = self.theTest2  # Set background for other rooms
+
         if len(self.onScreenChar) != 0:
-
             playerSprite = None
-
             for i in range(len(self.onScreenChar)):
-                if self.onScreenChar[i].getName() == "Dolphin" or self.onScreenChar[i].getName() == "Buddha" or self.onScreenChar[i].getName() == "Astronaut": #ViewUnits.PLAYER_SPRITE_NAME:
+                if self.onScreenChar[i].getName() in ["Dolphin", "Buddha", "Astronaut"]:
                     playerSprite = self.onScreenChar[i]
-            
             self.onScreenChar = [playerSprite]
+        self.cords = event.cords
+
 
     def addCharacterToScreenList(self, theEvent:pygame.event):
         #print("addid",theEvent.id)
@@ -98,18 +99,24 @@ class MView:
 
         pygame.time.delay(3000)  # Pause for some seconds before quitting
     def redrawCharacter(self):
-        """ 1. clears screen
-            2. draws passed sprite in new position
-            3. draws all other sprites that were onscreen 
-        """
-        self.clear()        
-
+        """Clears the screen, redraws the room, characters, and room coordinates."""
+        # self.clear()
         self.screen.blit(self.theNewRoom, (0, 0))
 
+        # Draw characters
         for currentSprite in self.onScreenChar:
             self.screen.blit(currentSprite.getCurrentSprite(), currentSprite.getRect().topleft)
 
+        # Display room coordinates at the center of the screen
+        if self.cords:
+            font = pygame.font.Font(None, 50)  # Choose an appropriate font and size
+            text_surface = font.render(f"Room: {self.cords}", True, (255, 255, 255))  # White text
+            text_rect = text_surface.get_rect(center=(ViewUnits.SCREEN_WIDTH // 2, ViewUnits.SCREEN_HEIGHT // 2))
+            
+            self.screen.blit(text_surface, text_rect)
+        
         pygame.display.flip()
+
 
     
 

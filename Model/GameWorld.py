@@ -27,6 +27,7 @@ class GameWorld:
                 {
                     "roomtype": self.currentRoom.getRoomType(),
                     "doors":  self.currentRoom.getDoorMap(),
+                    "cords": self.currentRoom.getCords(),
                     "direction": None
                 }
             )
@@ -35,6 +36,8 @@ class GameWorld:
         self.enemies = []  # List of enemies
         self.player = None # player
         self.item = []
+        self.last_damage_time = 0  # Track last damage taken
+
 
     @classmethod
     def getInstance(cls):
@@ -72,7 +75,7 @@ class GameWorld:
         return self.currentRoom
     
     def changeCurrentRoom(self, theDoor:Door):
-        print("changeCurrentRoom")
+        
         newRoom = theDoor.getConnectedRoom(self.currentRoom)
         #self.printCheckDirection(theDoor.getCardinalDirection(self.currentRoom))
         #print(self.currentRoom.getCords()," -> ", newRoom.getCords())
@@ -83,6 +86,7 @@ class GameWorld:
                 {
                     "roomtype": self.currentRoom.getRoomType(),
                     "direction": theDoor.getConnectedDoorDirection(oldRoom),
+                    "cords": self.currentRoom.getCords(),
                     "doors":  self.currentRoom.getDoorMap()
                 }
             )
@@ -92,25 +96,28 @@ class GameWorld:
         """Lets know doors and entities in room that should be shown on screen"""
 
     def check_collision(self, rect, ignore=None):
-        
         """Check if a given rectangle collides with any obstacle or enemy."""
+        current_time = pygame.time.get_ticks()  # Get current game time in milliseconds
+        DAMAGE_COOLDOWN = 2000  # 2 seconds cooldown
+
         for enemy in self.currentRoom.getEnemyList().get_entities():
             if enemy != ignore:  # Don't check collision with itself
                 enemy_rect = pygame.Rect(enemy.getPositionX(), enemy.getPositionY(), 50, 50)
                 if rect.colliderect(enemy_rect):
-                    if ignore is self.player:
-                        ignore.takeDamage(150)
-                    #print(f"Collision with another enemy at ({enemy.getPositionX()}, {enemy.getPositionY()})")  # Debugging
+                    if ignore is self.player and (current_time - self.last_damage_time > DAMAGE_COOLDOWN):
+                        self.player.takeDamage(150)  # Only take damage if cooldown has passed
+                        self.last_damage_time = current_time  # Reset cooldown timer
                     return True
                 
         if self.player != ignore:  # Don't check collision with itself
-            my_rect = pygame.Rect(self.player.getPositionX(), self.player.getPositionY(), 50, 50)
-            if rect.colliderect(my_rect):
-                if ignore in self.currentRoom.getEnemyList().get_entities():
-                    self.player.takeDamage(150)
-                #print(f"Collision with the player at ({player.getPositionX()}, {player.getPositionY()})")  # Debugging
+            player_rect = pygame.Rect(self.player.getPositionX(), self.player.getPositionY(), 50, 50)
+            if rect.colliderect(player_rect):
+                if ignore in self.currentRoom.getEnemyList().get_entities() and (current_time - self.last_damage_time > DAMAGE_COOLDOWN):
+                    self.player.takeDamage(150)  # Apply damage with cooldown
+                    self.last_damage_time = current_time  # Reset cooldown timer
                 return True
-            return False  # No collision
+
+        return False  # No collision
         
 
     def collideWithDoor(self, thePlayerRect) -> str:
@@ -128,18 +135,18 @@ class GameWorld:
         return None
                     
 
-    def printCheckDirection(self,theDir):
-        if theDir == "N":
-            print("N (-1,0)")
-        elif theDir == "S":
-            print("S (1,0)")
+    # def printCheckDirection(self,theDir):
+    #     if theDir == "N":
+    #         print("N (-1,0)")
+    #     elif theDir == "S":
+    #         print("S (1,0)")
 
-        elif theDir == "W":
-            print("W (0,-1)")
-        elif theDir == "E":
-            print("E (0,1)")
+    #     elif theDir == "W":
+    #         print("W (0,-1)")
+    #     elif theDir == "E":
+    #         print("E (0,1)")
 
-    def printConnectedDoors(self,theRoom:Room):
+    # def printConnectedDoors(self,theRoom:Room):
         '''prints rooms adjacent to room passed in using doors'''
         adjacentDoors = [
             [".",       None,       "."],
