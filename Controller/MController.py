@@ -1,10 +1,11 @@
 from typing import Final
 import pygame
-import random
+from ViewUnits import ViewUnits
 from .MModel import MModel
 from Model.Dolphin import Dolphin
 from Model.Buddha import Buddha
 from Model.Astronaut import Astronaut
+from Model.Projectile import Projectile
 from Model import *
 from View import *
 from CustomEvents import CustomEvents
@@ -99,6 +100,15 @@ class MController:
         if keys[pygame.K_e]:  # Press 'E' to activate ability
             self.__myPlayer.activate_ability()
         
+        if keys[pygame.K_UP]:  # Press 'UP' arrow to shoot a projectile upwards
+            pygame.event.post(pygame.event.Event(CustomEvents.SHOOT_PROJECTILE, {'shooter': self.__myPlayer, 'direction': 'UP'}))
+        if keys[pygame.K_DOWN]:  # Press 'DOWN' arrow to shoot a projectile downwards
+            pygame.event.post(pygame.event.Event(CustomEvents.SHOOT_PROJECTILE, {'shooter': self.__myPlayer, 'direction': 'DOWN'}))
+        if keys[pygame.K_LEFT]:  # Press 'LEFT' arrow to shoot a projectile to the left
+            pygame.event.post(pygame.event.Event(CustomEvents.SHOOT_PROJECTILE, {'shooter': self.__myPlayer, 'direction': 'LEFT'}))
+        if keys[pygame.K_RIGHT]:  # Press 'RIGHT' arrow to shoot a projectile to the right
+            pygame.event.post(pygame.event.Event(CustomEvents.SHOOT_PROJECTILE, {'shooter': self.__myPlayer, 'direction': 'RIGHT'}))
+
         for key, direction in self.__myKeyMap.items():
             if keys[key]:
                 directions.append(direction)
