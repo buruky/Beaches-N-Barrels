@@ -73,6 +73,16 @@ class GameWorld:
 
     def testRandomKillEnemy(self):
         self.currentRoom.randomKillEnemy()
+        event = pygame.event.Event(
+                EventManager.event_types[CustomEvents.CHANGED_ROOM],
+                {
+                    "roomtype": self.currentRoom.getRoomType(),
+                    "direction": None,
+                    "cords": self.currentRoom.getCords(),
+                    "doors":  self.currentRoom.getDoorMap()
+                }
+            )
+        pygame.event.post(event)
         
     def getCurrentRoom(self):
         return self.currentRoom
@@ -84,11 +94,12 @@ class GameWorld:
         #print(self.currentRoom.getCords()," -> ", newRoom.getCords())
         oldRoom = self.currentRoom
         self.currentRoom = newRoom
+        self.direction = theDoor.getConnectedDoorDirection(oldRoom)
         event = pygame.event.Event(
                 EventManager.event_types[CustomEvents.CHANGED_ROOM],
                 {
                     "roomtype": self.currentRoom.getRoomType(),
-                    "direction": theDoor.getConnectedDoorDirection(oldRoom),
+                    "direction": self.direction,
                     "cords": self.currentRoom.getCords(),
                     "doors":  self.currentRoom.getDoorMap()
                 }

@@ -1,8 +1,10 @@
 from typing import Final
 from .Enemy import Enemy
+import random
 from .Crab import Crab
 from .Pirate import Pirate
 from .DungeonCharacterList import DungeonCharacterList
+from ViewUnits import ViewUnits
 
 class EnemyFactory():
     _instance = None  # Stores the single instance
@@ -29,16 +31,22 @@ class EnemyFactory():
     
     def createNormalTemplate(self):
         enemyList = DungeonCharacterList()
-        enemy1 = Crab(EnemyFactory._DEFAULT_ATTACK_DAMAGE, 
-                           EnemyFactory._DEFAULT_HEALTH,
-                           150, #positionX
-                           100, #positionY
-                           EnemyFactory._DEFAULT_SPEED)
-        enemy2 = Pirate(EnemyFactory._DEFAULT_ATTACK_DAMAGE, 
-                           EnemyFactory._DEFAULT_HEALTH,
-                           400, #positionX
-                           100, #positionY
-                           EnemyFactory._DEFAULT_SPEED)
+        screen_width = ViewUnits.SCREEN_WIDTH
+        screen_height = ViewUnits.SCREEN_HEIGHT
+        enemy1 = Crab(
+            EnemyFactory._DEFAULT_ATTACK_DAMAGE, 
+            EnemyFactory._DEFAULT_HEALTH,
+            random.randint(0, screen_width),  # Random x position
+            random.randint(0, screen_height),  # Random y position
+            EnemyFactory._DEFAULT_SPEED
+        )
+        enemy2 = Pirate(
+            EnemyFactory._DEFAULT_ATTACK_DAMAGE, 
+            EnemyFactory._DEFAULT_HEALTH,
+            random.randint(0, screen_width),  # Random x position
+            random.randint(0, screen_height),  # Random y position
+            EnemyFactory._DEFAULT_SPEED
+        )
         enemyList.add_entity(enemy1)
         enemyList.add_entity(enemy2)
         return enemyList
