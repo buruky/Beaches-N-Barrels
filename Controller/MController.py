@@ -110,13 +110,13 @@ class MController:
             if keys[pygame.K_UP]:  
                 self.__shoot_projectile(self.__myPlayer, "UP")
                 self.last_shot_time = current_time  # Update last shot time
-            if keys[pygame.K_DOWN]:  
+            elif keys[pygame.K_DOWN]:  
                 self.__shoot_projectile(self.__myPlayer, "DOWN")
                 self.last_shot_time = current_time
-            if keys[pygame.K_LEFT]:  
+            elif keys[pygame.K_LEFT]:  
                 self.__shoot_projectile(self.__myPlayer, "LEFT")
                 self.last_shot_time = current_time
-            if keys[pygame.K_RIGHT]:  
+            elif keys[pygame.K_RIGHT]:  
                 self.__shoot_projectile(self.__myPlayer, "RIGHT")
                 self.last_shot_time = current_time
 
@@ -132,9 +132,11 @@ class MController:
 
     def __shoot_projectile(self, shooter, direction):
         """Handles shooting a projectile in the given direction."""
+        shooterName = "Projectile" + shooter.getName()
+        print(shooterName)
         if shooter:
             projectile = Projectile(
-                name="Projectile",
+                name= shooterName,
                 shooter=shooter,
                 attackDamage=shooter.getAttackDamage(),  # Get attack damage from player
                 direction=direction,
