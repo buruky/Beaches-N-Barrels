@@ -28,6 +28,8 @@ class Enemy(DungeonCharacter, ABC):
             self._direction = random.choice(["UP", "DOWN", "LEFT", "RIGHT"])
             self._move_timer = current_time
         self.moveCharacter()
+    def getDamage(self):
+        return self._myAttackDamage
 
     def moveCharacter(self):
         """Moves the character based on its current direction."""

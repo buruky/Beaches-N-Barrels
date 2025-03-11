@@ -10,7 +10,7 @@ class EnemyFactory():
     _instance = None  # Stores the single instance
     _DEFAULT_SPEED:Final = 2
     _DEFAULT_HEALTH:Final = 1
-    _DEFAULT_ATTACK_DAMAGE:Final = 1
+    _DEFAULT_ATTACK_DAMAGE:Final = 150
     
 
     def __new__(cls):
@@ -38,7 +38,7 @@ class EnemyFactory():
             EnemyFactory._DEFAULT_HEALTH,
             random.randint(0, screen_width),  # Random x position
             random.randint(0, screen_height),  # Random y position
-            EnemyFactory._DEFAULT_SPEED
+            3
         )
         enemy2 = Pirate(
             EnemyFactory._DEFAULT_ATTACK_DAMAGE, 

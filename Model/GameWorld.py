@@ -119,7 +119,7 @@ class GameWorld:
                 enemy_rect = pygame.Rect(enemy.getPositionX(), enemy.getPositionY(), 50, 50)
                 if rect.colliderect(enemy_rect):
                     if ignore is self.player and (current_time - self.last_damage_time > DAMAGE_COOLDOWN):
-                        self.player.takeDamage(150)  # Only take damage if cooldown has passed
+                        self.player.takeDamage(enemy.getDamage())  # Only take damage if cooldown has passed
                         self.last_damage_time = current_time  # Reset cooldown timer
                     return True
                 
@@ -127,7 +127,7 @@ class GameWorld:
             player_rect = pygame.Rect(self.player.getPositionX(), self.player.getPositionY(), 50, 50)
             if rect.colliderect(player_rect):
                 if ignore in self.currentRoom.getEnemyList().get_entities() and (current_time - self.last_damage_time > DAMAGE_COOLDOWN):
-                    self.player.takeDamage(150)  # Apply damage with cooldown
+                    self.player.takeDamage(ignore.getDamage())  # Apply damage with cooldown
                     self.last_damage_time = current_time  # Reset cooldown timer
                 return True
 
@@ -161,26 +161,26 @@ class GameWorld:
     #         print("E (0,1)")
 
     # def printConnectedDoors(self,theRoom:Room):
-        '''prints rooms adjacent to room passed in using doors'''
-        adjacentDoors = [
-            [".",       None,       "."],
-            [None,theRoom.getCords(),None],
-            [".",       None,       "."]
-        ]
+        # '''prints rooms adjacent to room passed in using doors'''
+        # adjacentDoors = [
+        #     [".",       None,       "."],
+        #     [None,theRoom.getCords(),None],
+        #     [".",       None,       "."]
+        # ]
         
-        doormap = theRoom.getDoorMap()
-        for dir in doormap.keys():
-            if doormap[dir] != None:
-                cords = doormap[dir].getConnectedRoom(theRoom).getCords()
-                if dir == "N":
-                    adjacentDoors[0][1] = cords
-                elif dir == "S":
-                    adjacentDoors[2][1] = cords
-                elif dir == "W":
-                    adjacentDoors[1][0] = cords
-                elif dir == "E":
-                    adjacentDoors[1][2] = cords
+        # doormap = theRoom.getDoorMap()
+        # for dir in doormap.keys():
+        #     if doormap[dir] != None:
+        #         cords = doormap[dir].getConnectedRoom(theRoom).getCords()
+        #         if dir == "N":
+        #             adjacentDoors[0][1] = cords
+        #         elif dir == "S":
+        #             adjacentDoors[2][1] = cords
+        #         elif dir == "W":
+        #             adjacentDoors[1][0] = cords
+        #         elif dir == "E":
+        #             adjacentDoors[1][2] = cords
 
-        print(adjacentDoors[0])
-        print(adjacentDoors[1])
-        print(adjacentDoors[2])
+        # print(adjacentDoors[0])
+        # print(adjacentDoors[1])
+        # print(adjacentDoors[2])
