@@ -22,6 +22,9 @@ class SpriteFactory:
         self.myRawPirateImage = pygame.image.load(os.path.join(assets_path, 'pirate.png'))
         self.myRawCrabImage = pygame.image.load(os.path.join(assets_path, 'crab.png'))
 
+        # Load Projectile Image
+        self.myRawProjectileImage = pygame.image.load(os.path.join(assets_path, 'projectile.png'))
+
         # Resize and Flip Sprites
         self.myPlayerImage = pygame.transform.scale(self.myRawPlayerImage, ViewUnits.DEFAULT_SPRITE_DIM)
         self.myPlayerImage2 = pygame.transform.flip(self.myPlayerImage, True, False)
@@ -43,6 +46,15 @@ class SpriteFactory:
 
         self.crabImage = pygame.transform.scale(self.myRawCrabImage, ViewUnits.DEFAULT_SPRITE_DIM)
         self.crabImage2 = pygame.transform.flip(self.crabImage, True, False)
+        
+        # Resize (and optionally flip) the projectile image.
+        # Assuming the projectile is symmetric, flipping might not be necessary,
+        # but we create two images for consistency.
+        self.projectileImage = pygame.transform.scale(self.myRawProjectileImage, ViewUnits.DEFAULT_SPRITE_DIM)
+        self.projectileImage2 = pygame.transform.flip(self.projectileImage, True, False)
+
+        # Initialize the sprite sheets dictionary if needed
+        self.listOfSpriteSheets = {}
 
     def createSpriteSheet(self, theId, theName, thePositionX, thePositionY):
         """Creates a sprite sheet based on the character type."""
@@ -58,6 +70,8 @@ class SpriteFactory:
             return self.createPirateSpriteSheet(theId, thePositionX, thePositionY)
         elif theName == "Crab":
             return self.createCrabSpriteSheet(theId, thePositionX, thePositionY)
+        elif theName == "Projectile":
+            return self.createProjectileSpriteSheet(theId, thePositionX, thePositionY)
         else:  # Default to generic enemy
             return self.createEnemySpriteSheet(theId, thePositionX, thePositionY)
 
@@ -80,22 +94,22 @@ class SpriteFactory:
         return SpriteSheet(theId, "Dolphin", imageDict, dolphinRect)  
 
     def createBuddhaSpriteSheet(self, theId, thePositionX, thePositionY):
-        """Creates a Buddha sprite sheet."""  # NEW
+        """Creates a Buddha sprite sheet."""
         imageDict = {ViewUnits.DEFAULT_STATE_NAME: [self.buddhaImage, self.buddhaImage2]}  
         buddhaRect = copy.copy(ViewUnits.DEFAULT_RECT)
         buddhaRect.x = thePositionX
         buddhaRect.y = thePositionY
 
-        return SpriteSheet(theId, "Buddha", imageDict, buddhaRect)  # NEW
+        return SpriteSheet(theId, "Buddha", imageDict, buddhaRect)
 
     def createAstronautSpriteSheet(self, theId, thePositionX, thePositionY):
-        """Creates an Astronaut sprite sheet."""  # NEW
+        """Creates an Astronaut sprite sheet."""
         imageDict = {ViewUnits.DEFAULT_STATE_NAME: [self.astronautImage, self.astronautImage2]}  
         astronautRect = copy.copy(ViewUnits.DEFAULT_RECT)
         astronautRect.x = thePositionX
         astronautRect.y = thePositionY
 
-        return SpriteSheet(theId, "Astronaut", imageDict, astronautRect)  # NEW
+        return SpriteSheet(theId, "Astronaut", imageDict, astronautRect)
 
     def createEnemySpriteSheet(self, theId, thePositionX, thePositionY):
         """Creates a generic enemy sprite sheet."""
@@ -124,6 +138,15 @@ class SpriteFactory:
 
         return SpriteSheet(theId, "Crab", imageDict, crabRect)
 
+    def createProjectileSpriteSheet(self, theId, thePositionX, thePositionY):
+        """Creates a Projectile sprite sheet."""
+        imageDict = {ViewUnits.DEFAULT_STATE_NAME: [self.projectileImage, self.projectileImage2]}
+        projectileRect = copy.copy(ViewUnits.DEFAULT_RECT)
+        projectileRect.x = thePositionX
+        projectileRect.y = thePositionY
+
+        return SpriteSheet(theId, "Projectile", imageDict, projectileRect)
+
     def add(self, theSpriteSheet):
         """Adds a sprite sheet to the internal list."""
-        self.listOfSpriteSheets[theSpriteSheet.getName()] = theSpriteSheet  
+        self.listOfSpriteSheets[theSpriteSheet.getName()] = theSpriteSheet

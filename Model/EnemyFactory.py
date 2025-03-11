@@ -10,7 +10,7 @@ class EnemyFactory():
     _instance = None  # Stores the single instance
     _DEFAULT_SPEED:Final = 2
     _DEFAULT_HEALTH:Final = 1
-    _DEFAULT_ATTACK_DAMAGE:Final = 150
+    _DEFAULT_ATTACK_DAMAGE:Final = 20
     
 
     def __new__(cls):
@@ -31,8 +31,8 @@ class EnemyFactory():
     
     def createNormalTemplate(self):
         enemyList = DungeonCharacterList()
-        screen_width = ViewUnits.SCREEN_WIDTH
-        screen_height = ViewUnits.SCREEN_HEIGHT
+        screen_width = ViewUnits.SCREEN_WIDTH - 50
+        screen_height = ViewUnits.SCREEN_HEIGHT - 50
         enemy1 = Crab(
             EnemyFactory._DEFAULT_ATTACK_DAMAGE, 
             EnemyFactory._DEFAULT_HEALTH,

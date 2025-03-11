@@ -25,7 +25,8 @@ class MController:
         self.__myView: Final = MView()
         self.__InitalizeEvents()
         self.__myIsRunning = True
-        self.__myIsHoldingClick = False
+        self.shoot_cooldown = 300  # 300ms = 0.3 seconds between shots
+        self.last_shot_time = 0  # Time of last shot
         
         # Show title screen and get character selection
         title_screen = TitleScreen(self.__myView.screen)
@@ -59,6 +60,7 @@ class MController:
         if self.__myPlayer._ability:
             self.__myPlayer._ability.update()
         
+        
         return self.__myIsRunning
     
     def __InitalizeEvents(self):
@@ -71,6 +73,8 @@ class MController:
         EventManager.registerEvent(CustomEvents.CHARACTER_STOPPED, self.__myView.update_entity)
         EventManager.registerEvent(CustomEvents.PLAYER_DIED, self.__handle_character_death)
         EventManager.registerEvent(CustomEvents.CHANGED_ROOM, self.__myView.updateRoom)
+        EventManager.registerEvent(CustomEvents.SHOOT_PROJECTILE, self.__shoot_projectile)
+        EventManager.registerEvent(CustomEvents.UPDATE_PROJECTILE, self.__myView.remove_projectile)
 
     def __handle_character_death(self, event):
         """Displays 'Game Over' and stops the game loop."""
@@ -99,16 +103,24 @@ class MController:
 
         if keys[pygame.K_e]:  # Press 'E' to activate ability
             self.__myPlayer.activate_ability()
-        
-        if keys[pygame.K_UP]:  # Press 'UP' arrow to shoot a projectile upwards
-            pygame.event.post(pygame.event.Event(CustomEvents.SHOOT_PROJECTILE, {'shooter': self.__myPlayer, 'direction': 'UP'}))
-        if keys[pygame.K_DOWN]:  # Press 'DOWN' arrow to shoot a projectile downwards
-            pygame.event.post(pygame.event.Event(CustomEvents.SHOOT_PROJECTILE, {'shooter': self.__myPlayer, 'direction': 'DOWN'}))
-        if keys[pygame.K_LEFT]:  # Press 'LEFT' arrow to shoot a projectile to the left
-            pygame.event.post(pygame.event.Event(CustomEvents.SHOOT_PROJECTILE, {'shooter': self.__myPlayer, 'direction': 'LEFT'}))
-        if keys[pygame.K_RIGHT]:  # Press 'RIGHT' arrow to shoot a projectile to the right
-            pygame.event.post(pygame.event.Event(CustomEvents.SHOOT_PROJECTILE, {'shooter': self.__myPlayer, 'direction': 'RIGHT'}))
+         # Handle shooting projectiles with cooldown
+        current_time = pygame.time.get_ticks()  # Get current time in milliseconds
+        # Directly call the shooting method instead of posting an event
+        if current_time - self.last_shot_time >= self.shoot_cooldown:  # Check if cooldown has passed
+            if keys[pygame.K_UP]:  
+                self.__shoot_projectile(self.__myPlayer, "UP")
+                self.last_shot_time = current_time  # Update last shot time
+            if keys[pygame.K_DOWN]:  
+                self.__shoot_projectile(self.__myPlayer, "DOWN")
+                self.last_shot_time = current_time
+            if keys[pygame.K_LEFT]:  
+                self.__shoot_projectile(self.__myPlayer, "LEFT")
+                self.last_shot_time = current_time
+            if keys[pygame.K_RIGHT]:  
+                self.__shoot_projectile(self.__myPlayer, "RIGHT")
+                self.last_shot_time = current_time
 
+        # Handle movement with WASD keys
         for key, direction in self.__myKeyMap.items():
             if keys[key]:
                 directions.append(direction)
@@ -116,6 +128,23 @@ class MController:
         if directions:
             self.__myPlayer.moveCharacter(directions)
 
+
+
+    def __shoot_projectile(self, shooter, direction):
+        """Handles shooting a projectile in the given direction."""
+        if shooter:
+            projectile = Projectile(
+                name="Projectile",
+                shooter=shooter,
+                attackDamage=shooter.getAttackDamage(),  # Get attack damage from player
+                direction=direction,
+                speed=10,  # Set an appropriate speed
+                positionX=shooter.getPositionX(),
+                positionY=shooter.getPositionY()
+            )
+            self.__myWorld.addProjectile(projectile)  # Add to the game world
+
+            
     def __mouseButtonUp(self, theEvent):
         """Handles mouse button release."""
         if theEvent.button in [1, 3]:  # Left or right click

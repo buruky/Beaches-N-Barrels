@@ -59,14 +59,20 @@ class MView:
         newCharSprite = self.mySpriteFactory.createSpriteSheet(theEvent.id, theEvent.name, theEvent.positionX,theEvent.positionY)
         self.onScreenChar.append(newCharSprite)
     
+    def remove_projectile(self, theEvent:pygame.event):
+        """Removes a projectile from the screen."""
+        for i in range(len(self.onScreenChar)):
+            if theEvent.id == self.onScreenChar[i].getId():
+                self.onScreenChar.pop(i)
+                break
+        self.redrawCharacter()
+
     def update_entity(self,theEvent:pygame.event):#need to find way to clear canvas when you draw
         """Adds Chracter to list and to screen with new position  """
     
         isIdInSpriteList = False
         for characterSprite in self.onScreenChar:
-            #print(theEvent)
             if characterSprite is not None :
-                #print(characterSprite)
                 if theEvent.id == characterSprite.getId():
                     isIdInSpriteList = True
                 

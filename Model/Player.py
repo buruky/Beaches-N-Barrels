@@ -19,6 +19,10 @@ class Player(DungeonCharacter):
         """Update sprite when player is made"""
         self.update(CustomEvents.CHARACTER_STOPPED)
 
+
+    def getAttackDamage(self) -> int:
+        return self._myAttackDamage
+    
     def moveCharacter(self, theDirections: list) -> None:
         dx, dy = 0, 0
 

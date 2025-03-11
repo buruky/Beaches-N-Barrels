@@ -42,7 +42,10 @@ class Room:
             self.__myEnemyList.deleteEnemy()
         else:
             print("They are dead!")
-            
+    
+    def killEnemy(self, theEnemy):
+        self.__myEnemyList.deleteEnemy(theEnemy)
+        
     def getRoomType(self):
         return self.__myRoomType
     def getEnemyList(self):

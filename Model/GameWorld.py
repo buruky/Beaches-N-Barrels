@@ -1,5 +1,6 @@
 from typing import Final
 import pygame
+from ViewUnits import ViewUnits
 from CustomEvents import CustomEvents
 from .Room import Room
 from .EventManager import EventManager
@@ -7,7 +8,6 @@ from .FloorFactory import FloorFactory
 from .Door import Door
 class GameWorld:
     """Singleton class representing the game world with obstacles and enemies."""
-    _FLOOR_SIDE_LENGTH:Final = 11
     _instance = None  # Stores the single instance
 
     def __new__(cls):
@@ -37,6 +37,7 @@ class GameWorld:
         self.player = None # player
         self.item = []
         self.last_damage_time = 0  # Track last damage taken
+        self.projectiles = []
 
 
     @classmethod
@@ -48,8 +49,31 @@ class GameWorld:
 
     def tick(self):
         self.currentRoom.checkState()
+        for entity in self.projectiles:
+            if entity.is_active:
+                entity.moveCharacter()
 
 
+
+    def addProjectile(self, theProjectile):
+        self.projectiles.append(theProjectile)
+
+    def getProjectiles(self):
+        return self.projectiles
+    
+    def removeProjectile(self, theProjectile):
+        self.projectiles.remove(theProjectile)
+        
+        event = pygame.event.Event(
+                EventManager.event_types[CustomEvents.CHANGED_ROOM],
+                {
+                    "roomtype": self.currentRoom.getRoomType(),
+                    "direction": None,
+                    "cords": self.currentRoom.getCords(),
+                    "doors":  self.currentRoom.getDoorMap()
+                }
+            )
+        pygame.event.post(event)
     def get_enemies(self):
         """Return the list of enemies."""
         return self.enemies
@@ -68,9 +92,19 @@ class GameWorld:
     
     def removeEnemy(self, enemy):
         """Remove an enemy from the game world."""
-        if enemy in self.enemies:
-            self.enemies.remove(enemy)
+        self.currentRoom.killEnemy(enemy)
+        event = pygame.event.Event(
+                EventManager.event_types[CustomEvents.CHANGED_ROOM],
+                {
+                    "roomtype": self.currentRoom.getRoomType(),
+                    "direction": None,
+                    "cords": self.currentRoom.getCords(),
+                    "doors":  self.currentRoom.getDoorMap()
+                }
+            )
+        pygame.event.post(event)
 
+    
     def testRandomKillEnemy(self):
         self.currentRoom.randomKillEnemy()
         event = pygame.event.Event(
@@ -133,6 +167,41 @@ class GameWorld:
 
         return False  # No collision
         
+    def check_projectile_collision(self, projectile):
+        """Checks if a projectile collides with an enemy, player, or obstacle."""
+        projectile_rect = pygame.Rect(projectile.getPositionX(), projectile.getPositionY(), 10, 10)
+        
+        room_width = ViewUnits.SCREEN_WIDTH
+        room_height = ViewUnits.SCREEN_HEIGHT
+
+        #  Check if the projectile is out of bounds
+        if (projectile.getPositionX() < 0 or projectile.getPositionX() > room_width or
+            projectile.getPositionY() < 0 or projectile.getPositionY() > room_height):
+            # Destroy projectile if it goes outside the room
+            return True  # Collision detected (out of bounds)
+        # Check collision with enemies
+        for enemy in self.currentRoom.getEnemyList().get_entities():
+            if enemy is projectile.shooter:  # 🔥 Ignore the shooter
+                continue
+
+            enemy_rect = pygame.Rect(enemy.getPositionX(), enemy.getPositionY(), 50, 50)
+            if projectile_rect.colliderect(enemy_rect):
+                enemy.Dies()  # Apply projectile damage
+                # projectile.Dies()  # Destroy projectile
+
+                # self.updateWorld()
+                return True  # Collision detected
+
+        # Check collision with player (only if projectile was fired by an enemy)
+        if projectile.shooter in self.currentRoom.getEnemyList().get_entities():
+            player_rect = pygame.Rect(self.player.getPositionX(), self.player.getPositionY(), 50, 50)
+            if projectile_rect.colliderect(player_rect):
+                self.player.takeDamage(projectile.attackDamage)  # Player takes damage
+                # projectile.Dies()  # Destroy projectile
+                # self.updateWorld()
+                return True
+
+        return False  # No collision
 
     def collideWithDoor(self, thePlayerRect) -> str:
         doormap = self.currentRoom.getDoorMap()
@@ -147,40 +216,4 @@ class GameWorld:
                     #self.printConnectedDoors(self.currentRoom)
                     return door.getConnectedDoorDirection(self.currentRoom)#maybe return cords
         return None
-                    
-
-    # def printCheckDirection(self,theDir):
-    #     if theDir == "N":
-    #         print("N (-1,0)")
-    #     elif theDir == "S":
-    #         print("S (1,0)")
-
-    #     elif theDir == "W":
-    #         print("W (0,-1)")
-    #     elif theDir == "E":
-    #         print("E (0,1)")
-
-    # def printConnectedDoors(self,theRoom:Room):
-        # '''prints rooms adjacent to room passed in using doors'''
-        # adjacentDoors = [
-        #     [".",       None,       "."],
-        #     [None,theRoom.getCords(),None],
-        #     [".",       None,       "."]
-        # ]
-        
-        # doormap = theRoom.getDoorMap()
-        # for dir in doormap.keys():
-        #     if doormap[dir] != None:
-        #         cords = doormap[dir].getConnectedRoom(theRoom).getCords()
-        #         if dir == "N":
-        #             adjacentDoors[0][1] = cords
-        #         elif dir == "S":
-        #             adjacentDoors[2][1] = cords
-        #         elif dir == "W":
-        #             adjacentDoors[1][0] = cords
-        #         elif dir == "E":
-        #             adjacentDoors[1][2] = cords
-
-        # print(adjacentDoors[0])
-        # print(adjacentDoors[1])
-        # print(adjacentDoors[2])
+                
