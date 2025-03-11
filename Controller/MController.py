@@ -73,7 +73,6 @@ class MController:
         EventManager.registerEvent(CustomEvents.CHARACTER_STOPPED, self.__myView.update_entity)
         EventManager.registerEvent(CustomEvents.PLAYER_DIED, self.__handle_character_death)
         EventManager.registerEvent(CustomEvents.CHANGED_ROOM, self.__myView.updateRoom)
-        EventManager.registerEvent(CustomEvents.SHOOT_PROJECTILE, self.__shoot_projectile)
         EventManager.registerEvent(CustomEvents.UPDATE_PROJECTILE, self.__myView.remove_projectile)
 
     def __handle_character_death(self, event):
@@ -110,13 +109,13 @@ class MController:
             if keys[pygame.K_UP]:  
                 self.__shoot_projectile(self.__myPlayer, "UP")
                 self.last_shot_time = current_time  # Update last shot time
-            if keys[pygame.K_DOWN]:  
+            elif keys[pygame.K_DOWN]:  
                 self.__shoot_projectile(self.__myPlayer, "DOWN")
                 self.last_shot_time = current_time
-            if keys[pygame.K_LEFT]:  
+            elif keys[pygame.K_LEFT]:  
                 self.__shoot_projectile(self.__myPlayer, "LEFT")
                 self.last_shot_time = current_time
-            if keys[pygame.K_RIGHT]:  
+            elif keys[pygame.K_RIGHT]:  
                 self.__shoot_projectile(self.__myPlayer, "RIGHT")
                 self.last_shot_time = current_time
 
