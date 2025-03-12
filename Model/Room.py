@@ -40,10 +40,13 @@ class Room:
 
     def randomKillEnemy(self):
         if len(self.__myEnemyList.get_entities()) > 0:
-            self.__myEnemyList.deleteEnemy()
+            self.__myEnemyList.deleteAllEnemy()
         else:
             print("They are dead!")
-            
+    
+    def killEnemy(self, theEnemy):
+        self.__myEnemyList.deleteEnemy(theEnemy)
+        
     def getRoomType(self):
         return self.__myRoomType
     def setRoomType(self, new_type: str) -> None:

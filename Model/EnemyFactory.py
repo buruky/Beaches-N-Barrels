@@ -3,7 +3,7 @@ from .Enemy import Enemy
 from .Crab import Crab
 from .Pirate import Pirate
 from .DungeonCharacterList import DungeonCharacterList
-from .database import initialize_enemy_db
+# from .database import initialize_enemy_db
 import sqlite3
 import random
 from ViewUnits import ViewUnits
@@ -14,7 +14,6 @@ class EnemyFactory():
     _DEFAULT_HEALTH:Final = 1
     _DEFAULT_ATTACK_DAMAGE:Final = 1
     
-
     def __new__(cls):
         """Ensure only one instance is created."""
         if cls._instance is None:
@@ -56,7 +55,7 @@ class EnemyFactory():
             return Pirate(attack, health, random.randint(0,screen_width), random.randint(0, screen_height), speed)
         elif enemy_type == "Crab":
             return Crab(attack, health, random.randint(0,screen_width), random.randint(0, screen_height), speed)
-        
+
         else:
             return None
     def test_database_connection(self):
@@ -83,7 +82,7 @@ class EnemyFactory():
         enemyList = DungeonCharacterList()
         enemy1 = self.create_enemy("Crab")
         enemy2 = self.create_enemy("Pirate")
-    
+
         enemyList.add_entity(enemy1)
         enemyList.add_entity(enemy2)
         return enemyList

@@ -31,6 +31,7 @@ class MView:
         self.theRoom = pygame.Rect(0,0,  screen_width, screen_height) 
         self.theNewRoom = self.theTest
         self.cords = None
+        self.playerHealth = 100
         # self.theNewRoom = (10,10,10)
     
     def getScreen(self):
@@ -39,6 +40,12 @@ class MView:
     def clear(self):
         """Clear the screen before drawing the next frame."""
         self.screen.fill((0, 0, 0))  # Fill screen with black
+
+
+    def updateUI(self, event: pygame.event.Event):
+        self.playerHealth = event.health
+        self.redrawCharacter()
+
 
     def updateRoom(self, event: pygame.event.Event):
         """Updates the room background and displays room coordinates at the center."""
@@ -57,21 +64,24 @@ class MView:
 
 
     def addCharacterToScreenList(self, theEvent:pygame.event):
-        #print("addid",theEvent.id)
-        #print(self.onScreenChar)
+        
         newCharSprite = self.mySpriteFactory.createSpriteSheet(theEvent.id, theEvent.name, theEvent.positionX,theEvent.positionY)
-        #print("addchar: ",newCharSprite.getName())
         self.onScreenChar.append(newCharSprite)
-        #print("waaa",self.onScreenChar)
+    
+    def remove_projectile(self, theEvent:pygame.event):
+        """Removes a projectile from the screen."""
+        for i in range(len(self.onScreenChar)):
+            if theEvent.id == self.onScreenChar[i].getId():
+                self.onScreenChar.pop(i)
+                break
+        self.redrawCharacter()
 
     def update_entity(self,theEvent:pygame.event):#need to find way to clear canvas when you draw
         """Adds Chracter to list and to screen with new position  """
     
         isIdInSpriteList = False
         for characterSprite in self.onScreenChar:
-            #print(theEvent)
             if characterSprite is not None :
-                #print(characterSprite)
                 if theEvent.id == characterSprite.getId():
                     isIdInSpriteList = True
                 
@@ -113,13 +123,17 @@ class MView:
 
     def redrawCharacter(self):
         """Clears the screen, redraws the room, characters, and room coordinates."""
-        # self.clear()
         self.screen.blit(self.theNewRoom, (0, 0))
 
         # Draw characters
         for currentSprite in self.onScreenChar:
             self.screen.blit(currentSprite.getCurrentSprite(), currentSprite.getRect().topleft)
 
+        font = pygame.font.Font(None, 50)  # Choose an appropriate font and size
+        text_surface = font.render(f"health: {self.playerHealth}", True, (255, 255, 255))  # White text
+        text_rect = text_surface.get_rect(center=(ViewUnits.SCREEN_WIDTH - 100, ViewUnits.SCREEN_HEIGHT - 100))
+            
+        self.screen.blit(text_surface, text_rect)
         # Display room coordinates at the center of the screen
         if self.cords:
             font = pygame.font.Font(None, 50)  # Choose an appropriate font and size
