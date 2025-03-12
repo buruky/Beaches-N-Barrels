@@ -86,6 +86,17 @@ class GameWorld:
         """Add an enemy to the game world."""
         self.player = player
 
+    def collideWithItem(self, thePlayerRect):
+        """Checks if the player's rectangle collides with any item in the current room.
+        If a collision is detected, remove the item from the room and return it."""
+        items = self.currentRoom.get_items()
+        for item in items:
+            if thePlayerRect.colliderect(item.rect):
+                # Remove the item from the room.
+                items.remove(item)
+                return item
+        return None
+    
     def getPlayer(self):
         """Returns the player object."""
         return self.player
