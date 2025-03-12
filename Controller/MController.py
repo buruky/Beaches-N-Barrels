@@ -59,6 +59,8 @@ class MController:
 
         if self.__myPlayer._ability:
             self.__myPlayer._ability.update()
+        if self.__myPlayer._item_Ability:
+            self.__myPlayer._item_Ability.update()
         
         
         return self.__myIsRunning
@@ -95,6 +97,7 @@ class MController:
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_k:
                 self.__myWorld.testRandomKillEnemy()
                 self.__myView.redrawCharacter()
+            
             EventManager.dispatch_event(event)
 
     def __handle_keyboard(self):
@@ -104,6 +107,8 @@ class MController:
 
         if keys[pygame.K_e]:  # Press 'E' to activate ability
             self.__myPlayer.activate_ability()
+        elif keys[pygame.K_t]:  # Press 'E' to activate ability
+            self.__myPlayer.use_item()
          # Handle shooting projectiles with cooldown
         current_time = pygame.time.get_ticks()  # Get current time in milliseconds
         # Directly call the shooting method instead of posting an event
