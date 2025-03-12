@@ -5,6 +5,8 @@ from .Pirate import Pirate
 from .DungeonCharacterList import DungeonCharacterList
 from .database import initialize_enemy_db
 import sqlite3
+import random
+from ViewUnits import ViewUnits
 
 class EnemyFactory():
     _instance = None  # Stores the single instance
@@ -35,24 +37,26 @@ class EnemyFactory():
             row = cursor.fetchone()
             connection.close()
             if row:
-                return {"attack": row[0], "health": row[1], "speed": row[2]}
+                return {"attack": row[0], "health": row[1], "speed": row[2], }
         except Exception as e:
             print(f"Error loading enemy data for {enemy_type}: {e}")
         # default
         return {"attack": self._DEFAULT_ATTACK_DAMAGE,
                 "health": self._DEFAULT_HEALTH,
                 "speed": self._DEFAULT_SPEED}
-    
-    def create_enemy(self, enemy_type: str, posX: int, posY: int):
+    ### for creating enemy
+    def create_enemy(self, enemy_type: str):
         data = self.load_enemy_data(enemy_type)
         attack = data["attack"]
         health = data["health"]
         speed = data["speed"]
-        
+        screen_width = ViewUnits.SCREEN_WIDTH - 50
+        screen_height = ViewUnits.SCREEN_HEIGHT -50
         if enemy_type == "Pirate":
-            return Pirate(attack, health, posX, posY, speed)
+            return Pirate(attack, health, random.randint(0,screen_width), random.randint(0, screen_height), speed)
         elif enemy_type == "Crab":
-            return Crab(attack, health, posX, posY, speed)
+            return Crab(attack, health, random.randint(0,screen_width), random.randint(0, screen_height), speed)
+        
         else:
             return None
     def test_database_connection(self):
@@ -74,11 +78,12 @@ class EnemyFactory():
         if cls._instance is None:  # Ensure an instance exists
             cls._instance = cls()  # This triggers __new__()
         return cls._instance
-    
+    #### for creating enemy
     def createNormalTemplate(self):
         enemyList = DungeonCharacterList()
-        enemy1 = self.create_enemy("Crab", 150, 100)
-        enemy2 = self.create_enemy("Pirate", 400, 100)
+        enemy1 = self.create_enemy("Crab")
+        enemy2 = self.create_enemy("Pirate")
+    
         enemyList.add_entity(enemy1)
         enemyList.add_entity(enemy2)
         return enemyList
