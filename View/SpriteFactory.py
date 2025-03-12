@@ -54,7 +54,7 @@ class SpriteFactory:
         # but we create two images for consistency.
         self.projectileDolphinImage = pygame.transform.scale(self.myRawProjectileImage, ViewUnits.DEFAULT_SPRITE_DIM)
         self.projectileBuddhaImage = pygame.transform.scale(self.myRaw2ProjectileImage, ViewUnits.DEFAULT_SPRITE_DIM)
-        self.projectileAstronautImage = pygame.transform.scale(self.myRaw3ProjectileImage, ViewUnits.DEFAULT_SPRITE_DIM)
+        self.projectileAstronautImage = pygame.transform.scale(self.myRaw3ProjectileImage, (100,100))
 
         # Initialize the sprite sheets dictionary if needed
         self.listOfSpriteSheets = {}

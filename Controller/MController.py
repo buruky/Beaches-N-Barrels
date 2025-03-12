@@ -133,7 +133,6 @@ class MController:
     def __shoot_projectile(self, shooter, direction):
         """Handles shooting a projectile in the given direction."""
         shooterName = "Projectile" + shooter.getName()
-        print(shooterName)
         if shooter:
             projectile = Projectile(
                 name= shooterName,

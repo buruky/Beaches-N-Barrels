@@ -72,7 +72,7 @@ class Projectile(DungeonCharacter):
 
     def Dies(self) -> None:
         """Handles when a projectile is removed from the game."""
-        print(f"{self._name} has been removed!")  # Debugging
+        # print(f"{self._name} has been removed!")  # Debugging
         self.is_active = False  # Stop movement
         self._game_world.removeProjectile(self)
 

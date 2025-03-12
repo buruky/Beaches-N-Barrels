@@ -179,6 +179,7 @@ class GameWorld:
             projectile.getPositionY() < 0 or projectile.getPositionY() > room_height):
             # Destroy projectile if it goes outside the room
             return True  # Collision detected (out of bounds)
+        
         # Check collision with enemies
         for enemy in self.currentRoom.getEnemyList().get_entities():
             if enemy is projectile.shooter:  # 🔥 Ignore the shooter
@@ -186,7 +187,7 @@ class GameWorld:
 
             enemy_rect = pygame.Rect(enemy.getPositionX(), enemy.getPositionY(), 50, 50)
             if projectile_rect.colliderect(enemy_rect):
-                enemy.Dies()  # Apply projectile damage
+                enemy.takeDamage(projectile.shooter.getAttackDamage())  # Apply projectile damage
                 # projectile.Dies()  # Destroy projectile
 
                 # self.updateWorld()
@@ -196,7 +197,7 @@ class GameWorld:
         if projectile.shooter in self.currentRoom.getEnemyList().get_entities():
             player_rect = pygame.Rect(self.player.getPositionX(), self.player.getPositionY(), 50, 50)
             if projectile_rect.colliderect(player_rect):
-                self.player.takeDamage(projectile.attackDamage)  # Player takes damage
+                self.player.takeDamage(projectile.shooter.getAttackDamage())  # Player takes damage
                 # projectile.Dies()  # Destroy projectile
                 # self.updateWorld()
                 return True
