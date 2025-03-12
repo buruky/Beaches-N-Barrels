@@ -5,5 +5,5 @@ class Dolphin(Player):
     """Dolphin hero that can swim fast temporarily."""
     
     def __init__(self):
-        super().__init__("Dolphin", speed=7, health=100)  # Faster base speed, more health
+        super().__init__("Dolphin", speed=7, health=100, damage = 40)  # Faster base speed, more health
         self._ability = SpeedBoostAbility(self)

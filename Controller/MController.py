@@ -1,10 +1,11 @@
 from typing import Final
 import pygame
-import random
+from ViewUnits import ViewUnits
 from .MModel import MModel
 from Model.Dolphin import Dolphin
 from Model.Buddha import Buddha
 from Model.Astronaut import Astronaut
+from Model.Projectile import Projectile
 from Model import *
 from View import *
 from CustomEvents import CustomEvents
@@ -24,7 +25,8 @@ class MController:
         self.__myView: Final = MView()
         self.__InitalizeEvents()
         self.__myIsRunning = True
-        self.__myIsHoldingClick = False
+        self.shoot_cooldown = 300  # 300ms = 0.3 seconds between shots
+        self.last_shot_time = 0  # Time of last shot
         
         # Show title screen and get character selection
         title_screen = TitleScreen(self.__myView.screen)
@@ -58,6 +60,7 @@ class MController:
         if self.__myPlayer._ability:
             self.__myPlayer._ability.update()
         
+        
         return self.__myIsRunning
     
     def __InitalizeEvents(self):
@@ -70,6 +73,9 @@ class MController:
         EventManager.registerEvent(CustomEvents.CHARACTER_STOPPED, self.__myView.update_entity)
         EventManager.registerEvent(CustomEvents.PLAYER_DIED, self.__handle_character_death)
         EventManager.registerEvent(CustomEvents.CHANGED_ROOM, self.__myView.updateRoom)
+        EventManager.registerEvent(CustomEvents.SHOOT_PROJECTILE, self.__shoot_projectile)
+        EventManager.registerEvent(CustomEvents.TOOK_DAMAGE, self.__myView.updateUI)
+        EventManager.registerEvent(CustomEvents.UPDATE_PROJECTILE, self.__myView.remove_projectile)
 
     def __handle_character_death(self, event):
         """Displays 'Game Over' and stops the game loop."""
@@ -98,7 +104,60 @@ class MController:
 
         if keys[pygame.K_e]:  # Press 'E' to activate ability
             self.__myPlayer.activate_ability()
-        
+         # Handle shooting projectiles with cooldown
+        current_time = pygame.time.get_ticks()  # Get current time in milliseconds
+        # Directly call the shooting method instead of posting an event
+        if current_time - self.last_shot_time >= self.shoot_cooldown:  # Check if cooldown has passed
+            if keys[pygame.K_UP]:  
+                event = pygame.event.Event(
+                    EventManager.event_types["SHOOT_PROJECTILE"],
+                    {"shooter": self.__myPlayer.getName(),
+                    "direction": "UP",
+                    "damage": self.__myPlayer.getAttackDamage(),
+                    "positionX": self.__myPlayer.getPositionX(),
+                    "positionY": self.__myPlayer.getPositionY(),
+                    "speed": 10}        
+                )
+                pygame.event.post(event)
+                self.last_shot_time = current_time  # Update last shot time
+            elif keys[pygame.K_DOWN]:   
+                event = pygame.event.Event(
+                    EventManager.event_types["SHOOT_PROJECTILE"],
+                    {"shooter": self.__myPlayer.getName(),
+                    "direction": "DOWN",
+                    "damage": self.__myPlayer.getAttackDamage(),
+                    "positionX": self.__myPlayer.getPositionX(),
+                    "positionY": self.__myPlayer.getPositionY(),
+                    "speed": 10}        
+                )
+                pygame.event.post(event)
+                self.last_shot_time = current_time
+            elif keys[pygame.K_LEFT]:  
+                event = pygame.event.Event(
+                    EventManager.event_types["SHOOT_PROJECTILE"],
+                    {"shooter": self.__myPlayer.getName(),
+                    "direction": "LEFT",
+                    "damage": self.__myPlayer.getAttackDamage(),
+                    "positionX": self.__myPlayer.getPositionX(),
+                    "positionY": self.__myPlayer.getPositionY(),
+                    "speed": 10}        
+                )
+                pygame.event.post(event)
+                self.last_shot_time = current_time
+            elif keys[pygame.K_RIGHT]:  
+                event = pygame.event.Event(
+                    EventManager.event_types["SHOOT_PROJECTILE"],
+                    {"shooter": self.__myPlayer.getName(),
+                    "direction": "RIGHT",
+                    "damage": self.__myPlayer.getAttackDamage(),
+                    "positionX": self.__myPlayer.getPositionX(),
+                    "positionY": self.__myPlayer.getPositionY(),
+                    "speed": 10}        
+                )
+                pygame.event.post(event)
+                self.last_shot_time = current_time
+
+        # Handle movement with WASD keys
         for key, direction in self.__myKeyMap.items():
             if keys[key]:
                 directions.append(direction)
@@ -106,6 +165,23 @@ class MController:
         if directions:
             self.__myPlayer.moveCharacter(directions)
 
+    def __shoot_projectile(self, event: pygame.event.Event):
+        """Handles shooting a projectile in the given direction."""
+        shooterName = "Projectile" + event.shooter
+        if event.shooter:
+            projectile = Projectile(
+                name= shooterName,
+                shooter=event.shooter,
+                attackDamage=event.damage,  # Get attack damage from player
+                direction=event.direction,
+                speed=event.speed,  # Set an appropriate speed
+                positionX=event.positionX,
+                positionY=event.positionY
+            )
+            
+            self.__myWorld.addProjectile(projectile)  # Add to the game world
+
+            
     def __mouseButtonUp(self, theEvent):
         """Handles mouse button release."""
         if theEvent.button in [1, 3]:  # Left or right click

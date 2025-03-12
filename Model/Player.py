@@ -9,8 +9,8 @@ import pygame
 class Player(DungeonCharacter):
     """Parent class for all player heroes with shared movement and event handling."""
     
-    def __init__(self, name: str, speed: int, health: int):
-        super().__init__(50, health, 250, 250, speed)  # Default attackDamage = 50
+    def __init__(self, name: str, speed: int, health: int, damage: int):
+        super().__init__(damage, health, 250, 250, speed)  # Default attackDamage = 50
         self._myHealth = health
         self._name = name
         self._direction = None
@@ -19,6 +19,10 @@ class Player(DungeonCharacter):
         """Update sprite when player is made"""
         self.update(CustomEvents.CHARACTER_STOPPED)
 
+
+    def getAttackDamage(self) -> int:
+        return self._myAttackDamage
+    
     def moveCharacter(self, theDirections: list) -> None:
         dx, dy = 0, 0
 
@@ -71,7 +75,14 @@ class Player(DungeonCharacter):
     
     def takeDamage(self, damage: int):
         self._myHealth -= damage
-        print("health after damage: ",self._myHealth)
+        print("player health after damage: ",self._myHealth)
+        event = pygame.event.Event(
+            EventManager.event_types["TOOK_DAMAGE"],
+            {"name": self.getName(),
+             "health": self.getHealth()
+            }        
+        )
+        pygame.event.post(event)
         if self._myHealth <= 0:
             self.Dies()
 
@@ -101,7 +112,8 @@ class Player(DungeonCharacter):
 
     def getPositionX(self) -> int:
         return self._myPositionX
-    
+    def getHealth(self):
+        return self._myHealth
     def getPositionY(self) -> int:
         return self._myPositionY
     

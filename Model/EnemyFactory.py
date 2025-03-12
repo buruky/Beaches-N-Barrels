@@ -9,8 +9,8 @@ from ViewUnits import ViewUnits
 class EnemyFactory():
     _instance = None  # Stores the single instance
     _DEFAULT_SPEED:Final = 2
-    _DEFAULT_HEALTH:Final = 1
-    _DEFAULT_ATTACK_DAMAGE:Final = 150
+    _DEFAULT_HEALTH:Final = 50
+    _DEFAULT_ATTACK_DAMAGE:Final = 20
     
 
     def __new__(cls):
@@ -31,8 +31,8 @@ class EnemyFactory():
     
     def createNormalTemplate(self):
         enemyList = DungeonCharacterList()
-        screen_width = ViewUnits.SCREEN_WIDTH
-        screen_height = ViewUnits.SCREEN_HEIGHT
+        screen_width = ViewUnits.SCREEN_WIDTH - 50
+        screen_height = ViewUnits.SCREEN_HEIGHT - 50
         enemy1 = Crab(
             EnemyFactory._DEFAULT_ATTACK_DAMAGE, 
             EnemyFactory._DEFAULT_HEALTH,
@@ -42,7 +42,7 @@ class EnemyFactory():
         )
         enemy2 = Pirate(
             EnemyFactory._DEFAULT_ATTACK_DAMAGE, 
-            EnemyFactory._DEFAULT_HEALTH,
+            EnemyFactory._DEFAULT_HEALTH + 50,
             random.randint(0, screen_width),  # Random x position
             random.randint(0, screen_height),  # Random y position
             EnemyFactory._DEFAULT_SPEED
