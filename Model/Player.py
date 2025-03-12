@@ -9,8 +9,8 @@ import pygame
 class Player(DungeonCharacter):
     """Parent class for all player heroes with shared movement and event handling."""
     
-    def __init__(self, name: str, speed: int, health: int):
-        super().__init__(50, health, 250, 250, speed)  # Default attackDamage = 50
+    def __init__(self, name: str, speed: int, health: int, damage: int):
+        super().__init__(damage, health, 250, 250, speed)  # Default attackDamage = 50
         self._myHealth = health
         self._name = name
         self._direction = None

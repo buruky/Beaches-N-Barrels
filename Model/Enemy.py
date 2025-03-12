@@ -16,6 +16,7 @@ class Enemy(DungeonCharacter, ABC):
         """Initializes an enemy with basic attributes."""
         super().__init__(attackDamage, healthPoints, positionX, positionY, speed)
         self._name = name
+        self._myHealth = healthPoints
         self._direction = random.choice(["UP", "DOWN", "LEFT", "RIGHT"])
         self._move_timer = pygame.time.get_ticks()
         from .GameWorld import GameWorld
@@ -56,7 +57,12 @@ class Enemy(DungeonCharacter, ABC):
         if not GameWorld.getInstance().check_collision(pygame.Rect(new_x, new_y, 50, 50), ignore):
             self._myPositionX, self._myPositionY = new_x, new_y
             self._post_move_event()
-
+    def takeDamage(self, damage: int):
+        self._myHealth -= damage
+        print("health after damage: ",self._myHealth)
+        if self._myHealth <= 0:
+            self.Dies()
+            
     def _post_move_event(self):
         """Posts an event when the enemy moves."""
         event = pygame.event.Event(

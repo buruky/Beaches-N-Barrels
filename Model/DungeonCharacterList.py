@@ -16,7 +16,7 @@ class DungeonCharacterList:
             #pass 
             character.update()
 
-    def deleteEnemy(self):
+    def deleteAllEnemy(self):
         self.__myDungeonCharacterList.clear()
         self.update_all()
     

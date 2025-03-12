@@ -131,9 +131,10 @@ class MController:
 
     def __shoot_projectile(self, shooter, direction):
         """Handles shooting a projectile in the given direction."""
+        shooterName = "Projectile" + shooter.getName()
         if shooter:
             projectile = Projectile(
-                name="Projectile",
+                name= shooterName,
                 shooter=shooter,
                 attackDamage=shooter.getAttackDamage(),  # Get attack damage from player
                 direction=direction,
