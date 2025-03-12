@@ -1,6 +1,10 @@
 from .Room import Room
 from .EnemyFactory import EnemyFactory
 from .DungeonCharacterList import DungeonCharacterList
+import random
+from .Item import MockItem 
+from ViewUnits import ViewUnits
+
 class RoomFactory():
     _instance = None  # Stores the single instance
 
@@ -29,9 +33,22 @@ class RoomFactory():
         elif theRoomType == self.n:
             return self.createNormalRoom(theRoomType, theX, theY)
 
-    def createStartRoom(self, theRoomType:str, theX, theY):
-        return Room(theRoomType, theX, theY, DungeonCharacterList())
-    
-    def createNormalRoom(self, theRoomType, theX, theY):
+    def createStartRoom(self, theRoomType: str, theX, theY):
+        self.__myEnemyFactory.test_database_connection()
+        room = Room(theRoomType, theX, theY, DungeonCharacterList())
+        # Add a random number (0-2) of items to the start room.
+        for _ in range(random.randint(3, 5)):
+            pos = (random.randint(0, ViewUnits.SCREEN_WIDTH - 50),
+                random.randint(0, ViewUnits.SCREEN_HEIGHT - 50))
+            room.add_item(MockItem(pos))
+        return room
+
+    def createNormalRoom(self, theRoomType, theX, theY):    
         enemylist = self.__myEnemyFactory.createNormalTemplate()
-        return Room(theRoomType, theX, theY, enemylist)
+        room = Room(theRoomType, theX, theY, enemylist)
+        # Add a random number (0-2) of items to a normal room.
+        for _ in range(random.randint(3, 5)):
+            pos = (random.randint(0, ViewUnits.SCREEN_WIDTH - 50),
+                random.randint(0, ViewUnits.SCREEN_HEIGHT - 50))
+            room.add_item(MockItem(pos))
+        return room

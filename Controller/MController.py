@@ -31,7 +31,7 @@ class MController:
         # Show title screen and get character selection
         title_screen = TitleScreen(self.__myView.screen)
         selected_character = title_screen.run()
-
+        
         # Load or create new game
         self.__myWorld = GameWorld.getInstance()
         if selected_character == "Load":
@@ -61,8 +61,6 @@ class MController:
             self.__myPlayer._ability.update()
         if self.__myPlayer._item_Ability:
             self.__myPlayer._item_Ability.update()
-        
-        
         return self.__myIsRunning
     
     def __InitalizeEvents(self):

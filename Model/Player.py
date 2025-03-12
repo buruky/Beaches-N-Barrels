@@ -4,6 +4,7 @@ from .DungeonCharacter import DungeonCharacter
 from .EventManager import EventManager
 from CustomEvents import CustomEvents
 from .GameWorld import GameWorld
+from .Abilities import SpeedBoostAbility
 import pygame
 
 class Player(DungeonCharacter):
@@ -16,6 +17,10 @@ class Player(DungeonCharacter):
         self._direction = None
         self._ability = None  # To be set by subclasses
 
+        #item
+        self.__inventory = []
+        self._item_Ability = SpeedBoostAbility(self)
+        
         """Update sprite when player is made"""
         self.update(CustomEvents.CHARACTER_STOPPED)
 
@@ -60,6 +65,10 @@ class Player(DungeonCharacter):
         if collidedDoor is not None:
             self.teleportCharacter(ViewUnits.SCREEN_WIDTH//2, ViewUnits.SCREEN_HEIGHT//2)
 
+        collidedItem = GameWorld.getInstance().collideWithItem(pygame.Rect(new_x, new_y, 50, 50))
+        if collidedItem is not None:
+            self.pickup(collidedItem)
+
         if dx != 0 or dy != 0:
             """Character is moving"""
             self.update(CustomEvents.CHARACTER_MOVED)
@@ -67,6 +76,31 @@ class Player(DungeonCharacter):
         if theDirections:
             self._direction = theDirections[-1]  # Last key pressed is priority
     
+    def pickup(self, item) -> None:
+        self.__inventory.append(item)
+        print(f"Picked up {item}")
+        print([str(obj) for obj in self.__inventory])
+
+    def getInventory(self) -> list:
+        return self.__inventory
+    
+    def use_item(self) -> None:
+        ### use item when t is pressed
+        if self.__inventory:
+            item = self.__inventory[0]
+            if item.name == "MockItem":
+                if not self._item_Ability.active:
+                    self.__inventory.pop(0)
+                    self._item_Ability.use()
+                    print([str(obj) for obj in self.__inventory])
+            else:
+                #other items
+                print("other items")
+            #event to update the UI
+            #self.update("ITEM_USED")
+        #else:
+            #print("No items available to use!")
+     
     def teleportCharacter(self, num1: int, num2: int) -> None:
         self._myPositionX = num1
         self._myPositionY = num2
@@ -102,8 +136,15 @@ class Player(DungeonCharacter):
         )
         pygame.event.post(event)
 
-    
+    def update_items(self) -> None:
+        """
+        Updates each item in the player's inventory so that cooldowns are tracked.
+        Call this in your game loop tick.
+        """
+        for item in self.__inventory:
+            item.update(self)
 
+    
     def Dies(self) -> None:
         """Trigger death event"""
         print(f"{self._name} has died!")  # Debugging
