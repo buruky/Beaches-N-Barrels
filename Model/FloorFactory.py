@@ -102,6 +102,15 @@ class FloorFactory:
             if not added_room:
                 dead_ends.append(current)
 
+        if dead_ends:
+            boss_dead_end = random.choice(dead_ends)
+            for dead in dead_ends:
+                room = grid[dead[0]][dead[1]]
+                if room:
+                    if dead == boss_dead_end:
+                        room.setRoomType("b ")
+                    else:
+                        room.setRoomType("k ")
         return grid  
 
 

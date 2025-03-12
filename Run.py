@@ -14,7 +14,7 @@ class Run:
 
     pygame.quit()
 
-"""
+"""s
 For resident linux user, pls dont delete! :d
 python3 -m venv myenv
 source myenv/bin/activate

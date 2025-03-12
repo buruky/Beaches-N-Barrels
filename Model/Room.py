@@ -18,6 +18,7 @@ class Room:
         
         self.rect = pygame.Rect(0,0,ViewUnits.SCREEN_WIDTH, ViewUnits.SCREEN_HEIGHT)
         self.__myEnemyList = theEnemyList
+        self.__items = []
 
     
     def addDoor(self, theDirection, theDoor):
@@ -45,11 +46,16 @@ class Room:
             
     def getRoomType(self):
         return self.__myRoomType
+    def setRoomType(self, new_type: str) -> None:
+        self.__myRoomType = new_type
     def getEnemyList(self):
         return self.__myEnemyList
     def getCords(self):
         return [self.__myX,self.__myY]
-    
+    def add_item(self, item):
+        self.__items.append(item)
+    def get_items(self):
+        return self.__items
     def getDoorMap(self):
         return self.__myDoorMap
     def __str__(self):

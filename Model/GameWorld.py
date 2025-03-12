@@ -136,6 +136,18 @@ class GameWorld:
                     #self.printConnectedDoors(self.currentRoom)
                     return door.getConnectedDoorDirection(self.currentRoom)#maybe return cords
         return None
+    
+
+    def collideWithItem(self, thePlayerRect):
+        """Checks if the player's rectangle collides with any item in the current room.
+        If a collision is detected, remove the item from the room and return it."""
+        items = self.currentRoom.get_items()
+        for item in items:
+            if thePlayerRect.colliderect(item.rect):
+                # Remove the item from the room.
+                items.remove(item)
+                return item
+        return None
                     
 
     # def printCheckDirection(self,theDir):

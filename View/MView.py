@@ -4,6 +4,8 @@ import pygame
 from .SpriteSheet import SpriteSheet
 from .SpriteFactory import SpriteFactory
 from ViewUnits import ViewUnits
+from Model.GameWorld import GameWorld 
+
 class MView:
     def __init__(self):
         # self.screen = screen
@@ -85,7 +87,6 @@ class MView:
         self.redrawCharacter()
 
 
-
     def display_game_over(self):
         """Display 'Game Over' and stop the game."""
         self.clear()
@@ -98,6 +99,18 @@ class MView:
         pygame.display.flip()
 
         pygame.time.delay(3000)  # Pause for some seconds before quitting
+
+    def draw_room_items(self, room):
+        """Draws items present in the room using the crab sprite sheet at the item's stored position."""
+        items = room.get_items()
+        for item in items:
+            # Use the item's stored position.
+            pos_x, pos_y = item.position  # Assuming each item has a 'position' attribute.
+            # Create a crab sprite for this item.
+            item_sprite = self.mySpriteFactory.createCrabSpriteSheet(id(item), pos_x, pos_y)
+            # Draw the sprite at its designated position.
+            self.screen.blit(item_sprite.getCurrentSprite(), item_sprite.getRect().topleft)
+
     def redrawCharacter(self):
         """Clears the screen, redraws the room, characters, and room coordinates."""
         # self.clear()
@@ -115,6 +128,9 @@ class MView:
             
             self.screen.blit(text_surface, text_rect)
         
+        current_room = GameWorld.getInstance().getCurrentRoom()
+        if current_room is not None:
+            self.draw_room_items(current_room)
         pygame.display.flip()
 
 
