@@ -1,8 +1,8 @@
 import os
 import pygame
 #from Model.GameWorld import GameWorld
-from .SpriteSheet import SpriteSheet
-from .SpriteFactory import SpriteFactory
+
+from .SpriteAnimatorFactory import SpriteAnimatorFactory
 from ViewUnits import ViewUnits
 class MView:
     def __init__(self):
@@ -10,24 +10,18 @@ class MView:
         current_directory = os.path.dirname(__file__)
 
         # Build the relative path to the player and enemy images
-        player_image_path = os.path.join(current_directory, '..', 'Assets', 'TestBackround.png')
-        self.myRawPlayerImage = pygame.image.load(player_image_path)
-        self.theTest = pygame.transform.scale(self.myRawPlayerImage, (ViewUnits.SCREEN_WIDTH,ViewUnits.SCREEN_HEIGHT))
-        player_image_path2 = os.path.join(current_directory, '..', 'Assets', 'Testbackround2.png')
-        self.myRawPlayerImage2 = pygame.image.load(player_image_path2)
-        self.theTest2 = pygame.transform.scale(self.myRawPlayerImage2, (ViewUnits.SCREEN_WIDTH,ViewUnits.SCREEN_HEIGHT))
+        
+        
 
-
-        door_image_path = os.path.join(current_directory, '..', 'Assets', 'door.png')
-        self.mydoor = pygame.image.load(door_image_path)
+        self.myAnimatiorFactory = SpriteAnimatorFactory()
+        
+        
         
         screen_width = ViewUnits.SCREEN_WIDTH
         screen_height = ViewUnits.SCREEN_HEIGHT
         self.screen = pygame.display.set_mode((screen_width, screen_height))
-        self.mySpriteFactory = SpriteFactory()
         self.onScreenChar = []
         self.theRoom = pygame.Rect(0,0,  screen_width, screen_height) 
-        self.theNewRoom = self.theTest
         self.cords = None
         # self.theNewRoom = (10,10,10)
     
@@ -56,7 +50,7 @@ class MView:
 
     def addCharacterToScreenList(self, theEvent:pygame.event):
         
-        newCharSprite = self.mySpriteFactory.createSpriteSheet(theEvent.id, theEvent.name, theEvent.positionX,theEvent.positionY)
+        newCharSprite = self.myAnimatiorFactory.createSpriteAnimator( theEvent.name, theEvent.id, theEvent.positionX,theEvent.positionY)
         self.onScreenChar.append(newCharSprite)
     
     def remove_projectile(self, theEvent:pygame.event):

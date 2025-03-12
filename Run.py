@@ -7,7 +7,8 @@ class Run:
     __myController: Final = MController()
     __myClock: Final = pygame.time.Clock()
     __myRunning = True
-    while __myRunning:
+    while __myRunning:\
+    
         if __myController.ControllerTick() == False:
             __myRunning = False
         __myClock.tick(60)

@@ -1,0 +1,32 @@
+
+"""
+NAMING CONVENTIONS FOR ASSETS:
+
+background image/title screen image: background-name
+
+button : button-name
+
+UI: UI-name
+
+everything else: Name-STATE-#
+
+
+----------------------------------------------
+name: is the name of the object associated with it, 
+    you will have to add a new name to constants to add new sprites to assets folder.
+
+STATE: is the action the thing is taking.
+
+#: is the number in the sequence of animation, starts at 0!
+
+
+
+ex :
+button-Exit
+UI-Title
+Dolphin-IDLE-0"
+background-StartRoom
+background-BossRoom
+Pirate-SIDE-3 ( left and right will flip in program)
+Pirate-DIE-2
+"""
