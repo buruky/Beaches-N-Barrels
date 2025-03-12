@@ -75,7 +75,7 @@ class Player(DungeonCharacter):
     
     def takeDamage(self, damage: int):
         self._myHealth -= damage
-        print("health after damage: ",self._myHealth)
+        print("player health after damage: ",self._myHealth)
         if self._myHealth <= 0:
             self.Dies()
 

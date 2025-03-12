@@ -73,6 +73,8 @@ class MController:
         EventManager.registerEvent(CustomEvents.CHARACTER_STOPPED, self.__myView.update_entity)
         EventManager.registerEvent(CustomEvents.PLAYER_DIED, self.__handle_character_death)
         EventManager.registerEvent(CustomEvents.CHANGED_ROOM, self.__myView.updateRoom)
+        EventManager.registerEvent(CustomEvents.SHOOT_PROJECTILE, self.__shoot_projectile)
+
         EventManager.registerEvent(CustomEvents.UPDATE_PROJECTILE, self.__myView.remove_projectile)
 
     def __handle_character_death(self, event):
@@ -107,16 +109,52 @@ class MController:
         # Directly call the shooting method instead of posting an event
         if current_time - self.last_shot_time >= self.shoot_cooldown:  # Check if cooldown has passed
             if keys[pygame.K_UP]:  
-                self.__shoot_projectile(self.__myPlayer, "UP")
+                event = pygame.event.Event(
+                    EventManager.event_types["SHOOT_PROJECTILE"],
+                    {"shooter": self.__myPlayer.getName(),
+                    "direction": "UP",
+                    "damage": self.__myPlayer.getAttackDamage(),
+                    "positionX": self.__myPlayer.getPositionX(),
+                    "positionY": self.__myPlayer.getPositionY(),
+                    "speed": 10}        
+                )
+                pygame.event.post(event)
                 self.last_shot_time = current_time  # Update last shot time
-            elif keys[pygame.K_DOWN]:  
-                self.__shoot_projectile(self.__myPlayer, "DOWN")
+            elif keys[pygame.K_DOWN]:   
+                event = pygame.event.Event(
+                    EventManager.event_types["SHOOT_PROJECTILE"],
+                    {"shooter": self.__myPlayer.getName(),
+                    "direction": "DOWN",
+                    "damage": self.__myPlayer.getAttackDamage(),
+                    "positionX": self.__myPlayer.getPositionX(),
+                    "positionY": self.__myPlayer.getPositionY(),
+                    "speed": 10}        
+                )
+                pygame.event.post(event)
                 self.last_shot_time = current_time
             elif keys[pygame.K_LEFT]:  
-                self.__shoot_projectile(self.__myPlayer, "LEFT")
+                event = pygame.event.Event(
+                    EventManager.event_types["SHOOT_PROJECTILE"],
+                    {"shooter": self.__myPlayer.getName(),
+                    "direction": "LEFT",
+                    "damage": self.__myPlayer.getAttackDamage(),
+                    "positionX": self.__myPlayer.getPositionX(),
+                    "positionY": self.__myPlayer.getPositionY(),
+                    "speed": 10}        
+                )
+                pygame.event.post(event)
                 self.last_shot_time = current_time
             elif keys[pygame.K_RIGHT]:  
-                self.__shoot_projectile(self.__myPlayer, "RIGHT")
+                event = pygame.event.Event(
+                    EventManager.event_types["SHOOT_PROJECTILE"],
+                    {"shooter": self.__myPlayer.getName(),
+                    "direction": "RIGHT",
+                    "damage": self.__myPlayer.getAttackDamage(),
+                    "positionX": self.__myPlayer.getPositionX(),
+                    "positionY": self.__myPlayer.getPositionY(),
+                    "speed": 10}        
+                )
+                pygame.event.post(event)
                 self.last_shot_time = current_time
 
         # Handle movement with WASD keys
@@ -127,21 +165,20 @@ class MController:
         if directions:
             self.__myPlayer.moveCharacter(directions)
 
-
-
-    def __shoot_projectile(self, shooter, direction):
+    def __shoot_projectile(self, event: pygame.event.Event):
         """Handles shooting a projectile in the given direction."""
-        shooterName = "Projectile" + shooter.getName()
-        if shooter:
+        shooterName = "Projectile" + event.shooter
+        if event.shooter:
             projectile = Projectile(
                 name= shooterName,
-                shooter=shooter,
-                attackDamage=shooter.getAttackDamage(),  # Get attack damage from player
-                direction=direction,
-                speed=10,  # Set an appropriate speed
-                positionX=shooter.getPositionX(),
-                positionY=shooter.getPositionY()
+                shooter=event.shooter,
+                attackDamage=event.damage,  # Get attack damage from player
+                direction=event.direction,
+                speed=event.speed,  # Set an appropriate speed
+                positionX=event.positionX,
+                positionY=event.positionY
             )
+            
             self.__myWorld.addProjectile(projectile)  # Add to the game world
 
             

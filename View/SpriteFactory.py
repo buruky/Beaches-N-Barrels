@@ -77,7 +77,7 @@ class SpriteFactory:
             return self.createProjectileDolphinSpriteSheet(theId, thePositionX, thePositionY)
         elif theName == "ProjectileBuddha":
             return self.createProjectileBuddhaSpriteSheet(theId, thePositionX, thePositionY)
-        elif theName == "ProjectileAstronaut":
+        elif theName == "ProjectileAstronaut" or theName == "ProjectilePirate":
             return self.createProjectileAstronautSpriteSheet(theId, thePositionX, thePositionY)
         else:  # Default to generic enemy
             return self.createEnemySpriteSheet(theId, thePositionX, thePositionY)

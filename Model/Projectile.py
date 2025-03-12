@@ -10,6 +10,7 @@ class Projectile(DungeonCharacter):
         super().__init__(attackDamage, direction, positionX, positionY, speed)  # Ensure DungeonCharacter handles these
 
         # If DungeonCharacter does not define these attributes, we explicitly declare them
+        self.damage = attackDamage
         self.shooter = shooter
         self.x = positionX
         self.y = positionY
@@ -32,6 +33,9 @@ class Projectile(DungeonCharacter):
         if self.is_active:
             self.moveCharacter()
 
+    def getAttackDamage(self):
+        return self.damage
+    
     def moveCharacter(self):
         """Move projectile based on its direction."""
         new_x, new_y = self.x, self.y

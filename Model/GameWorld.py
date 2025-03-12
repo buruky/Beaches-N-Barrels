@@ -153,7 +153,7 @@ class GameWorld:
                 enemy_rect = pygame.Rect(enemy.getPositionX(), enemy.getPositionY(), 50, 50)
                 if rect.colliderect(enemy_rect):
                     if ignore is self.player and (current_time - self.last_damage_time > DAMAGE_COOLDOWN):
-                        self.player.takeDamage(enemy.getDamage())  # Only take damage if cooldown has passed
+                        self.player.takeDamage(enemy.getAttackDamage())  # Only take damage if cooldown has passed
                         self.last_damage_time = current_time  # Reset cooldown timer
                     return True
                 
@@ -161,7 +161,7 @@ class GameWorld:
             player_rect = pygame.Rect(self.player.getPositionX(), self.player.getPositionY(), 50, 50)
             if rect.colliderect(player_rect):
                 if ignore in self.currentRoom.getEnemyList().get_entities() and (current_time - self.last_damage_time > DAMAGE_COOLDOWN):
-                    self.player.takeDamage(ignore.getDamage())  # Apply damage with cooldown
+                    self.player.takeDamage(ignore.getAttackDamage())  # Apply damage with cooldown
                     self.last_damage_time = current_time  # Reset cooldown timer
                 return True
 
@@ -182,22 +182,22 @@ class GameWorld:
         
         # Check collision with enemies
         for enemy in self.currentRoom.getEnemyList().get_entities():
-            if enemy is projectile.shooter:  # 🔥 Ignore the shooter
+            if enemy.getName() is projectile.shooter:  # 🔥 Ignore the shooter
                 continue
 
             enemy_rect = pygame.Rect(enemy.getPositionX(), enemy.getPositionY(), 50, 50)
             if projectile_rect.colliderect(enemy_rect):
-                enemy.takeDamage(projectile.shooter.getAttackDamage())  # Apply projectile damage
+                enemy.takeDamage(projectile.getAttackDamage())  # Apply projectile damage
                 # projectile.Dies()  # Destroy projectile
 
                 # self.updateWorld()
                 return True  # Collision detected
 
         # Check collision with player (only if projectile was fired by an enemy)
-        if projectile.shooter in self.currentRoom.getEnemyList().get_entities():
+        if projectile.shooter != self.player.getName():
             player_rect = pygame.Rect(self.player.getPositionX(), self.player.getPositionY(), 50, 50)
             if projectile_rect.colliderect(player_rect):
-                self.player.takeDamage(projectile.shooter.getAttackDamage())  # Player takes damage
+                self.player.takeDamage(projectile.getAttackDamage())  # Player takes damage
                 # projectile.Dies()  # Destroy projectile
                 # self.updateWorld()
                 return True

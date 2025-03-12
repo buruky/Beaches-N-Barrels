@@ -15,6 +15,7 @@ class Enemy(DungeonCharacter, ABC):
     def __init__(self, name: str, attackDamage: int, healthPoints: int, speed: int, positionX: int, positionY: int):
         """Initializes an enemy with basic attributes."""
         super().__init__(attackDamage, healthPoints, positionX, positionY, speed)
+        self._myAttackDamage = attackDamage
         self._name = name
         self._myHealth = healthPoints
         self._direction = random.choice(["UP", "DOWN", "LEFT", "RIGHT"])
@@ -29,7 +30,8 @@ class Enemy(DungeonCharacter, ABC):
             self._direction = random.choice(["UP", "DOWN", "LEFT", "RIGHT"])
             self._move_timer = current_time
         self.moveCharacter()
-    def getDamage(self):
+
+    def getAttackDamage(self):
         return self._myAttackDamage
 
     def moveCharacter(self):
@@ -57,12 +59,29 @@ class Enemy(DungeonCharacter, ABC):
         if not GameWorld.getInstance().check_collision(pygame.Rect(new_x, new_y, 50, 50), ignore):
             self._myPositionX, self._myPositionY = new_x, new_y
             self._post_move_event()
+
     def takeDamage(self, damage: int):
         self._myHealth -= damage
         print("health after damage: ",self._myHealth)
         if self._myHealth <= 0:
             self.Dies()
             
+    def getName(self):
+        return self._name
+    
+    def shoot(self, theEventName: str):
+        """Post an event when the projectile moves."""
+        event = pygame.event.Event(
+                    EventManager.event_types[theEventName],
+                    {"shooter": self.getName(),
+                    "direction": self._direction,
+                    "damage": self.getAttackDamage(),
+                    "positionX": self.getPositionX(),
+                    "positionY": self.getPositionY(),
+                    "speed": 5}        
+                )
+        pygame.event.post(event)
+
     def _post_move_event(self):
         """Posts an event when the enemy moves."""
         event = pygame.event.Event(
