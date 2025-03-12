@@ -182,7 +182,7 @@ class GameWorld:
         
         # Check collision with enemies
         for enemy in self.currentRoom.getEnemyList().get_entities():
-            if enemy.getName() is projectile.shooter:  # 🔥 Ignore the shooter
+            if enemy.getName() is projectile.shooter:  #  Ignore the shooter
                 continue
 
             enemy_rect = pygame.Rect(enemy.getPositionX(), enemy.getPositionY(), 50, 50)

@@ -76,6 +76,13 @@ class Player(DungeonCharacter):
     def takeDamage(self, damage: int):
         self._myHealth -= damage
         print("player health after damage: ",self._myHealth)
+        event = pygame.event.Event(
+            EventManager.event_types["TOOK_DAMAGE"],
+            {"name": self.getName(),
+             "health": self.getHealth()
+            }        
+        )
+        pygame.event.post(event)
         if self._myHealth <= 0:
             self.Dies()
 
@@ -105,7 +112,8 @@ class Player(DungeonCharacter):
 
     def getPositionX(self) -> int:
         return self._myPositionX
-    
+    def getHealth(self):
+        return self._myHealth
     def getPositionY(self) -> int:
         return self._myPositionY
     

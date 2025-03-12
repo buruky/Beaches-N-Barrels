@@ -29,6 +29,7 @@ class MView:
         self.theRoom = pygame.Rect(0,0,  screen_width, screen_height) 
         self.theNewRoom = self.theTest
         self.cords = None
+        self.playerHealth = 100
         # self.theNewRoom = (10,10,10)
     
     def getScreen(self):
@@ -37,6 +38,12 @@ class MView:
     def clear(self):
         """Clear the screen before drawing the next frame."""
         self.screen.fill((0, 0, 0))  # Fill screen with black
+
+
+    def updateUI(self, event: pygame.event.Event):
+        self.playerHealth = event.health
+        self.redrawCharacter()
+
 
     def updateRoom(self, event: pygame.event.Event):
         """Updates the room background and displays room coordinates at the center."""
@@ -109,6 +116,11 @@ class MView:
         for currentSprite in self.onScreenChar:
             self.screen.blit(currentSprite.getCurrentSprite(), currentSprite.getRect().topleft)
 
+        font = pygame.font.Font(None, 50)  # Choose an appropriate font and size
+        text_surface = font.render(f"health: {self.playerHealth}", True, (255, 255, 255))  # White text
+        text_rect = text_surface.get_rect(center=(ViewUnits.SCREEN_WIDTH - 100, ViewUnits.SCREEN_HEIGHT - 100))
+            
+        self.screen.blit(text_surface, text_rect)
         # Display room coordinates at the center of the screen
         if self.cords:
             font = pygame.font.Font(None, 50)  # Choose an appropriate font and size

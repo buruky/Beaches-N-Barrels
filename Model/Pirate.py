@@ -7,7 +7,7 @@ class Pirate(Enemy):
     
     def __init__(self, attackDamage: int, healthPoints: int, positionX: int, positionY: int, speed: int):
         super().__init__("Pirate", attackDamage, healthPoints, speed, positionX, positionY)
-        self.shoot_cooldown = 500  # 300ms = 0.3 seconds between shots
+        self.shoot_cooldown = 1000  # 300ms = 0.3 seconds between shots
         self.last_shot_time = 0  # Time of last shot
 
     def moveCharacter(self):
