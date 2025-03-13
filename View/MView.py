@@ -10,7 +10,7 @@ class MView:
         current_directory = os.path.dirname(__file__)
 
         # Build the relative path to the player and enemy images
-        
+        self.testincrement = 0
         
 
         self.myAnimatiorFactory = SpriteAnimatorFactory()
@@ -38,8 +38,8 @@ class MView:
         print("liklebit")
         if event.roomtype == "s ":
             self.theNewRoom = self.myStartRoomBackground  # Set background for start room
-
-            print(self.theNewRoom)
+            
+            print("updateRoom: ",self.theNewRoom)
         else:
             self.theNewRoom = self.theTest2  # Set background for other rooms
 
@@ -101,10 +101,9 @@ class MView:
 
         pygame.time.delay(3000)  # Pause for some seconds before quitting
     def redrawCharacter(self):
-        print("redrawCharacter")
-
+        self.testincrement+=1
         """Clears the screen, redraws the room, characters, and room coordinates."""
-        self.screen.blit(self.theNewRoom, (0, 0))
+        self.screen.blit(self.theNewRoom, (self.testincrement, self.testincrement))
         
         # Draw characters
         for currentSprite in self.onScreenChar:

@@ -21,15 +21,17 @@ class SpriteAnimatorFactory:
 
         for currentName, currentSpriteSheet in self.__myListOfSpriteSheets.items():
             if theName == currentName:
+                print("createDefaultChar: ",theName)
                 return SpriteAnimator(theName, theId, thePositionCords, currentSpriteSheet)
         raise Exception("SpriteAnimatorFactory.createDefaultCharacter: NO CHARACTER WITH SPRITESHEET WITH THAT NAME\n",
                         "Name Passed: ",theName,"\n"
                         "Names in List: ", self.__myListOfSpriteSheets.keys())
     
     def getBackground(self, theName:str):
+
         for currentName, currentSpriteSheet in self.__myListOfSpriteSheets.items():
             if theName == "StartRoom":
-                print(currentSpriteSheet)
+                print("getBackground: ",theName," d ",currentSpriteSheet.getName())
                 return currentSpriteSheet.getMap().get(ViewUnits.DEFAULT_STATE_NAME)[0]
         
 

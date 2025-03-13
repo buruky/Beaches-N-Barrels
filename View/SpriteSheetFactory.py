@@ -21,7 +21,8 @@ class SpriteSheetFactory:
         allImageInfo = self.__getAllImageInfo()#hols all image data from Assets [name: state, index, fullFileName]
 
         for name, info in allImageInfo.items():#iterates through all of the data
-            
+            if name == "background":
+                print("getAllAssets: ",info)
             
             
             if len(info) < 3:
