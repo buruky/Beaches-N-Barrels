@@ -80,6 +80,13 @@ class Player(DungeonCharacter):
         self.__inventory.append(item)
         print(f"Picked up {item}")
         print([str(obj) for obj in self.__inventory])
+        event = pygame.event.Event(
+            EventManager.event_types["PICKUP_ITEM"],
+            {"name": self.getName(),
+             "inventory": self.__inventory
+            }        
+        )
+        pygame.event.post(event)
 
     def getInventory(self) -> list:
         return self.__inventory

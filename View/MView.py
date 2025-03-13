@@ -32,6 +32,9 @@ class MView:
         self.theNewRoom = self.theTest
         self.cords = None
         self.playerHealth = 100
+        self.inventory = []
+        self.int = 0
+
         # self.theNewRoom = (10,10,10)
     
     def getScreen(self):
@@ -42,8 +45,12 @@ class MView:
         self.screen.fill((0, 0, 0))  # Fill screen with black
 
 
-    def updateUI(self, event: pygame.event.Event):
+    def updateHealthUI(self, event: pygame.event.Event):
         self.playerHealth = event.health
+        self.redrawCharacter()
+
+    def updateInventoryUI(self, event: pygame.event.Event):
+        self.inventory = event.inventory
         self.redrawCharacter()
 
 
@@ -117,17 +124,23 @@ class MView:
             # Use the item's stored position.
             pos_x, pos_y = item.position  # Assuming each item has a 'position' attribute.
             # Create a crab sprite for this item.
-            item_sprite = self.mySpriteFactory.createCrabSpriteSheet(id(item), pos_x, pos_y)
+            item_sprite = self.mySpriteFactory.createProjectileAstronautSpriteSheet(id(item), pos_x, pos_y)
             # Draw the sprite at its designated position.
             self.screen.blit(item_sprite.getCurrentSprite(), item_sprite.getRect().topleft)
 
     def redrawCharacter(self):
         """Clears the screen, redraws the room, characters, and room coordinates."""
         self.screen.blit(self.theNewRoom, (0, 0))
-
+        
         # Draw characters
         for currentSprite in self.onScreenChar:
             self.screen.blit(currentSprite.getCurrentSprite(), currentSprite.getRect().topleft)
+
+        font = pygame.font.Font(None, 25)  # Choose an appropriate font and size
+        
+        text_surface = font.render(f"Inventory: {[i+1 for i in range(len(self.inventory))]}", True, (255, 255, 255))  # White text        
+        text_rect = text_surface.get_rect(center=(100,100))
+        self.screen.blit(text_surface, text_rect)
 
         font = pygame.font.Font(None, 50)  # Choose an appropriate font and size
         text_surface = font.render(f"health: {self.playerHealth}", True, (255, 255, 255))  # White text

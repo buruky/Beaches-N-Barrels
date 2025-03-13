@@ -74,7 +74,9 @@ class MController:
         EventManager.registerEvent(CustomEvents.PLAYER_DIED, self.__handle_character_death)
         EventManager.registerEvent(CustomEvents.CHANGED_ROOM, self.__myView.updateRoom)
         EventManager.registerEvent(CustomEvents.SHOOT_PROJECTILE, self.__shoot_projectile)
-        EventManager.registerEvent(CustomEvents.TOOK_DAMAGE, self.__myView.updateUI)
+        EventManager.registerEvent(CustomEvents.TOOK_DAMAGE, self.__myView.updateHealthUI)
+        EventManager.registerEvent(CustomEvents.PICKUP_ITEM, self.__myView.updateInventoryUI)
+
         EventManager.registerEvent(CustomEvents.UPDATE_PROJECTILE, self.__myView.remove_projectile)
 
     def __handle_character_death(self, event):

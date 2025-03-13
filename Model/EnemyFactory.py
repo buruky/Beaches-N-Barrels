@@ -3,7 +3,7 @@ from .Enemy import Enemy
 from .Crab import Crab
 from .Pirate import Pirate
 from .DungeonCharacterList import DungeonCharacterList
-# from .database import initialize_enemy_db
+from .database import initialize_enemy_db
 import sqlite3
 import random
 from ViewUnits import ViewUnits
