@@ -21,6 +21,7 @@ class Player(DungeonCharacter):
         #item
         self.__inventory = []
         self._item_Ability = HealAbility(self)
+        self._ability = None  # To be set by subclasses
         
         """Update sprite when player is made"""
         self.update(CustomEvents.CHARACTER_STOPPED)
@@ -35,8 +36,9 @@ class Player(DungeonCharacter):
             "damage": self._myAttackDamage,
             "positionX": self._myPositionX,
             "positionY": self._myPositionY,
+            "ability": self._ability.__class__.__name__ if self._ability else None,  # Save ability class name
             "inventory": [item.to_dict() for item in self.__inventory],  # Convert inventory items if needed
-            # "ability_active": self._item_Ability.active if self._item_Ability else None
+            "ability_active": self._item_Ability.active if self._item_Ability else None
         }
 
     @classmethod
@@ -52,7 +54,8 @@ class Player(DungeonCharacter):
         player._myPositionY = data["positionY"]
         
         player._direction = data["direction"]
-
+        player._ability = globals().get(data.get("ability"), None)  # Dynamically find class
+        print(f"Loading ability: {data.get('ability')}")
         # # Restore inventory items if necessary
         if "inventory" in data:
             player.__inventory = []
@@ -67,8 +70,8 @@ class Player(DungeonCharacter):
                     print(f"Error: {item_class_name} does not have a from_dict method")
 
         # Restore ability if applicable
-        # if data.get("ability_active") and player._item_Ability:
-        #     player._item_Ability.active = True
+        if data.get("ability_active") and player._item_Ability:
+            player._item_Ability.active = True
 
         return player
     def getAttackDamage(self) -> int:

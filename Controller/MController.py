@@ -40,6 +40,7 @@ class MController:
             self.__myPlayer = self.__myWorld.getPlayer()
             self.__myPlayer.update(CustomEvents.CHARACTER_MOVED)
             self.__myPlayer.update(CustomEvents.HEALTH)
+            self.__myPlayer.update(CustomEvents.PICKUP_ITEM)
         else:
             self.__setup_new_game(selected_character)
 
@@ -80,7 +81,6 @@ class MController:
         EventManager.registerEvent(CustomEvents.SHOOT_PROJECTILE, self.__shoot_projectile)
         EventManager.registerEvent(CustomEvents.HEALTH, self.__myView.updateHealthUI)
         EventManager.registerEvent(CustomEvents.PICKUP_ITEM, self.__myView.updateInventoryUI)
-
         EventManager.registerEvent(CustomEvents.UPDATE_PROJECTILE, self.__myView.remove_projectile)
 
     def __handle_character_death(self, event):
