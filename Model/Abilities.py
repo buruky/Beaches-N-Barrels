@@ -45,6 +45,24 @@ class SpeedBoostAbility(Ability):
         self.player._mySpeed /= 2  # Restore speed
         super().deactivate()
 
+class HealAbility(Ability):
+    """Temporarily increases health."""
+    def __init__(self, player):
+        super().__init__(player, duration=3000)  # Set specific duration for speed boost
+
+    def activate(self):
+        print("Heal Activated!")
+        self.player._myHealth += 50  # Increase health by 50
+        self.player.takeDamage(0)
+
+    def deactivate(self):
+        print("Heal Ended.")
+        self.player._myHealth -= 50
+        self.player.takeDamage(0)
+
+        super().deactivate()
+
+
 class InvincibilityAbility(Ability):
     """Temporarily makes the player invincible."""
     def __init__(self, player):

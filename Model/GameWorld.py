@@ -64,7 +64,7 @@ class GameWorld:
         try:
             with open(self.SAVE_FILE, "wb") as file:
                 pickle.dump(save_data, file)
-            print("Player saved successfully.")
+            print("Player saved successfully.", self.player.getInventory())  # Debugging line
         except Exception as e:
             print(f"Error saving player: {e}")
 

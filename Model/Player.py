@@ -4,7 +4,8 @@ from .DungeonCharacter import DungeonCharacter
 from .EventManager import EventManager
 from CustomEvents import CustomEvents
 from .GameWorld import GameWorld
-from .Abilities import SpeedBoostAbility
+from .Abilities import HealAbility
+from .Item import *
 import pygame
 
 class Player(DungeonCharacter):
@@ -19,7 +20,7 @@ class Player(DungeonCharacter):
 
         #item
         self.__inventory = []
-        self._item_Ability = SpeedBoostAbility(self)
+        self._item_Ability = HealAbility(self)
         
         """Update sprite when player is made"""
         self.update(CustomEvents.CHARACTER_STOPPED)
@@ -35,7 +36,7 @@ class Player(DungeonCharacter):
             "positionX": self._myPositionX,
             "positionY": self._myPositionY,
             "inventory": [item.to_dict() for item in self.__inventory],  # Convert inventory items if needed
-            "ability_active": self._item_Ability.active if self._item_Ability else None
+            # "ability_active": self._item_Ability.active if self._item_Ability else None
         }
 
     @classmethod
@@ -52,13 +53,22 @@ class Player(DungeonCharacter):
         
         player._direction = data["direction"]
 
-        # Restore inventory items if necessary
-        # if "inventory" in data:
-        #     player.__inventory = [Item.from_dict(item) for item in data["inventory"]] if data["inventory"] else []
+        # # Restore inventory items if necessary
+        if "inventory" in data:
+            player.__inventory = []
+            for item_data in data["inventory"]:
+                item_class_name = item_data.get("class", "UsableItem")
+                item_class = globals().get(item_class_name, UsableItem)  # Dynamically find class
+                player.__inventory.append(item_class.from_dict(item_data))
+                print(f"Loading item: {item_class_name}")
+                if hasattr(item_class, 'from_dict'):
+                    player.__inventory.append(item_class.from_dict(item_data))
+                else:
+                    print(f"Error: {item_class_name} does not have a from_dict method")
 
         # Restore ability if applicable
-        if data.get("ability_active") and player._item_Ability:
-            player._item_Ability.active = True
+        # if data.get("ability_active") and player._item_Ability:
+        #     player._item_Ability.active = True
 
         return player
     def getAttackDamage(self) -> int:
@@ -116,14 +126,9 @@ class Player(DungeonCharacter):
         self.__inventory.append(item)
         print(f"Picked up {item}")
         print([str(obj) for obj in self.__inventory])
-        event = pygame.event.Event(
-            EventManager.event_types["PICKUP_ITEM"],
-            {"name": self.getName(),
-             "inventory": self.__inventory
-            }        
-        )
-        pygame.event.post(event)
+        self.update("PICKUP_ITEM")
 
+   
     def getInventory(self) -> list:
         return self.__inventory
     
@@ -131,7 +136,7 @@ class Player(DungeonCharacter):
         ### use item when t is pressed
         if self.__inventory:
             item = self.__inventory[0]
-            if item.name == "MockItem":
+            if item.getName() == "MockItem":
                 if not self._item_Ability.active:
                     self.__inventory.pop(0)
                     self._item_Ability.use()
@@ -139,8 +144,7 @@ class Player(DungeonCharacter):
             else:
                 #other items
                 print("other items")
-            #event to update the UI
-            #self.update("ITEM_USED")
+
         #else:
             #print("No items available to use!")
      
@@ -153,13 +157,7 @@ class Player(DungeonCharacter):
     def takeDamage(self, damage: int):
         self._myHealth -= damage
         print("player health after damage: ",self._myHealth)
-        event = pygame.event.Event(
-            EventManager.event_types["TOOK_DAMAGE"],
-            {"name": self.getName(),
-             "health": self.getHealth()
-            }        
-        )
-        pygame.event.post(event)
+        self.update("HEALTH")
         if self._myHealth <= 0:
             self.Dies()
 
@@ -169,14 +167,28 @@ class Player(DungeonCharacter):
         if self._ability:
             self._ability.use()
 
+
     def update(self, theEventName: str):
-        event = pygame.event.Event(
-            EventManager.event_types[theEventName],
-            {"name": self.getName(),
-             "positionX": self.getPositionX(),
-             "positionY": self.getPositionY(),
-             "id": id(self)}        
-        )
+        if theEventName == "CHARACTER_MOVED" or theEventName == "CHARACTER_STOPPED":
+            event = pygame.event.Event(
+                EventManager.event_types[theEventName],
+                {"name": self.getName(),
+                "positionX": self.getPositionX(),
+                "positionY": self.getPositionY(),
+                "id": id(self)}        
+            )
+        elif theEventName == "HEALTH":
+            event = pygame.event.Event(
+                EventManager.event_types[theEventName],
+                {"name": self.getName(),
+                "health": self.getHealth()}        
+            )
+        elif theEventName == "PICKUP_ITEM":
+            event = pygame.event.Event(
+                EventManager.event_types[theEventName],
+                {"name": self.getName(),
+                "inventory": self.getInventory()}        
+            )
         pygame.event.post(event)
 
     def update_items(self) -> None:

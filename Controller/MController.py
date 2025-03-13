@@ -39,6 +39,7 @@ class MController:
             self.__myWorld.load_state()
             self.__myPlayer = self.__myWorld.getPlayer()
             self.__myPlayer.update(CustomEvents.CHARACTER_MOVED)
+            self.__myPlayer.update(CustomEvents.HEALTH)
         else:
             self.__setup_new_game(selected_character)
 
@@ -60,10 +61,10 @@ class MController:
         self.__handle_mouse(self.__mySign)
         self.__myWorld.tick()
 
-        # if self.__myPlayer._ability:
-        #     self.__myPlayer._ability.update()
-        # if self.__myPlayer._item_Ability:
-        #     self.__myPlayer._item_Ability.update()
+        if self.__myPlayer._ability:
+            self.__myPlayer._ability.update()
+        if self.__myPlayer._item_Ability:
+            self.__myPlayer._item_Ability.update()
         return self.__myIsRunning
     
     def __InitalizeEvents(self):
@@ -77,7 +78,7 @@ class MController:
         EventManager.registerEvent(CustomEvents.PLAYER_DIED, self.__handle_character_death)
         EventManager.registerEvent(CustomEvents.CHANGED_ROOM, self.__myView.updateRoom)
         EventManager.registerEvent(CustomEvents.SHOOT_PROJECTILE, self.__shoot_projectile)
-        EventManager.registerEvent(CustomEvents.TOOK_DAMAGE, self.__myView.updateHealthUI)
+        EventManager.registerEvent(CustomEvents.HEALTH, self.__myView.updateHealthUI)
         EventManager.registerEvent(CustomEvents.PICKUP_ITEM, self.__myView.updateInventoryUI)
 
         EventManager.registerEvent(CustomEvents.UPDATE_PROJECTILE, self.__myView.remove_projectile)
@@ -114,6 +115,7 @@ class MController:
             self.__myPlayer.activate_ability()
         elif keys[pygame.K_t]:  # Press 'E' to activate ability
             self.__myPlayer.use_item()
+            
          # Handle shooting projectiles with cooldown
         current_time = pygame.time.get_ticks()  # Get current time in milliseconds
         # Directly call the shooting method instead of posting an event
