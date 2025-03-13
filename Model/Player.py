@@ -36,7 +36,7 @@ class Player(DungeonCharacter):
             "positionX": self._myPositionX,
             "positionY": self._myPositionY,
             "inventory": [item.to_dict() for item in self.__inventory],  # Convert inventory items if needed
-            # "ability_active": self._item_Ability.active if self._item_Ability else None
+            "ability_active": self._item_Ability.active if self._item_Ability else None
         }
 
     @classmethod
@@ -67,10 +67,14 @@ class Player(DungeonCharacter):
                     print(f"Error: {item_class_name} does not have a from_dict method")
 
         # Restore ability if applicable
-        # if data.get("ability_active") and player._item_Ability:
-        #     player._item_Ability.active = True
+        if data.get("ability_active") and player._item_Ability:
+            player._item_Ability.active = True
 
         return player
+    
+    
+    
+    
     def getAttackDamage(self) -> int:
         return self._myAttackDamage
     

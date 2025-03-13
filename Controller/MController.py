@@ -10,6 +10,7 @@ from Model import *
 from View import *
 from CustomEvents import CustomEvents
 from View.TitleScreen import TitleScreen
+from GameSaver import GameSaver
 
 class MController:
     
@@ -33,18 +34,16 @@ class MController:
         selected_character = title_screen.run()
         
         # Load or create new game
-        self.__myWorld = GameWorld.getInstance()
+        
         if selected_character == "Load":
             print()
-            self.__myWorld.load_state()
-            self.__myPlayer = self.__myWorld.getPlayer()
-            self.__myPlayer.update(CustomEvents.CHARACTER_MOVED)
-            self.__myPlayer.update(CustomEvents.HEALTH)
+            self.__myWorld = GameSaver.load_game()
         else:
             self.__setup_new_game(selected_character)
 
     def __setup_new_game(self, selected_character):
         """Creates a new game with the chosen character."""
+        self.__myWorld = GameWorld.getInstance()
         character_map = {
             "Dolphin": Dolphin,
             "Buddha": Buddha,
@@ -98,7 +97,7 @@ class MController:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN and event.key == pygame.K_l:
                 print("Saving game...")  # Press "L" to save anytime
-                self.__myWorld.save_state()
+                GameSaver.save_game()
 
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_k:
                 self.__myWorld.testRandomKillEnemy()

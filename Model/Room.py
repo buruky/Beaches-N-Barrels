@@ -21,6 +21,32 @@ class Room:
         self.__items = []
 
     
+    def to_dict(self):
+        """Convert Room to a dictionary for serialization."""
+        return {
+            "room_type": self.__myRoomType,
+            "x": self.__myX,
+            "y": self.__myY,
+            "enemy_list": self.__myEnemyList.to_dict(),  # Serialize enemies
+            "items": [item.to_dict() for item in self.__items],  # Serialize items
+            "doors": {direction: door.to_dict() for direction, door in self.__myDoorMap.items() if door},
+        }
+
+    @classmethod
+    def from_dict(cls, data):
+        """Reconstruct a Room from a dictionary."""
+        from .DungeonCharacterList import DungeonCharacterList
+        enemy_list = DungeonCharacterList.from_dict(data["enemy_list"])  # Restore enemies
+
+        room = cls(data["room_type"], data["x"], data["y"], enemy_list)
+
+        from .Item import Item
+        room.__items = [Item.from_dict(item_data) for item_data in data["items"]]  # Restore items
+
+        return room  # Doors will be linked separately after all rooms are loaded
+
+
+
     def addDoor(self, theDirection, theDoor):
         self.__myDoorMap[theDirection] = theDoor
         

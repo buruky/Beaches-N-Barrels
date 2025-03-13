@@ -29,3 +29,29 @@ class DungeonCharacter(ABC):
     @abstractmethod
     def toString() -> str:
         pass
+
+    def to_dict(self):
+        """Convert player state to a dictionary for serialization."""
+        return {
+            "name": self._name,
+            "speed": self._mySpeed,
+            "health": self._myHealth,
+            "direction": self._direction,
+            "damage": self._myAttackDamage,
+            "positionX": self._myPositionX,
+            "positionY": self._myPositionY,
+            "inventory": [item.to_dict() for item in self.__inventory],  # Convert inventory items if needed
+            "ability_active": self._item_Ability.active if self._item_Ability else None
+        }
+    
+    @classmethod
+    def from_dict(cls, data):
+        """Reconstruct a DungeonCharacter from a dictionary. Assumes subclass implementation."""
+        return cls(
+            data["attack_damage"],
+            data["health_points"],
+            data["position_x"],
+            data["position_y"],
+            data["speed"]
+        )
+
