@@ -6,6 +6,9 @@ from .Room import Room
 from .EventManager import EventManager
 from .FloorFactory import FloorFactory
 from .Door import Door
+
+import pickle
+import os
 class GameWorld:
     """Singleton class representing the game world with obstacles and enemies."""
     _instance = None  # Stores the single instance
@@ -33,7 +36,6 @@ class GameWorld:
             )
         pygame.event.post(event)
         self.__myFloor.print_dungeon()              
-        self.enemies = []  # List of enemies
         self.player = None # player
         self.item = []
         self.last_damage_time = 0  # Track last damage taken
@@ -46,6 +48,51 @@ class GameWorld:
         if cls._instance is None:  # Ensure an instance exists
             cls._instance = cls()  # This triggers __new__()
         return cls._instance
+
+
+
+    SAVE_FILE = "game_save.pkl"  # Save file path
+
+    def save_state(self):
+        """Saves only the player state to a file using pickle."""
+        if not self.player:
+            print("No player to save.")
+            return
+
+        save_data = {"player": self.player.to_dict()}  # Wrap in "player" key
+
+        try:
+            with open(self.SAVE_FILE, "wb") as file:
+                pickle.dump(save_data, file)
+            print("Player saved successfully.")
+        except Exception as e:
+            print(f"Error saving player: {e}")
+
+    def load_state(self):
+        """Loads only the player state from a file."""
+        if not os.path.exists(self.SAVE_FILE):
+            print("No saved player found.")
+            return
+
+        try:
+            with open(self.SAVE_FILE, "rb") as file:
+                save_data = pickle.load(file)
+
+            print(f"Loaded player data: {save_data}")  # Debugging line
+
+            from .Player import Player  # Ensure Player is recognized at runtime
+            if "player" in save_data:
+                self.player = Player.from_dict(save_data["player"])
+                print("Player loaded successfully.")
+            else:
+                print("Error: Player data missing in save file.")
+        except Exception as e:
+            print(f"Error loading player: {e}")
+
+
+
+
+
 
     def tick(self):
         self.currentRoom.checkState()

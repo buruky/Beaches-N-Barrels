@@ -36,6 +36,9 @@ class MController:
         self.__myWorld = GameWorld.getInstance()
         if selected_character == "Load":
             print()
+            self.__myWorld.load_state()
+            self.__myPlayer = self.__myWorld.getPlayer()
+            self.__myPlayer.update(CustomEvents.CHARACTER_MOVED)
         else:
             self.__setup_new_game(selected_character)
 
@@ -57,10 +60,10 @@ class MController:
         self.__handle_mouse(self.__mySign)
         self.__myWorld.tick()
 
-        if self.__myPlayer._ability:
-            self.__myPlayer._ability.update()
-        if self.__myPlayer._item_Ability:
-            self.__myPlayer._item_Ability.update()
+        # if self.__myPlayer._ability:
+        #     self.__myPlayer._ability.update()
+        # if self.__myPlayer._item_Ability:
+        #     self.__myPlayer._item_Ability.update()
         return self.__myIsRunning
     
     def __InitalizeEvents(self):
@@ -94,6 +97,8 @@ class MController:
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN and event.key == pygame.K_l:
                 print("Saving game...")  # Press "L" to save anytime
+                self.__myWorld.save_state()
+
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_k:
                 self.__myWorld.testRandomKillEnemy()
                 self.__myView.redrawCharacter()

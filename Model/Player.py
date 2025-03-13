@@ -24,7 +24,43 @@ class Player(DungeonCharacter):
         """Update sprite when player is made"""
         self.update(CustomEvents.CHARACTER_STOPPED)
 
+    def to_dict(self):
+        """Convert player state to a dictionary for serialization."""
+        return {
+            "name": self._name,
+            "speed": self._mySpeed,
+            "health": self._myHealth,
+            "direction": self._direction,
+            "damage": self._myAttackDamage,
+            "positionX": self._myPositionX,
+            "positionY": self._myPositionY,
+            "inventory": [item.to_dict() for item in self.__inventory],  # Convert inventory items if needed
+            "ability_active": self._item_Ability.active if self._item_Ability else None
+        }
 
+    @classmethod
+    def from_dict(cls, data):
+        """Reconstruct a Player object from a dictionary."""
+        required_keys = ["name", "speed", "health", "damage", "positionX", "positionY"]
+        for key in required_keys:
+            if key not in data:
+                raise ValueError(f"Missing key in saved data: {key}")
+
+        player = cls(data["name"], data["speed"], data["health"], data["damage"])
+        player._myPositionX = data["positionX"]
+        player._myPositionY = data["positionY"]
+        
+        player._direction = data["direction"]
+
+        # Restore inventory items if necessary
+        # if "inventory" in data:
+        #     player.__inventory = [Item.from_dict(item) for item in data["inventory"]] if data["inventory"] else []
+
+        # Restore ability if applicable
+        if data.get("ability_active") and player._item_Ability:
+            player._item_Ability.active = True
+
+        return player
     def getAttackDamage(self) -> int:
         return self._myAttackDamage
     
