@@ -26,20 +26,21 @@ class TitleScreen:
         assets_path = os.path.join(current_directory, '..', 'Assets')
 
         # Load background
-        self.background = pygame.image.load(os.path.join(assets_path, 'Goat.jpg'))
+
+        self.background = pygame.image.load(os.path.join(assets_path, 'background-Goat.jpg'))
         self.background = pygame.transform.scale(self.background, (ViewUnits.SCREEN_WIDTH, ViewUnits.SCREEN_HEIGHT))
 
         # Load title image
-        self.title_image = pygame.image.load(os.path.join(assets_path, 'Title.png'))
+        self.title_image = pygame.image.load(os.path.join(assets_path, 'UI-Title.png'))
         self.title_image = pygame.transform.scale(self.title_image, (ViewUnits.SCREEN_WIDTH // 2, ViewUnits.SCREEN_HEIGHT // 6))
         self.title_x = (ViewUnits.SCREEN_WIDTH - self.title_image.get_width()) // 2
         self.title_y = ViewUnits.SCREEN_HEIGHT // 6  # Position title at top 1/6th of the screen
 
         # Load button images
-        self.start_image = pygame.image.load(os.path.join(assets_path, 'start.png'))
-        self.load_image = pygame.image.load(os.path.join(assets_path, 'Load.png'))
-        self.quit_image = pygame.image.load(os.path.join(assets_path, 'exit.png'))
-        self.back_image = pygame.image.load(os.path.join(assets_path, 'back.png'))  # NEW
+        self.start_image = pygame.image.load(os.path.join(assets_path, 'button-Start.png'))
+        self.load_image = pygame.image.load(os.path.join(assets_path, 'button-Load.png'))
+        self.quit_image = pygame.image.load(os.path.join(assets_path, 'button-Exit.png'))
+        self.back_image = pygame.image.load(os.path.join(assets_path, 'button-Back.png'))  # NEW
 
         # Resize buttons if necessary
         button_width = ViewUnits.SCREEN_WIDTH // 4
@@ -104,9 +105,9 @@ class TitleScreen:
         assets_path = os.path.join(current_directory, '..', 'Assets')
 
         # Load character selection images
-        dolphin_img = pygame.image.load(os.path.join(assets_path, 'Dolphin.png'))
-        buddha_img = pygame.image.load(os.path.join(assets_path, 'Buddha.jpg'))
-        astronaut_img = pygame.image.load(os.path.join(assets_path, 'Astronaut.jpg'))
+        dolphin_img = pygame.image.load(os.path.join(assets_path, 'button-Dolphin.png'))
+        buddha_img = pygame.image.load(os.path.join(assets_path, 'button-Buddha.jpg'))
+        astronaut_img = pygame.image.load(os.path.join(assets_path, 'button-Astronaut.jpg'))
 
         # Scale images to fit
         img_width = ViewUnits.SCREEN_WIDTH // 4

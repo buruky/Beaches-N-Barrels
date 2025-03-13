@@ -3,6 +3,8 @@ from collections import defaultdict
 import os
 
 import pygame
+
+from ViewUnits import ViewUnits
 from .SpriteSheetFactory import SpriteSheetFactory
 from .SpriteAnimator import SpriteAnimator
 
@@ -12,7 +14,8 @@ class SpriteAnimatorFactory:
         self.__myListOfSpriteSheets = self.ssf.getAllAssets(self)
 
     def createSpriteAnimator(self, theName:str, theId: str, thePositionCords:list[int]) -> SpriteAnimator:
-        self.createDefaultCharacter()
+        # print("hehe")
+        return self.createDefaultCharacter(theName, theId, thePositionCords)
         #might implement different methods
     def createDefaultCharacter(self, theName:str, theId: str, thePositionCords:list[int]) -> SpriteAnimator:
 
@@ -23,6 +26,12 @@ class SpriteAnimatorFactory:
                         "Name Passed: ",theName,"\n"
                         "Names in List: ", self.__myListOfSpriteSheets.keys())
     
+    def getBackground(self, theName:str):
+        for currentName, currentSpriteSheet in self.__myListOfSpriteSheets.items():
+            if theName == "StartRoom":
+                print(currentSpriteSheet)
+                return currentSpriteSheet.getMap().get(ViewUnits.DEFAULT_STATE_NAME)[0]
+        
 
 
     

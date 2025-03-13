@@ -1,3 +1,4 @@
+from collections import defaultdict
 from typing import Final
 
 import pygame
@@ -30,7 +31,8 @@ class ViewUnits:
                                       (DEFAULT_WIDTH,
                                        DEFAULT_HEIGHT ))
     DEFAULT_STATE_NAME = "IDLE"
-    DEFAULT_DICT:Final = {DEFAULT_STATE_NAME: []}
+    DEFAULT_DICT:Final = {DEFAULT_STATE_NAME: [None] * 10}
+    
     PLAYER_SPRITE_NAME = "PlayerMock"
     ENEMY_SPRITE_NAME = "EnemyMock"
     DEFAULT_SPRITE_DIM = (DEFAULT_WIDTH,DEFAULT_HEIGHT)

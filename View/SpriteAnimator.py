@@ -1,10 +1,11 @@
 
 
 import pygame
+from .SpriteSheet import SpriteSheet
 from ViewUnits import ViewUnits
 
 class SpriteAnimator:
-    def __init__(self, theName:str, theId:str, thePositionCords:list[int], theSpriteSheet):
+    def __init__(self, theName:str, theId:str, thePositionCords:list[int], theSpriteSheet:SpriteSheet):
         self.__myName = theName
         self.__myId = theId
         self.__myRect = pygame.Rect( (thePositionCords[0],thePositionCords[1]), (ViewUnits.DEFAULT_WIDTH, ViewUnits.DEFAULT_HEIGHT) )
@@ -15,16 +16,17 @@ class SpriteAnimator:
 
         self.__myCurrentState = ViewUnits.DEFAULT_STATE_NAME
     
-    def __init__(self, theName:str, theId:str, thePositionRect:pygame.Rect, theSpriteSheet):
-        self.__myName = theName
-        self.__myId = theId
-        self.__myRect = thePositionRect
+    # def __init__(self, theName:str, theId:str, thePositionRect:pygame.Rect, theSpriteSheet):
+    #     self.__myName = theName
+    #     self.__myId = theId
+    #     print("inSpriteANimator: ", thePositionRect)
+    #     self.__myRect = pygame.Rect(thePositionRect)
 
-        self.__mySpriteSheet = theSpriteSheet
+    #     self.__mySpriteSheet = theSpriteSheet
 
-        self.__myCurrentSpriteIndex = 0
+    #     self.__myCurrentSpriteIndex = 0
 
-        self.__myCurrentState = ViewUnits.DEFAULT_STATE_NAME
+    #     self.__myCurrentState = ViewUnits.DEFAULT_STATE_NAME
 
     
     def getAllImages(self) -> list:
@@ -67,8 +69,8 @@ class SpriteAnimator:
         self.__myRect.x = theNewX
         self.__myRect.y = theNewY
 
-    def getImageMap(self) -> dict:
-        return self.__mySprites
+    def getImageMap(self) -> SpriteSheet:
+        return self.__mySpriteSheet
     
     def getRect(self):
         return self.__myRect
@@ -79,7 +81,7 @@ class SpriteAnimator:
     def getCurrentSprite(self):
         # print(self.__myCurrentState)
         # print(self.__myCurrentSpriteIndex)
-        return self.__mySprites[self.__myCurrentState][self.__myCurrentSpriteIndex]
+        return self.__mySpriteSheet.getCurrentSprite(self.__myCurrentState,self.__myCurrentSpriteIndex)
     
     def getName(self):
         return self.__myName

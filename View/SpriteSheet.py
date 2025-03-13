@@ -7,10 +7,10 @@ class SpriteSheet:
         self.__myName = theName
         self.__myStateToImages = theMapOfSprites
     
-    def __getName(self):
+    def getName(self):
         return self.__myName
     
-    def __getMap(self):
+    def getMap(self):
         return  self.__myStateToImages.copy()
     
     def addToMap(self, theState:str,theIndex:int ,theImage:pygame.image):
@@ -22,3 +22,7 @@ class SpriteSheet:
                             "SpriteSheetName: ", self.__myName,"\n",
                             "SpriteSheetStates: ", self.__myStateToImages.keys(),"\n",
                             "State passed: ", theState)
+    def getCurrentSprite(self,theWantedState:str, theWantedIndex:int):
+        # print(self.__myCurrentState)
+        # print(self.__myCurrentSpriteIndex)
+        return self.__myStateToImages[theWantedState][theWantedIndex]

@@ -16,15 +16,15 @@ class SpriteSheetFactory:
     def getAllAssets(self,P) -> list:
         '''returns list of spriteSheets for all assets in assets folder'''
 
-        allSpriteSheets = defaultdict(list) #name: spriteSheet
+        allSpriteSheets = defaultdict(SpriteSheet) #name: spriteSheet
 
         allImageInfo = self.__getAllImageInfo()#hols all image data from Assets [name: state, index, fullFileName]
 
-        print(allImageInfo)
         for name, info in allImageInfo.items():#iterates through all of the data
             
             
-            if name == len(info) < 2:
+            
+            if len(info) < 3:
                 state = "IDLE" 
                 index = 0
                 fileName = info[1]
@@ -40,10 +40,12 @@ class SpriteSheetFactory:
 
                 newMap = ViewUnits.DEFAULT_DICT.copy()
             #           [State]     [list index]
-                newMap[state.upper()][index] = image
+                
+                newMap[state.upper()] = [None] * 10
+                newMap[state.upper()][int(index)] = image
 
 
-                allSpriteSheets.append(self.SpriteSheet(name, newMap))
+                allSpriteSheets[name] = SpriteSheet(name, newMap)
             else:                                            #if found already creates spriteSheet
 
                 theAddingSpriteSheet = allSpriteSheets[name]
@@ -56,9 +58,9 @@ class SpriteSheetFactory:
         """gets all image names from Assets Folder
         """
         """reads asset folder and represent"""
+        
         # Specify the directory path
         directory_path = os.path.join(os.path.dirname(__file__), '..', 'Assets')
-
         # List all the files in the directory and save them as a list of strings
         file_names = [f for f in os.listdir(directory_path) if os.path.isfile(os.path.join(directory_path, f))]
 

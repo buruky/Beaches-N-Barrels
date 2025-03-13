@@ -16,6 +16,7 @@ class MView:
         self.myAnimatiorFactory = SpriteAnimatorFactory()
         
         
+        self.myStartRoomBackground = self.myAnimatiorFactory.getBackground("StartRoom")
         
         screen_width = ViewUnits.SCREEN_WIDTH
         screen_height = ViewUnits.SCREEN_HEIGHT
@@ -34,8 +35,11 @@ class MView:
 
     def updateRoom(self, event: pygame.event.Event):
         """Updates the room background and displays room coordinates at the center."""
+        print("liklebit")
         if event.roomtype == "s ":
-            self.theNewRoom = self.theTest  # Set background for start room
+            self.theNewRoom = self.myStartRoomBackground  # Set background for start room
+
+            print(self.theNewRoom)
         else:
             self.theNewRoom = self.theTest2  # Set background for other rooms
 
@@ -50,7 +54,8 @@ class MView:
 
     def addCharacterToScreenList(self, theEvent:pygame.event):
         
-        newCharSprite = self.myAnimatiorFactory.createSpriteAnimator( theEvent.name, theEvent.id, theEvent.positionX,theEvent.positionY)
+        newCharSprite = self.myAnimatiorFactory.createSpriteAnimator( theEvent.name, theEvent.id, (theEvent.positionX,theEvent.positionY))
+        print("MVIE 54Whehe: ",newCharSprite.getName())
         self.onScreenChar.append(newCharSprite)
     
     def remove_projectile(self, theEvent:pygame.event):
@@ -96,9 +101,11 @@ class MView:
 
         pygame.time.delay(3000)  # Pause for some seconds before quitting
     def redrawCharacter(self):
+        print("redrawCharacter")
+
         """Clears the screen, redraws the room, characters, and room coordinates."""
         self.screen.blit(self.theNewRoom, (0, 0))
-
+        
         # Draw characters
         for currentSprite in self.onScreenChar:
             self.screen.blit(currentSprite.getCurrentSprite(), currentSprite.getRect().topleft)
