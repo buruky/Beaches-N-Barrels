@@ -26,7 +26,7 @@ class Player(DungeonCharacter):
         self.update(CustomEvents.CHARACTER_STOPPED)
 
     def to_dict(self):
-        """Convert player state to a dictionary for serialization."""
+        """Convert player state to a dictionary for serialization, ensuring inventory is saved correctly."""
         return {
             "name": self._name,
             "speed": self._mySpeed,
@@ -35,16 +35,17 @@ class Player(DungeonCharacter):
             "damage": self._myAttackDamage,
             "positionX": self._myPositionX,
             "positionY": self._myPositionY,
-            "inventory": [item.to_dict() for item in self.__inventory],  # ✅ Save inventory
+            "inventory": [item.to_dict() for item in self.__inventory],  # ✅ Store full inventory
+            "class": self.__class__.__name__,  # ✅ Save player subclass name
         }
 
 
     @classmethod
     def from_dict(cls, data):
-        """Reconstruct a Player object, ensuring the correct subclass is restored."""
+        """Reconstruct a Player object, ensuring the correct subclass is restored properly."""
         from .Dolphin import Dolphin
-        from .Buddha import Buddha  # Example: Add other subclasses
-        from .Astronaut import Astronaut  # Example: Add other subclasses
+        from .Buddha import Buddha
+        from .Astronaut import Astronaut
 
         class_mapping = {
             "Dolphin": Dolphin,
@@ -54,7 +55,35 @@ class Player(DungeonCharacter):
         }
 
         player_class = class_mapping.get(data.get("class", "Player"), Player)
-        return player_class.from_dict(data)  # ✅ Calls the correct subclass method
+
+        # ✅ If the class is Dolphin/Buddha (no init params), just instantiate
+        if player_class in [Dolphin, Buddha, Astronaut]:
+            player = player_class()
+        else:
+            player = player_class(data["name"], data["speed"], data["health"], data["damage"])
+
+        # Restore base attributes
+        player._myPositionX = data["positionX"]
+        player._myPositionY = data["positionY"]
+        player._direction = data["direction"]
+
+        # ✅ Restore inventory correctly on the instance
+        if "inventory" in data:
+            from .Item import UsableItem  # Ensure item classes are imported
+            player.__inventory = []
+            for item_data in data["inventory"]:
+                item_class_name = item_data.get("class", "UsableItem")  # Default to UsableItem
+                item_class = globals().get(item_class_name, UsableItem)  # Find the correct item class
+
+                if hasattr(item_class, 'from_dict'):
+                    item_instance = item_class.from_dict(item_data)  # ✅ Create the item instance
+                    player.__inventory.append(item_instance)  # ✅ Append to instance inventory
+                else:
+                    print(f"Error: {item_class_name} does not have a from_dict method")
+
+        return player
+
+
     
     
     
