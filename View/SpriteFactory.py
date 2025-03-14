@@ -22,6 +22,10 @@ class SpriteFactory:
         self.myRawPirateImage = pygame.image.load(os.path.join(assets_path, 'pirate.png'))
         self.myRawCrabImage = pygame.image.load(os.path.join(assets_path, 'crab.png'))
         self.myRawBeachBallImage = pygame.image.load(os.path.join(assets_path, 'BeachBall.png'))
+        # Inside the __init__ method
+        self.myRawSeagullImage = pygame.image.load(os.path.join(assets_path, 'seagull.png'))
+        self.seagullImage = pygame.transform.scale(self.myRawSeagullImage, (100,100))
+        self.seagullImage2 = pygame.transform.flip(self.seagullImage, True, False)
 
         # Load Projectile Image
         self.myRawProjectileImage = pygame.image.load(os.path.join(assets_path, 'projectileDolphin.png'))
@@ -68,7 +72,7 @@ class SpriteFactory:
         if theName == ViewUnits.PLAYER_SPRITE_NAME:
             return self.createPlayerSpriteSheet(theId, thePositionX, thePositionY)
         elif theName == "Dolphin":
-            return self.createDolphinSpriteSheet(theId, thePositionX, thePositionY)  
+            return self.createDolphinSpriteSheet(theId, thePositionX, thePositionY)
         elif theName == "Buddha":
             return self.createBuddhaSpriteSheet(theId, thePositionX, thePositionY)  # NEW
         elif theName == "Astronaut":
@@ -79,14 +83,17 @@ class SpriteFactory:
             return self.createCrabSpriteSheet(theId, thePositionX, thePositionY)
         elif theName == "BeachBall":
             return self.createBeachBallSpriteSheet(theId, thePositionX, thePositionY)
+        elif theName == "Seagull":
+            return self.createSeagullSpriteSheet(theId, thePositionX, thePositionY)  # NEW
         elif theName == "ProjectileDolphin":
             return self.createProjectileDolphinSpriteSheet(theId, thePositionX, thePositionY)
         elif theName == "ProjectileBuddha":
             return self.createProjectileBuddhaSpriteSheet(theId, thePositionX, thePositionY)
-        elif theName == "ProjectileAstronaut" or theName == "ProjectilePirate":
+        elif theName == "ProjectileAstronaut" or theName == "ProjectilePirate" or theName == "ProjectileSeagull":
             return self.createProjectileAstronautSpriteSheet(theId, thePositionX, thePositionY)
         else:  # Default to generic enemy
             return self.createEnemySpriteSheet(theId, thePositionX, thePositionY)
+
 
     def createPlayerSpriteSheet(self, theId, thePositionX, thePositionY):
         """Creates a player sprite sheet."""
@@ -185,6 +192,15 @@ class SpriteFactory:
         projectileRect.y = thePositionY
 
         return SpriteSheet(theId, "ProjectileBuddha", imageDict, projectileRect)
+    def createSeagullSpriteSheet(self, theId, thePositionX, thePositionY):
+        """Creates a Seagull sprite sheet."""
+        imageDict = {ViewUnits.DEFAULT_STATE_NAME: [self.seagullImage2, self.seagullImage]}
+        seagullRect = copy.copy(ViewUnits.DEFAULT_RECT)
+        seagullRect.x = thePositionX
+        seagullRect.y = thePositionY
+
+        return SpriteSheet(theId, "Seagull", imageDict, seagullRect)
+
 
     def add(self, theSpriteSheet):
         """Adds a sprite sheet to the internal list."""

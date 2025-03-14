@@ -52,8 +52,8 @@ class Enemy(DungeonCharacter, ABC):
 
     def _check_collision_and_update_position(self, new_x, new_y, ignore):
         """Helper method to check for collisions before updating position."""
-        new_x = max(0, min(new_x, self.SCREEN_WIDTH - 50))  # Keep inside width
-        new_y = max(0, min(new_y, self.SCREEN_HEIGHT - 50))  # Keep inside height
+        new_x = max(0, min(new_x, self.SCREEN_WIDTH - 150))  # Keep inside width
+        new_y = max(0, min(new_y, self.SCREEN_HEIGHT - 150))  # Keep inside height
 
         from .GameWorld import GameWorld
         if not GameWorld.getInstance().check_collision(pygame.Rect(new_x, new_y, 50, 50), ignore):
@@ -69,16 +69,16 @@ class Enemy(DungeonCharacter, ABC):
     def getName(self):
         return self._name
     
-    def shoot(self, theEventName: str):
+    def shoot(self, theEventName: str,angle):
         """Post an event when the projectile moves."""
         event = pygame.event.Event(
                     EventManager.event_types[theEventName],
                     {"shooter": self.getName(),
-                    "direction": self._direction,
+                    "direction": angle,
                     "damage": self.getAttackDamage(),
                     "positionX": self.getPositionX(),
                     "positionY": self.getPositionY(),
-                    "speed": 5}        
+                    "speed": 10}        
                 )
         pygame.event.post(event)
 

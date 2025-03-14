@@ -1,21 +1,25 @@
 import pygame
+import math
 from .DungeonCharacter import DungeonCharacter
 from .EventManager import EventManager
 from ViewUnits import ViewUnits
 from CustomEvents import CustomEvents
 
 class Projectile(DungeonCharacter):
-    def __init__(self, name: str, shooter, attackDamage: int, direction: str, speed: int, positionX: int, positionY: int):
+    def __init__(self, name: str, shooter, attackDamage: int, angle: float, speed: int, positionX: int, positionY: int):
         """Initialize projectile with attributes and ensure position variables are set."""
-        super().__init__(attackDamage, direction, positionX, positionY, speed)  # Ensure DungeonCharacter handles these
-
-        # If DungeonCharacter does not define these attributes, we explicitly declare them
+        
+        # Since DungeonCharacter requires health points, we pass a placeholder value of 1 for the health.
+        # Assuming projectiles are not intended to have health.
+        super().__init__(attackDamage, 1, positionX, positionY, speed)  # Pass '1' for health points (not relevant for projectiles)
+        
+        # Now we define the attributes specific to the Projectile class
         self.damage = attackDamage
         self.shooter = shooter
         self.x = positionX
         self.y = positionY
         self.speed = speed
-        self._direction = direction
+        self.angle = angle  # Store the angle for movement
         self._name = name
 
         from .GameWorld import GameWorld  # Prevent circular imports
@@ -28,6 +32,8 @@ class Projectile(DungeonCharacter):
         self.is_active = True  # Track if the projectile should keep moving
         self.shoot()
 
+
+
     def shoot(self):
         """Moves the projectile continuously after being created."""
         if self.is_active:
@@ -37,19 +43,25 @@ class Projectile(DungeonCharacter):
         return self.damage
     
     def moveCharacter(self):
-        """Move projectile based on its direction."""
+        """Move projectile based on its angle or direction."""
         new_x, new_y = self.x, self.y
 
-        if self._direction == "UP":
-            new_y -= self.speed
-        elif self._direction == "DOWN":
-            new_y += self.speed
-        elif self._direction == "LEFT":
-            new_x -= self.speed
-        elif self._direction == "RIGHT":
-            new_x += self.speed
+        # Check if an angle is used (for diagonals or specific direction) or predefined directions
+        if self.angle is not None:  # Using angle for movement
+            new_x += self.speed * math.cos(self.angle)
+            new_y += self.speed * math.sin(self.angle)
+        else:
+            # Predefined directions (UP, DOWN, LEFT, RIGHT)
+            if self._direction == "UP":
+                new_y -= self.speed  # Move up (decrease Y)
+            elif self._direction == "DOWN":
+                new_y += self.speed  # Move down (increase Y)
+            elif self._direction == "LEFT":
+                new_x -= self.speed  # Move left (decrease X)
+            elif self._direction == "RIGHT":
+                new_x += self.speed  # Move right (increase X)
 
-       
+        # Check for collisions in the game world
         if not self._game_world.check_projectile_collision(self):
             self.x = new_x
             self.y = new_y
@@ -58,8 +70,6 @@ class Projectile(DungeonCharacter):
         else:
             self.Dies()  # Remove projectile if it hits something
             self.update(CustomEvents.UPDATE_PROJECTILE)
-        # Notify event system about movement
-
 
     def update(self, theEventName: str):
         """Post an event when the projectile moves."""
@@ -76,7 +86,6 @@ class Projectile(DungeonCharacter):
 
     def Dies(self) -> None:
         """Handles when a projectile is removed from the game."""
-        # print(f"{self._name} has been removed!")  # Debugging
         self.is_active = False  # Stop movement
         self._game_world.removeProjectile(self)
 
@@ -95,7 +104,7 @@ class Projectile(DungeonCharacter):
     def toString(self) -> str:
         """Returns a string representation of the projectile."""
         return f"{self._name} at ({self.x}, {self.y})"
-    
+
     def to_dict(self):
         """Convert player state to a dictionary for serialization."""
         return {
