@@ -39,7 +39,7 @@ class GameWorld:
             )
         pygame.event.post(event)
         print(self.currentRoom.getDoorMap())
-        # self.__myFloor.print_dungeon()  
+  
         self.__myFloor.print_dungeon()           
         self.player = None # player
         self.item = []
@@ -62,22 +62,20 @@ class GameWorld:
         return {
             "current_room": self.currentRoom.getCords(),
             "floor": self.__myFloor.to_dict(),
+            "player": self.player.to_dict() if self.player else None,
         }
 
     def load_from_dict(self, data):
         """Reconstruct GameWorld from a saved dictionary."""
         from .Floor import Floor
-        # Restore Floor directly from saved data
-        self.__myFloor = Floor.from_dict(data["floor"])
-        print("Floor loaded successfully.")  # Debugging line
+        from .Player import Player  # Ensure Player is imported
 
-        # Restore Current Room using coordinates
-        room_coords = tuple(data["current_room"])  
-        self.currentRoom = self.__myFloor.getRoomByCoords(room_coords)
+        self.__myFloor = Floor.from_dict(data["floor"])
+        self.currentRoom = self.__myFloor.getRoomByCoords(tuple(data["current_room"]))
+
+        if data.get("player"):
+            self.player = Player.from_dict(data["player"])
         self.__myFloor.print_dungeon()
-        print(self.currentRoom.getDoorMap())
-        
-        # Update world state
         event = pygame.event.Event(
             EventManager.event_types[CustomEvents.CHANGED_ROOM],
             {
@@ -88,6 +86,7 @@ class GameWorld:
             }
         )
         pygame.event.post(event)
+
     
     
    

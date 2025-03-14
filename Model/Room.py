@@ -23,6 +23,7 @@ class Room:
     
     def to_dict(self):
         """Convert Room to a dictionary for serialization."""
+        # print({direction: door.to_dict() for direction, door in self.__myDoorMap.items() if door})
         return {
             "room_type": self.__myRoomType,
             "x": self.__myX,

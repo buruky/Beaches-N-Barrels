@@ -28,20 +28,25 @@ class Door:
         return {
             "direction": self.__myFirstDirection,
             "connected_direction": self.__myEndDirection,
-            "room_coords": self.__myFirstRoom.getCords(),  # Store (x, y) instead of object
-            "neighbor_coords": self.__myEndRoom.getCords(),  # Store (x, y) instead of object
+            "room_coords": self.__myFirstRoom.getCords() if self.__myFirstRoom else None,
+            "neighbor_coords": self.__myEndRoom.getCords() if self.__myEndRoom else None,
             "is_open": self.isOpen,
         }
 
     @classmethod
     def from_dict(cls, data):
-        """Reconstruct a Door from a dictionary."""
-        return cls(
+        """Reconstruct a Door from a dictionary. Room linking happens in Floor.from_dict()."""
+        door = cls(
             data["direction"],
             data["connected_direction"],
-            data["room_coords"],  # Placeholder: Will be linked after all rooms are created
-            data["neighbor_coords"],  # Placeholder: Will be linked after all rooms are created
+            None,  # Placeholder, will be linked later
+            None   # Placeholder, will be linked later
         )
+        door.isOpen = data["is_open"]
+        door._room_coords = tuple(data["room_coords"])  # Temporarily store room coordinates
+        door._neighbor_coords = tuple(data["neighbor_coords"])  # Temporarily store neighbor coordinates
+        return door
+
 
 
 
