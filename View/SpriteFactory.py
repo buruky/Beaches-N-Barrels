@@ -22,10 +22,8 @@ class SpriteFactory:
         self.myRawPirateImage = pygame.image.load(os.path.join(assets_path, 'pirate.png'))
         self.myRawCrabImage = pygame.image.load(os.path.join(assets_path, 'crab.png'))
         self.myRawBeachBallImage = pygame.image.load(os.path.join(assets_path, 'BeachBall.png'))
-        # Inside the __init__ method
         self.myRawSeagullImage = pygame.image.load(os.path.join(assets_path, 'seagull.png'))
-        self.seagullImage = pygame.transform.scale(self.myRawSeagullImage, (100,100))
-        self.seagullImage2 = pygame.transform.flip(self.seagullImage, True, False)
+        
 
         # Load Projectile Image
         self.myRawProjectileImage = pygame.image.load(os.path.join(assets_path, 'projectileDolphin.png'))
@@ -56,6 +54,9 @@ class SpriteFactory:
 
         self.ballImage = pygame.transform.scale(self.myRawBeachBallImage, ViewUnits.DEFAULT_SPRITE_DIM)
         self.ballImage2 = pygame.transform.flip(self.ballImage, True, False)
+
+        self.seagullImage = pygame.transform.scale(self.myRawSeagullImage, (100,100))
+        self.seagullImage2 = pygame.transform.flip(self.seagullImage, True, False)
         
         # Resize (and optionally flip) the projectile image.
         # Assuming the projectile is symmetric, flipping might not be necessary,
@@ -87,9 +88,9 @@ class SpriteFactory:
             return self.createSeagullSpriteSheet(theId, thePositionX, thePositionY)  # NEW
         elif theName == "ProjectileDolphin":
             return self.createProjectileDolphinSpriteSheet(theId, thePositionX, thePositionY)
-        elif theName == "ProjectileBuddha":
+        elif theName == "ProjectileBuddha" or theName == "ProjectileSeagull":
             return self.createProjectileBuddhaSpriteSheet(theId, thePositionX, thePositionY)
-        elif theName == "ProjectileAstronaut" or theName == "ProjectilePirate" or theName == "ProjectileSeagull":
+        elif theName == "ProjectileAstronaut" or theName == "ProjectilePirate":
             return self.createProjectileAstronautSpriteSheet(theId, thePositionX, thePositionY)
         else:  # Default to generic enemy
             return self.createEnemySpriteSheet(theId, thePositionX, thePositionY)

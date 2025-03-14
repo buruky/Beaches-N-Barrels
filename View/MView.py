@@ -131,11 +131,6 @@ class MView:
     def redrawCharacter(self):
         """Clears the screen, redraws the room, characters, and room coordinates."""
         self.screen.blit(self.theNewRoom, (0, 0))
-        
-        # Draw characters
-        for currentSprite in self.onScreenChar:
-            self.screen.blit(currentSprite.getCurrentSprite(), currentSprite.getRect().topleft)
-
         font = pygame.font.Font(None, 25)  # Choose an appropriate font and size
         
         text_surface = font.render(f"Inventory: {[i+1 for i in range(len(self.inventory))]}", True, (255, 255, 255))  # White text        
@@ -154,6 +149,13 @@ class MView:
             text_rect = text_surface.get_rect(center=(ViewUnits.SCREEN_WIDTH // 2, ViewUnits.SCREEN_HEIGHT // 2))
             
             self.screen.blit(text_surface, text_rect)
+
+            
+        # Draw characters
+        for currentSprite in self.onScreenChar:
+            self.screen.blit(currentSprite.getCurrentSprite(), currentSprite.getRect().topleft)
+
+        
         
         current_room = GameWorld.getInstance().getCurrentRoom()
         if current_room is not None:

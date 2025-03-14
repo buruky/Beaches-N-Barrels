@@ -92,6 +92,6 @@ class EnemyFactory():
         enemy4 = self.create_enemy("Seagull")
         # enemyList.add_entity(enemy1)
         # enemyList.add_entity(enemy2)
-        # enemyList.add_entity(enemy3)
+        enemyList.add_entity(enemy3)
         enemyList.add_entity(enemy4)
         return enemyList

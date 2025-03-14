@@ -29,10 +29,10 @@ class Seagull(Enemy):
             self._shoot_at_player(player_x, player_y)
         else:
             self._random_movement()
+        self._post_move_event()
     
     def _move_away_from_player(self, player_x, player_y):
         """Move Seagull away from the player to maintain distance."""
-        current_time = pygame.time.get_ticks()
         new_x, new_y = self._myPositionX, self._myPositionY
         
         if player_x < self._myPositionX:
