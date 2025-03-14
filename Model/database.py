@@ -20,9 +20,9 @@ def initialize_enemy_db(db_path="db/enemies.db"):
     
     # Insert default enemy data
     cursor.execute("INSERT INTO enemy_data (enemy_type, attack, health, speed) VALUES ('Pirate', 20, 1, 2)")
-    cursor.execute("INSERT INTO enemy_data (enemy_type, attack, health, speed) VALUES ('Crab', 20, 1, 2)")
-    cursor.execute("INSERT INTO enemy_data (enemy_type, attack, health, speed) VALUES ('BeachBall', 20, 1, 4)")
-    cursor.execute("INSERT INTO enemy_data (enemy_type, attack, health, speed) VALUES ('Seagull', 60, 1, 2)")
+    cursor.execute("INSERT INTO enemy_data (enemy_type, attack, health, speed) VALUES ('Crab', 20, 1, 10)")
+    cursor.execute("INSERT INTO enemy_data (enemy_type, attack, health, speed) VALUES ('BeachBall', 20, 60, 4)")
+    cursor.execute("INSERT INTO enemy_data (enemy_type, attack, health, speed) VALUES ('Seagull', 60, 30, 2)")
     cursor.execute("INSERT INTO enemy_data (enemy_type, attack, health, speed) VALUES ('Shark', 60, 500, 2)")
     print("Default enemy data inserted.")
     

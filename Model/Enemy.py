@@ -78,7 +78,7 @@ class Enemy(DungeonCharacter, ABC):
                     "damage": self.getAttackDamage(),
                     "positionX": self.getPositionX(),
                     "positionY": self.getPositionY(),
-                    "speed": 10}        
+                    "speed": self._mySpeed * 10}        
                 )
         pygame.event.post(event)
 

@@ -94,9 +94,9 @@ class EnemyFactory():
         enemy3 = self.create_enemy("BeachBall")
         enemy4 = self.create_enemy("Seagull")
         enemy5 = self.create_enemy("Shark")
-        # enemyList.add_entity(enemy1)
+        enemyList.add_entity(enemy1)
         # enemyList.add_entity(enemy2)
-        # enemyList.add_entity(enemy3)
-        # enemyList.add_entity(enemy4)
-        enemyList.add_entity(enemy5)
+        enemyList.add_entity(enemy3)
+        enemyList.add_entity(enemy4)
+        # enemyList.add_entity(enemy5)
         return enemyList

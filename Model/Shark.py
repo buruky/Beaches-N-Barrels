@@ -98,6 +98,6 @@ class Shark(Enemy):
             angle = math.atan2(direction_y, direction_x)  # Calculate the angle towards the player
             
             # Post event to create the projectile
-             # Shoot in the direction of the player
+            # Shoot in the direction of the player
             self.shoot("SHOOT_PROJECTILE", angle)
             self.last_shot_time = current_time  # Update last shot tim
