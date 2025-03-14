@@ -51,8 +51,8 @@ class EnemyFactory():
         attack = data["attack"]
         health = data["health"]
         speed = data["speed"]
-        screen_width = ViewUnits.SCREEN_WIDTH - 50
-        screen_height = ViewUnits.SCREEN_HEIGHT -50
+        screen_width = ViewUnits.SCREEN_WIDTH - 150
+        screen_height = ViewUnits.SCREEN_HEIGHT -150
         if enemy_type == "Pirate":
             return Pirate(attack, health, random.randint(0,screen_width), random.randint(0, screen_height), speed)
         elif enemy_type == "Crab":
