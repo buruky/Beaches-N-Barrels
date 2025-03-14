@@ -22,9 +22,12 @@ class GameWorld:
 
     def _init_once(self):
         """Initialize the game world only once."""
+        
         self.__myFloorFactory = FloorFactory.getInstance()
         self.__myFloor = self.__myFloorFactory.createFloor()
         self.currentRoom = self.__myFloor.getStartRoom()
+           
+    
         event = pygame.event.Event(
                 EventManager.event_types[CustomEvents.CHANGED_ROOM],
                 {
@@ -35,11 +38,14 @@ class GameWorld:
                 }
             )
         pygame.event.post(event)
-        self.__myFloor.print_dungeon()              
+        print(self.currentRoom.getDoorMap())
+        # self.__myFloor.print_dungeon()  
+        self.__myFloor.print_dungeon()           
         self.player = None # player
         self.item = []
         self.last_damage_time = 0  # Track last damage taken
         self.projectiles = []
+
 
 
     @classmethod
@@ -56,23 +62,21 @@ class GameWorld:
         return {
             "current_room": self.currentRoom.getCords(),
             "floor": self.__myFloor.to_dict(),
-            "projectiles": [proj.to_dict() for proj in self.projectiles],
         }
+
     def load_from_dict(self, data):
         """Reconstruct GameWorld from a saved dictionary."""
         from .Floor import Floor
-        from .Projectile import Projectile
-
         # Restore Floor directly from saved data
         self.__myFloor = Floor.from_dict(data["floor"])
+        print("Floor loaded successfully.")  # Debugging line
 
         # Restore Current Room using coordinates
         room_coords = tuple(data["current_room"])  
         self.currentRoom = self.__myFloor.getRoomByCoords(room_coords)
-
-        # Restore Projectiles
-        self.projectiles = [Projectile.from_dict(proj_data) for proj_data in data.get("projectiles", [])]
-
+        self.__myFloor.print_dungeon()
+        print(self.currentRoom.getDoorMap())
+        
         # Update world state
         event = pygame.event.Event(
             EventManager.event_types[CustomEvents.CHANGED_ROOM],
@@ -84,41 +88,9 @@ class GameWorld:
             }
         )
         pygame.event.post(event)
-    # def save_state(self):
-    #     """Saves only the player state to a file using pickle."""
-    #     if not self.player:
-    #         print("No player to save.")
-    #         return
-
-    #     save_data = {"player": self.player.to_dict()}  # Wrap in "player" key
-
-    #     try:
-    #         with open(self.SAVE_FILE, "wb") as file:
-    #             pickle.dump(save_data, file)
-    #         print("Player saved successfully.", self.player.getInventory())  # Debugging line
-    #     except Exception as e:
-    #         print(f"Error saving player: {e}")
-
-    # def load_state(self):
-    #     """Loads only the player state from a file."""
-    #     if not os.path.exists(self.SAVE_FILE):
-    #         print("No saved player found.")
-    #         return
-
-    #     try:
-    #         with open(self.SAVE_FILE, "rb") as file:
-    #             save_data = pickle.load(file)
-
-    #         print(f"Loaded player data: {save_data}")  # Debugging line
-
-    #         from .Player import Player  # Ensure Player is recognized at runtime
-    #         if "player" in save_data:
-    #             self.player = Player.from_dict(save_data["player"])
-    #             print("Player loaded successfully.")
-    #         else:
-    #             print("Error: Player data missing in save file.")
-    #     except Exception as e:
-    #         print(f"Error loading player: {e}")
+    
+    
+   
 
     def loadWorld(self):
         self.player.update(CustomEvents.CHARACTER_MOVED)
@@ -309,4 +281,43 @@ class GameWorld:
                     #self.printConnectedDoors(self.currentRoom)
                     return door.getConnectedDoorDirection(self.currentRoom)#maybe return cords
         return None
+    
+
+
+
+     # def save_state(self):
+    #     """Saves only the player state to a file using pickle."""
+    #     if not self.player:
+    #         print("No player to save.")
+    #         return
+
+    #     save_data = {"player": self.player.to_dict()}  # Wrap in "player" key
+
+    #     try:
+    #         with open(self.SAVE_FILE, "wb") as file:
+    #             pickle.dump(save_data, file)
+    #         print("Player saved successfully.", self.player.getInventory())  # Debugging line
+    #     except Exception as e:
+    #         print(f"Error saving player: {e}")
+
+    # def load_state(self):
+    #     """Loads only the player state from a file."""
+    #     if not os.path.exists(self.SAVE_FILE):
+    #         print("No saved player found.")
+    #         return
+
+    #     try:
+    #         with open(self.SAVE_FILE, "rb") as file:
+    #             save_data = pickle.load(file)
+
+    #         print(f"Loaded player data: {save_data}")  # Debugging line
+
+    #         from .Player import Player  # Ensure Player is recognized at runtime
+    #         if "player" in save_data:
+    #             self.player = Player.from_dict(save_data["player"])
+    #             print("Player loaded successfully.")
+    #         else:
+    #             print("Error: Player data missing in save file.")
+    #     except Exception as e:
+    #         print(f"Error loading player: {e}")
  

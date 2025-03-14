@@ -38,6 +38,7 @@ class GameSaver:
                 save_data = pickle.load(file)
                 
             # pprint.pprint(save_data, width=120)  # Pretty-print saved data)
+            
             game_world = GameWorld.getInstance()
             game_world.load_from_dict(save_data["world"])
 
@@ -46,6 +47,9 @@ class GameSaver:
                 game_world.setPlayer(Player.from_dict(save_data["player"]))
             
             print(" Game loaded successfully!")
+            game_world.loadWorld()
+
+
             return game_world
         except Exception as e:
             print(f" Error loading game: {e}")

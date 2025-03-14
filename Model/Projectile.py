@@ -95,3 +95,26 @@ class Projectile(DungeonCharacter):
     def toString(self) -> str:
         """Returns a string representation of the projectile."""
         return f"{self._name} at ({self.x}, {self.y})"
+    
+    def to_dict(self):
+        """Convert player state to a dictionary for serialization."""
+        return {
+            "name": self._name,
+            "speed": self._mySpeed,
+            "direction": self._direction,
+            "damage": self._myAttackDamage,
+            "positionX": self._myPositionX,
+            "positionY": self._myPositionY,
+            # "inventory": [item.to_dict() for item in self.__inventory],  # Convert inventory items if needed
+            # "ability_active": self._item_Ability.active if self._item_Ability else None
+        }
+    @classmethod
+    def from_dict(cls, data):
+        """Reconstruct a DungeonCharacter from a dictionary. Assumes subclass implementation."""
+        return cls(
+            data["damage"],
+            data["health"],
+            data["positionX"],
+            data["positionY"],
+            data["speed"]
+        )

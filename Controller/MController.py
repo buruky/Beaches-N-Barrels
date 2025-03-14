@@ -38,6 +38,7 @@ class MController:
         if selected_character == "Load":
             print()
             self.__myWorld = GameSaver.load_game()
+            self.__myPlayer = self.__myWorld.getPlayer()
         else:
             self.__setup_new_game(selected_character)
 

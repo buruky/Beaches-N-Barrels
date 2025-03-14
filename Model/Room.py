@@ -36,14 +36,15 @@ class Room:
     def from_dict(cls, data):
         """Reconstruct a Room from a dictionary."""
         from .DungeonCharacterList import DungeonCharacterList
+        from .Door import Door
+
         enemy_list = DungeonCharacterList.from_dict(data["enemy_list"])  # Restore enemies
-
+        
         room = cls(data["room_type"], data["x"], data["y"], enemy_list)
-
-        from .Item import Item
-        room.__items = [Item.from_dict(item_data) for item_data in data["items"]]  # Restore items
-
-        return room  # Doors will be linked separately after all rooms are loaded
+        from .Item import UsableItem
+        # room.__items = [UsableItem.from_dict(item_data) for item_data in data["items"]]  # Restore items
+        room.__myDoorMap = {direction: Door.from_dict(door) for direction, door in data["doors"].items()}
+        return room  
 
 
 

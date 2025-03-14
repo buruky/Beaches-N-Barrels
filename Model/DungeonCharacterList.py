@@ -27,18 +27,22 @@ class DungeonCharacterList:
     def get_entities(self):
         """Return a list of all entities."""
         return self.__myDungeonCharacterList
+    
     def to_dict(self):
         """Convert DungeonCharacterList to a dictionary for serialization."""
         return {
             "characters": [character.to_dict() for character in self.__myDungeonCharacterList]
         }
+    
     @classmethod
     def from_dict(cls, data):
         """Reconstruct DungeonCharacterList from a dictionary."""
-        from .DungeonCharacter import DungeonCharacter
+        from .Enemy import Enemy  # Import subclasses as needed
         
         character_list = cls()  # Create an empty list
-        for char_data in data["characters"]:
-            character_list.add_entity(DungeonCharacter.from_dict(char_data))  # Restore characters
 
+        for char_data in data["characters"]:
+            character = Enemy.from_dict(char_data)
+            character_list.add_entity(character)  # Restore characters
+        
         return character_list

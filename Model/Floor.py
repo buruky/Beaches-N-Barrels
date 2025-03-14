@@ -33,24 +33,28 @@ class Floor:
                     line += ". "
             print(line)
         print()
-   
+    
+    def getRoomByCoords(self, theCoords:tuple):
+        return self.__myGrid[theCoords[0]][theCoords[1]]
+    
     def to_dict(self):
-            """Serialize the Floor to a dictionary."""
-            return {
-                "grid": [[room.to_dict() if isinstance(room, Room) else None for room in row] for row in self.__myGrid],
-                "doors": [door.to_dict() for door in self.__myDoorList],
-                "start_coords": self.__myStartCord,
-            }
+        """Convert the Floor to a dictionary for serialization."""
+        return {
+            "grid": [[room.to_dict() if isinstance(room, Room) else None for room in row] for row in self.__myGrid],
+            "door_list": [door.to_dict() for door in self.__myDoorList]
+        }
 
     @classmethod
     def from_dict(cls, data):
-        """Reconstruct a Floor from a dictionary."""
+        """Reconstruct the Floor from a dictionary."""
         from .Room import Room
         from .Door import Door
-
-        grid = [[Room.from_dict(room_data) if room_data else None for room_data in row] for row in data["grid"]]
-        doors = [Door.from_dict(door_data) for door_data in data["doors"]]
-
-        floor = cls(grid, doors)
-        floor.__myStartCord = tuple(data["start_coords"])  # Ensure tuple format
+        
+        grid = [
+            [Room.from_dict(room) if room else None for room in row]
+            for row in data["grid"]
+        ]
+        door_list = [Door.from_dict(door) for door in data["door_list"]]
+        
+        floor = cls(grid, door_list)
         return floor

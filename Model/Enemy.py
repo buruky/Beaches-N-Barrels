@@ -116,3 +116,28 @@ class Enemy(DungeonCharacter, ABC):
 
     def toString(self):
         return f"{self._name} at ({self._myPositionX}, {self._myPositionY})"
+
+    def to_dict(self):
+        """Convert player state to a dictionary for serialization."""
+        return {
+            "name": self._name,
+            "speed": self._mySpeed,
+            "health": self._myHealth,
+            "direction": self._direction,
+            "damage": self._myAttackDamage,
+            "positionX": self._myPositionX,
+            "positionY": self._myPositionY,
+            # "inventory": [item.to_dict() for item in self.__inventory],  # Convert inventory items if needed
+            # "ability_active": self._item_Ability.active if self._item_Ability else None
+        }
+    @classmethod
+    def from_dict(cls, data):
+        """Reconstruct a DungeonCharacter from a dictionary. Assumes subclass implementation."""
+        return cls(
+            data["name"],
+            data["damage"],
+            data["health"],
+            data["positionX"],
+            data["positionY"],
+            data["speed"]
+        )

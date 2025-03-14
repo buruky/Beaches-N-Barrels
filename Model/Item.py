@@ -12,6 +12,7 @@ class UsableItem:
         self._cooldown = cooldown  # cooldown duration in milliseconds
         self._active = False
         self._start_time = None  # Time when the item was activated
+   
     def getName(self):
         return self._name
     

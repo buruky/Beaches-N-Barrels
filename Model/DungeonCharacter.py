@@ -29,7 +29,7 @@ class DungeonCharacter(ABC):
     @abstractmethod
     def toString() -> str:
         pass
-
+    @abstractmethod
     def to_dict(self):
         """Convert player state to a dictionary for serialization."""
         return {
@@ -40,18 +40,21 @@ class DungeonCharacter(ABC):
             "damage": self._myAttackDamage,
             "positionX": self._myPositionX,
             "positionY": self._myPositionY,
-            "inventory": [item.to_dict() for item in self.__inventory],  # Convert inventory items if needed
-            "ability_active": self._item_Ability.active if self._item_Ability else None
+            # "inventory": [item.to_dict() for item in self.__inventory],  # Convert inventory items if needed
+            # "ability_active": self._item_Ability.active if self._item_Ability else None
         }
-    
-    @classmethod
+    @abstractmethod
     def from_dict(cls, data):
         """Reconstruct a DungeonCharacter from a dictionary. Assumes subclass implementation."""
+        if cls == DungeonCharacter:
+            raise NotImplementedError("DungeonCharacter should not be instantiated directly.")
+        
         return cls(
-            data["attack_damage"],
-            data["health_points"],
-            data["position_x"],
-            data["position_y"],
+            data["damage"],
+            data["health"],
+            data["positionX"],
+            data["positionY"],
             data["speed"]
         )
+        
 
