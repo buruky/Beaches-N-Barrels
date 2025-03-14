@@ -132,12 +132,18 @@ class Enemy(DungeonCharacter, ABC):
         }
     @classmethod
     def from_dict(cls, data):
-        """Reconstruct a DungeonCharacter from a dictionary. Assumes subclass implementation."""
-        return cls(
+        """Reconstruct an Enemy from a dictionary while ensuring movement logic is restored correctly."""
+        enemy = cls(
             data["name"],
             data["damage"],
             data["health"],
-            data["positionX"],
-            data["positionY"],
-            data["speed"]
+            data["speed"],      # ✅ Correct order
+            data["positionX"],  # ✅ Correct order
+            data["positionY"]
         )
+
+        # Restore movement properties
+        enemy._direction = data["direction"]
+        enemy._move_timer = pygame.time.get_ticks()  # ✅ Reset movement timer
+
+        return enemy

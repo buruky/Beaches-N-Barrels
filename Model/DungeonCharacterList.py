@@ -36,13 +36,21 @@ class DungeonCharacterList:
     
     @classmethod
     def from_dict(cls, data):
-        """Reconstruct DungeonCharacterList from a dictionary."""
-        from .Enemy import Enemy  # Import subclasses as needed
-        
+        """Reconstruct DungeonCharacterList from a dictionary while ensuring correct subclass restoration."""
+        from .Enemy import Enemy
+        from .Pirate import Pirate
+        from .Crab import Crab  # Import all subclasses
+
         character_list = cls()  # Create an empty list
 
         for char_data in data["characters"]:
-            character = Enemy.from_dict(char_data)
-            character_list.add_entity(character)  # Restore characters
-        
+            if char_data["name"] == "Pirate":
+                character = Pirate.from_dict(char_data)  # ✅ Correctly load Pirate
+            elif char_data["name"] == "Crab":
+                character = Crab.from_dict(char_data)  # ✅ Correctly load Crab
+            else:
+                character = Enemy.from_dict(char_data)  # Default to generic enemy
+
+            character_list.add_entity(character)  # Restore character
+
         return character_list
