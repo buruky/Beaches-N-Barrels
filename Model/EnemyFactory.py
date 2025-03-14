@@ -4,6 +4,7 @@ from .Crab import Crab
 from .Pirate import Pirate
 from .Seagull import Seagull
 from .BeachBall import BeachBall
+from .Shark import Shark
 from .DungeonCharacterList import DungeonCharacterList
 from .database import initialize_enemy_db
 import sqlite3
@@ -61,6 +62,8 @@ class EnemyFactory():
             return BeachBall(attack, health, random.randint(0,screen_width), random.randint(0, screen_height), speed)
         elif enemy_type == "Seagull":
             return Seagull(attack, health, random.randint(0,screen_width), random.randint(0, screen_height), speed)
+        elif enemy_type == "Shark":
+            return Shark(attack, health, random.randint(0,screen_width), random.randint(0, screen_height), speed)
 
         else:
             return None
@@ -90,8 +93,10 @@ class EnemyFactory():
         enemy2 = self.create_enemy("Pirate")
         enemy3 = self.create_enemy("BeachBall")
         enemy4 = self.create_enemy("Seagull")
+        enemy5 = self.create_enemy("Shark")
         # enemyList.add_entity(enemy1)
         # enemyList.add_entity(enemy2)
-        enemyList.add_entity(enemy3)
-        enemyList.add_entity(enemy4)
+        # enemyList.add_entity(enemy3)
+        # enemyList.add_entity(enemy4)
+        enemyList.add_entity(enemy5)
         return enemyList
