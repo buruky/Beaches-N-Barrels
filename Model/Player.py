@@ -35,46 +35,33 @@ class Player(DungeonCharacter):
             "damage": self._myAttackDamage,
             "positionX": self._myPositionX,
             "positionY": self._myPositionY,
-            "inventory": [item.to_dict() for item in self.__inventory],  # Convert inventory items if needed
-            "ability_active": self._item_Ability.active if self._item_Ability else None
+            "inventory": [item.to_dict() for item in self.__inventory],  # ✅ Save inventory
         }
+
 
     @classmethod
     def from_dict(cls, data):
-        """Reconstruct a Player object from a dictionary."""
-        required_keys = ["name", "speed", "health", "damage", "positionX", "positionY"]
-        for key in required_keys:
-            if key not in data:
-                raise ValueError(f"Missing key in saved data: {key}")
+        """Reconstruct a Player object, ensuring the correct subclass is restored."""
+        from .Dolphin import Dolphin
+        from .Buddha import Buddha  # Example: Add other subclasses
+        from .Astronaut import Astronaut  # Example: Add other subclasses
 
-        player = cls(data["name"], data["speed"], data["health"], data["damage"])
-        player._myPositionX = data["positionX"]
-        player._myPositionY = data["positionY"]
-        
-        player._direction = data["direction"]
+        class_mapping = {
+            "Dolphin": Dolphin,
+            "Buddha": Buddha,
+            "Astronaut": Astronaut,
+            "Player": Player
+        }
 
-        # # Restore inventory items if necessary
-        if "inventory" in data:
-            player.__inventory = []
-            for item_data in data["inventory"]:
-                item_class_name = item_data.get("class", "UsableItem")
-                item_class = globals().get(item_class_name, UsableItem)  # Dynamically find class
-                player.__inventory.append(item_class.from_dict(item_data))
-                print(f"Loading item: {item_class_name}")
-                if hasattr(item_class, 'from_dict'):
-                    player.__inventory.append(item_class.from_dict(item_data))
-                else:
-                    print(f"Error: {item_class_name} does not have a from_dict method")
-
-        # Restore ability if applicable
-        if data.get("ability_active") and player._item_Ability:
-            player._item_Ability.active = True
-
-        return player
+        player_class = class_mapping.get(data.get("class", "Player"), Player)
+        return player_class.from_dict(data)  # ✅ Calls the correct subclass method
     
     
     
-    
+    def restore_abilities(self):
+        """Ensure player abilities are restored after loading."""
+        for ability in self.abilities:
+            ability.restore_state()  # If abilities store cooldowns, restore them
     def getAttackDamage(self) -> int:
         return self._myAttackDamage
     

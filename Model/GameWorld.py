@@ -66,16 +66,26 @@ class GameWorld:
         }
 
     def load_from_dict(self, data):
-        """Reconstruct GameWorld from a saved dictionary."""
+        """Reconstruct GameWorld from a saved dictionary while ensuring player abilities are restored."""
         from .Floor import Floor
         from .Player import Player  # Ensure Player is imported
 
         self.__myFloor = Floor.from_dict(data["floor"])
         self.currentRoom = self.__myFloor.getRoomByCoords(tuple(data["current_room"]))
 
+        # ✅ Restore Player properly
         if data.get("player"):
-            self.player = Player.from_dict(data["player"])
+            self.player = Player.from_dict(data["player"])  # ✅ Load player
+
+            # ✅ Ensure inventory is restored
+            if hasattr(self.player, "restore_inventory"):
+                self.player.restore_inventory()
+
+        
+        # ✅ Ensure the dungeon is printed correctly
         self.__myFloor.print_dungeon()
+
+        # ✅ Post event to update room state
         event = pygame.event.Event(
             EventManager.event_types[CustomEvents.CHANGED_ROOM],
             {
@@ -86,6 +96,11 @@ class GameWorld:
             }
         )
         pygame.event.post(event)
+
+        # ✅ Ensure player updates correctly after loading
+        self.loadWorld()
+
+        print("Game loaded successfully! Player abilities restored.")
 
     
     
