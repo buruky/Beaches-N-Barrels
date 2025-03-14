@@ -1,5 +1,6 @@
 from .Player import Player
 from .Abilities import LowGravityAbility
+import pygame
 
 class Astronaut(Player):
     """Astronaut hero that can jump with low gravity effect."""
@@ -34,4 +35,15 @@ class Astronaut(Player):
         Astronaut._myHealth = data["health"]
         Astronaut._ability = Astronaut.setAbility()  # Restore first ability
         
+        if data.get("ability_active"):
+            # Simulate restoring start time by assuming the ability started before saving
+            elapsed_time = pygame.time.get_ticks() - (data.get("start_time", pygame.time.get_ticks()))
+            
+            if elapsed_time < Astronaut._ability.duration:
+                Astronaut._ability.active = True
+                Astronaut._ability.start_time = pygame.time.get_ticks() - elapsed_time  # ✅ Restore exact start time
+            else:
+                Astronaut._ability.deactivate()  # ✅ Expired, so deactivate immediately
+
+        Astronaut._ability.update()
         return Astronaut
