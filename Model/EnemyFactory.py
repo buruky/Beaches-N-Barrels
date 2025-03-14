@@ -2,6 +2,7 @@ from typing import Final
 from .Enemy import Enemy
 from .Crab import Crab
 from .Pirate import Pirate
+from .BeachBall import BeachBall
 from .DungeonCharacterList import DungeonCharacterList
 from .database import initialize_enemy_db
 import sqlite3
@@ -55,6 +56,8 @@ class EnemyFactory():
             return Pirate(attack, health, random.randint(0,screen_width), random.randint(0, screen_height), speed)
         elif enemy_type == "Crab":
             return Crab(attack, health, random.randint(0,screen_width), random.randint(0, screen_height), speed)
+        elif enemy_type == "BeachBall": 
+            return BeachBall(attack, health, random.randint(0,screen_width), random.randint(0, screen_height), speed)
 
         else:
             return None
@@ -82,7 +85,9 @@ class EnemyFactory():
         enemyList = DungeonCharacterList()
         enemy1 = self.create_enemy("Crab")
         enemy2 = self.create_enemy("Pirate")
+        enemy3 = self.create_enemy("BeachBall")
 
-        enemyList.add_entity(enemy1)
-        enemyList.add_entity(enemy2)
+        # enemyList.add_entity(enemy1)
+        # enemyList.add_entity(enemy2)
+        enemyList.add_entity(enemy3)
         return enemyList

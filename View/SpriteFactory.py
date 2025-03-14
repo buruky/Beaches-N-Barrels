@@ -21,6 +21,7 @@ class SpriteFactory:
         self.myRawEnemyImage = pygame.image.load(os.path.join(assets_path, 'speederman.png'))
         self.myRawPirateImage = pygame.image.load(os.path.join(assets_path, 'pirate.png'))
         self.myRawCrabImage = pygame.image.load(os.path.join(assets_path, 'crab.png'))
+        self.myRawBeachBallImage = pygame.image.load(os.path.join(assets_path, 'BeachBall.png'))
 
         # Load Projectile Image
         self.myRawProjectileImage = pygame.image.load(os.path.join(assets_path, 'projectileDolphin.png'))
@@ -48,6 +49,9 @@ class SpriteFactory:
 
         self.crabImage = pygame.transform.scale(self.myRawCrabImage, ViewUnits.DEFAULT_SPRITE_DIM)
         self.crabImage2 = pygame.transform.flip(self.crabImage, True, False)
+
+        self.ballImage = pygame.transform.scale(self.myRawBeachBallImage, ViewUnits.DEFAULT_SPRITE_DIM)
+        self.ballImage2 = pygame.transform.flip(self.ballImage, True, False)
         
         # Resize (and optionally flip) the projectile image.
         # Assuming the projectile is symmetric, flipping might not be necessary,
@@ -73,6 +77,8 @@ class SpriteFactory:
             return self.createPirateSpriteSheet(theId, thePositionX, thePositionY)
         elif theName == "Crab":
             return self.createCrabSpriteSheet(theId, thePositionX, thePositionY)
+        elif theName == "BeachBall":
+            return self.createBeachBallSpriteSheet(theId, thePositionX, thePositionY)
         elif theName == "ProjectileDolphin":
             return self.createProjectileDolphinSpriteSheet(theId, thePositionX, thePositionY)
         elif theName == "ProjectileBuddha":
@@ -144,6 +150,15 @@ class SpriteFactory:
         crabRect.y = thePositionY
 
         return SpriteSheet(theId, "Crab", imageDict, crabRect)
+    
+    def createBeachBallSpriteSheet(self, theId, thePositionX, thePositionY):
+        """Creates a Crab sprite sheet."""
+        imageDict = {ViewUnits.DEFAULT_STATE_NAME: [self.ballImage2, self.ballImage]}
+        ballRect = copy.copy(ViewUnits.DEFAULT_RECT)
+        ballRect.x = thePositionX
+        ballRect.y = thePositionY
+
+        return SpriteSheet(theId, "BeachBall", imageDict, ballRect)
 
     def createProjectileDolphinSpriteSheet(self, theId, thePositionX, thePositionY):
         """Creates a Projectile sprite sheet."""

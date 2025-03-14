@@ -39,15 +39,18 @@ class DungeonCharacterList:
         """Reconstruct DungeonCharacterList from a dictionary while ensuring correct subclass restoration."""
         from .Enemy import Enemy
         from .Pirate import Pirate
+        from .BeachBall import BeachBall
         from .Crab import Crab  # Import all subclasses
 
         character_list = cls()  # Create an empty list
 
         for char_data in data["characters"]:
             if char_data["name"] == "Pirate":
-                character = Pirate.from_dict(char_data)  # ✅ Correctly load Pirate
+                character = Pirate.from_dict(char_data)  # Correctly load Pirate
+            elif char_data["name"] == "BeachBall":
+                character = BeachBall.from_dict(char_data)  # Correctly load BeachBall
             elif char_data["name"] == "Crab":
-                character = Crab.from_dict(char_data)  # ✅ Correctly load Crab
+                character = Crab.from_dict(char_data)  #  Correctly load Crab
             else:
                 character = Enemy.from_dict(char_data)  # Default to generic enemy
 
