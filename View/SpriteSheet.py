@@ -1,7 +1,5 @@
 from typing import Final
 import pygame
-import random
-
 from ViewUnits import ViewUnits
 
 class SpriteSheet:
@@ -18,7 +16,6 @@ class SpriteSheet:
         self.__myCurrentSpriteIndex = 0
         self.__myCurrentState = "IDLE"
         self.__myRect = theRect
-        
         self.__myTimer= 150
         self.__increment = pygame.time.get_ticks()
         
@@ -79,13 +76,13 @@ class SpriteSheet:
         
         
         if now - self.__increment > self.__myTimer:
-            print("Total Sprites:", len(self.__mySprites[self.__myCurrentState]))
-            print("Before update:", self.__myCurrentSpriteIndex)
+            # print("Total Sprites:", len(self.__mySprites[self.__myCurrentState]))
+            # print("Before update:", self.__myCurrentSpriteIndex)
 
             self.__myCurrentSpriteIndex = (self.__myCurrentSpriteIndex + 1) % len(self.__mySprites[self.__myCurrentState])
 
-            print("After update:", self.__myCurrentSpriteIndex)
-            print("Current State:", self.__myCurrentState)
+            # print("After update:", self.__myCurrentSpriteIndex)
+            # print("Current State:", self.__myCurrentState)
 
             self.__increment = now
         
