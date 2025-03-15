@@ -34,8 +34,8 @@ class SpriteFactory:
 
         # Resize and Flip Sprites
 
-        self.dolphinImage = pygame.transform.scale(self.myRawDolphinImage, ViewUnits.DEFAULT_SPRITE_DIM)  
-        self.dolphinImage2 = pygame.transform.flip(self.dolphinImage, True, False)  
+        # self.dolphinImage = pygame.transform.scale(self.myRawDolphinImage, ViewUnits.DEFAULT_SPRITE_DIM)  
+        # self.dolphinImage2 = pygame.transform.flip(self.dolphinImage, True, False)  
 
         self.buddhaImage = pygame.transform.scale(self.myRawBuddhaImage, ViewUnits.DEFAULT_SPRITE_DIM)  # NEW
         self.buddhaImage2 = pygame.transform.flip(self.buddhaImage, True, False)  # NEW
