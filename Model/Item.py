@@ -86,7 +86,19 @@ class MockItem(UsableItem):
         item.rect = pygame.Rect(position[0], position[1], 50, 50)
 
         return item
-
+    
+class KeyItem(UsableItem):
+    """
+    A simple test item that, when used, subtracts 10 health from the player.
+    It uses a 3-second cooldown by default.
+    """
+    def __init__(self, position=None):
+        super().__init__("KeyItem", "This is a test item for pickup.", cooldown=3000)
+        if position is None:
+            position = (10, 10)
+        self.position = position
+        # Create a collision rectangle (50x50) at the given position.
+        self.rect = pygame.Rect(position[0], position[1], 50, 50)
 
     
     def __str__(self):

@@ -35,8 +35,17 @@ class SpriteFactory:
         self.myRaw2ProjectileImage = pygame.image.load(os.path.join(assets_path, 'projectileBuddha.png'))
         self.myRaw3ProjectileImage = pygame.image.load(os.path.join(assets_path, 'projectileAstronaut.png'))
         self.myRaw4ProjectileImage = pygame.image.load(os.path.join(assets_path, 'projectileShark.png'))
+        # Inside __init__ of SpriteFactory (after loading existing images)
+        key_icon_path = os.path.join(assets_path, 'keyIcon.png')
+        self.myRawKeyIcon = pygame.image.load(key_icon_path)
+        self.keyIcon = pygame.transform.scale(self.myRawKeyIcon, ViewUnits.DEFAULT_SPRITE_DIM)
+        self.keyIcon2 = pygame.transform.flip(self.keyIcon, True, False)
 
 
+        # NEW: Load additional item images
+        self.myRawPotionImage = pygame.image.load(os.path.join(assets_path, 'potion.png'))
+        self.myRawPoisonImage = pygame.image.load(os.path.join(assets_path, 'poison.png'))
+        self.myRawKeyImage = pygame.image.load(os.path.join(assets_path, 'key_item.png'))
         # Resize and Flip Sprites
 
         self.dolphinImage = pygame.transform.scale(self.myRawDolphinImage, ViewUnits.DEFAULT_SPRITE_DIM)  
@@ -65,6 +74,17 @@ class SpriteFactory:
 
         self.sharkImage = pygame.transform.scale(self.myRawSharkImage, (100,100))
         self.sharkImage2 = pygame.transform.flip(self.sharkImage, True, False)
+
+        # NEW: Resize and flip item images
+        self.potionImage = pygame.transform.scale(self.myRawPotionImage, (35,50))
+        self.potionImage2 = pygame.transform.flip(self.potionImage, True, False)
+        
+        self.poisonImage = pygame.transform.scale(self.myRawPoisonImage,(35,50))
+        self.poisonImage2 = pygame.transform.flip(self.poisonImage, True, False)
+        
+        self.keyImage = pygame.transform.scale(self.myRawKeyImage, (35,50))
+        self.keyImage2 = pygame.transform.flip(self.keyImage, True, False)
+
         
         # Resize (and optionally flip) the projectile image.
         # Assuming the projectile is symmetric, flipping might not be necessary,
@@ -107,6 +127,12 @@ class SpriteFactory:
             return self.createProjectileAstronautSpriteSheet(theId, thePositionX, thePositionY)
         elif theName == "Door":
             return self.createDoorSpriteSheet(theId, thePositionX, thePositionY)
+        elif theName == "Potion":
+            return self.createPotionSpriteSheet(theId, thePositionX, thePositionY)  # NEW
+        elif theName == "Poison":
+            return self.createPoisonSpriteSheet(theId, thePositionX, thePositionY)  # NEW
+        elif theName == "Key":
+            return self.createKeySpriteSheet(theId, thePositionX, thePositionY)  # NEW
         else:  # Default to generic enemy
             return self.createEnemySpriteSheet(theId, thePositionX, thePositionY)
 
@@ -252,6 +278,40 @@ class SpriteFactory:
         seagullRect.y = thePositionY
 
         return SpriteSheet(theId, "Seagull", imageDict, seagullRect)
+    # NEW: Additional sprite sheet creation methods for items
+    def createPotionSpriteSheet(self, theId, thePositionX, thePositionY):
+        """Creates a Potion sprite sheet."""
+        imageDict = {ViewUnits.DEFAULT_STATE_NAME: [self.potionImage, self.potionImage2]}
+        potionRect = copy.copy(ViewUnits.DEFAULT_RECT)
+        potionRect.x = thePositionX
+        potionRect.y = thePositionY
+        return SpriteSheet(theId, "Potion", imageDict, potionRect)
+    
+    def createPoisonSpriteSheet(self, theId, thePositionX, thePositionY):
+        """Creates a Poison sprite sheet."""
+        imageDict = {ViewUnits.DEFAULT_STATE_NAME: [self.poisonImage, self.poisonImage2]}
+        poisonRect = copy.copy(ViewUnits.DEFAULT_RECT)
+        poisonRect.x = thePositionX
+        poisonRect.y = thePositionY
+        return SpriteSheet(theId, "Poison", imageDict, poisonRect)
+    
+    def createKeySpriteSheet(self, theId, thePositionX, thePositionY):
+        """Creates a Key sprite sheet."""
+        imageDict = {ViewUnits.DEFAULT_STATE_NAME: [self.keyImage, self.keyImage2]}
+        keyRect = copy.copy(ViewUnits.DEFAULT_RECT)
+        keyRect.x = thePositionX
+        keyRect.y = thePositionY
+        return SpriteSheet(theId, "Key", imageDict, keyRect)
+    def createKeyIconSpriteSheet(self, theId, thePositionX, thePositionY):
+        """Creates a Key Icon sprite sheet using keyIcon.png."""
+        imageDict = {ViewUnits.DEFAULT_STATE_NAME: [self.keyIcon, self.keyIcon2]}
+        keyIconRect = copy.copy(pygame.Rect((thePositionX,
+                                    thePositionY),
+                                      (36,
+                                       36)))
+        keyIconRect.x = thePositionX
+        keyIconRect.y = thePositionY
+        return SpriteSheet(theId, "KeyIcon", imageDict, keyIconRect)
 
 
     def add(self, theSpriteSheet):

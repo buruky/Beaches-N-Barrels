@@ -250,7 +250,11 @@ class GameWorld:
                 return True
 
         return False  # No collision
-        
+    
+    def getFloor(self):
+        return self.__myFloorFactory
+
+
     def check_projectile_collision(self, projectile,isEnemy):
         """Checks if a projectile collides with an enemy, player, or obstacle."""
         projectile_rect = pygame.Rect(projectile.getPositionX(), projectile.getPositionY(), 10, 10)

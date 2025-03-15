@@ -5,6 +5,8 @@ from .EventManager import EventManager
 from CustomEvents import CustomEvents
 from .GameWorld import GameWorld
 from .Abilities import HealAbility
+from .Abilities import SpeedBoostAbility
+from .FloorFactory import FloorFactory
 from .Item import *
 import pygame
 
@@ -17,8 +19,9 @@ class Player(DungeonCharacter):
         self._name = name
         self._direction = "LEFT"  # Default direction
         self._ability = None  # To be set by subclasses
-
+        self.__myFloorFactory = FloorFactory.getInstance()
         #item
+        self.keyCount = 0
         self.__inventory = []
         self._item_Ability = HealAbility(self)
         
@@ -143,10 +146,15 @@ class Player(DungeonCharacter):
             self._direction = theDirections[-1]  # Last key pressed is priority
     
     def pickup(self, item) -> None:
-        self.__inventory.append(item)
+        if item._name == "KeyItem":
+            self.keyCount += 1
+            print(self.keyCount)
+        else:    
+            self.__inventory.append(item)
         print(f"Picked up {item}")
         print([str(obj) for obj in self.__inventory])
-        self.update("PICKUP_ITEM")
+        if self.__myFloorFactory.getKeyMin() <= self.keyCount:
+            print("FOUND ALL KEYS")
 
    
     def getInventory(self) -> list:
@@ -156,7 +164,7 @@ class Player(DungeonCharacter):
         ### use item when t is pressed
         if self.__inventory:
             item = self.__inventory[0]
-            if item.getName() == "MockItem":
+            if item._name == "MockItem":
                 if not self._item_Ability.active:
                     self.__inventory.pop(0)
                     self._item_Ability.use()

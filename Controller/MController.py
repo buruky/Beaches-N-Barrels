@@ -116,6 +116,7 @@ class MController:
             self.__myPlayer.activate_ability()
         elif keys[pygame.K_t]:  # Press 'T' to use an item
             self.__myPlayer.use_item()
+        self.__myView.showMinimap = keys[pygame.K_m]
         
         # Handle shooting projectiles with cooldown
         current_time = pygame.time.get_ticks()  # Get current time in milliseconds

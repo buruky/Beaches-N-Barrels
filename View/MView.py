@@ -18,6 +18,10 @@ class MView:
         player_image_path2 = os.path.join(current_directory, '..', 'Assets', 'background-normalRoom.png')
         self.myRawPlayerImage2 = pygame.image.load(player_image_path2)
         self.theTest2 = pygame.transform.scale(self.myRawPlayerImage2, (ViewUnits.SCREEN_WIDTH,ViewUnits.SCREEN_HEIGHT))
+        player_image_path3 = os.path.join(current_directory, '..', 'Assets', 'key.png')
+        self.myRawPlayerImage3 = pygame.image.load(player_image_path3)
+        self.theTest3 = pygame.transform.scale(self.myRawPlayerImage3, (ViewUnits.SCREEN_WIDTH,ViewUnits.SCREEN_HEIGHT))
+
 
 
         door_image_path = os.path.join(current_directory, '..', 'Assets', 'door.png')
@@ -35,7 +39,8 @@ class MView:
         self.playerHealth = 100
         self.inventory = []
         self.int = 0
-
+        self.showMinimap = False
+        self.minimap_rect = pygame.Rect(screen_width - 320, 20, 350, 350)  
         # self.theNewRoom = (10,10,10)
     
     def getScreen(self):
@@ -82,7 +87,15 @@ class MView:
                     theDoor = self.mySpriteFactory.createSpriteSheet(ord(dir), "Door",ViewUnits.WEST_DOOR_CORD[0],ViewUnits.WEST_DOOR_CORD[1])
                     theDoor.setCurrentState("RIGHT")
                     self.myDoorList.append(theDoor)
-
+        if event.roomtype == "s ":
+            self.theNewRoom = self.theTest  # Set background for start room
+        elif event.roomtype == "k ":
+            self.theNewRoom = self.theTest3  # Set background for key room
+            print("Key")
+        elif event.roomtype == "n ":
+            self.theNewRoom = self.theTest2  # Set background for other rooms
+        elif event.roomtype == "b ":
+            self.theNewRoom = self.theTest2  # Set background for other rooms
         if len(self.onScreenChar) != 0:
             playerSprite = None
             for i in range(len(self.onScreenChar)):
@@ -142,16 +155,63 @@ class MView:
         pygame.time.delay(3000)  # Pause for some seconds before quitting
 
     def draw_room_items(self, room):
-        """Draws items present in the room using the crab sprite sheet at the item's stored position."""
+        """Draws items present in the room using different sprite sheets depending on the item's type."""
         items = room.get_items()
         for item in items:
             # Use the item's stored position.
             pos_x, pos_y = item.position  # Assuming each item has a 'position' attribute.
-            # Create a crab sprite for this item.
-            item_sprite = self.mySpriteFactory.createProjectileAstronautSpriteSheet(id(item), pos_x, pos_y)
+            # Determine which sprite sheet to use based on the item type.
+            if item._name == "KeyItem":
+                item_sprite = self.mySpriteFactory.createKeySpriteSheet(id(item), pos_x, pos_y)
+            elif item._name == "PotionItem":
+                item_sprite = self.mySpriteFactory.createPotionSpriteSheet(id(item), pos_x, pos_y)
+            elif item._name == "MockItem":
+                item_sprite = self.mySpriteFactory.createPoisonSpriteSheet(id(item), pos_x, pos_y)
+            else:
+                # Fallback: use a default item sprite. Adjust this as needed.
+                item_sprite = self.mySpriteFactory.createCrabSpriteSheet(id(item), pos_x, pos_y)
+            
             # Draw the sprite at its designated position.
             self.screen.blit(item_sprite.getCurrentSprite(), item_sprite.getRect().topleft)
 
+    def draw_minimap(self):
+        """Draws a minimap of the floor using rectangles to represent rooms."""
+        gameworld = GameWorld.getInstance()
+        floor = gameworld.getFloor()  
+        grid = floor.get_dungeon()  
+        grid_rows = len(grid)
+        grid_cols = len(grid[0]) if grid_rows > 0 else 0
+        # Use the defined minimap rect to set the drawing area.
+        minimap_area = self.minimap_rect  # Ensure this is set (e.g., in __init__)
+        cell_width = minimap_area.width / grid_cols
+        cell_height = minimap_area.height / grid_rows
+
+        for row in range(grid_rows):
+            for col in range(grid_cols):
+                room = grid[row][col]
+                if room:
+                    rect_x = minimap_area.x + col * cell_width 
+                    rect_y = minimap_area.y + row * cell_height 
+                    room_type = room.getRoomType()
+                    if room_type == "s ":
+                        color = (0, 255, 0 , 180)
+                    elif room_type == "n ":
+                        color = (124, 113, 113) 
+                    elif room_type == "k ":
+                        color = (0, 0, 255) 
+                        key_sprite = self.mySpriteFactory.createKeyIconSpriteSheet(id(room), rect_x, rect_y)
+                        #self.screen.blit(key_sprite.getCurrentSprite(), (rect_x, rect_y))
+                    elif room_type == "b ":
+                        color = (255, 0, 0)    # Red for boss room.
+                        #crab_sprite = self.mySpriteFactory.createCrabSpriteSheet(id(room), rect_x, rect_y)
+                        #self.screen.blit(crab_sprite.getCurrentSprite(), (rect_x, rect_y))
+                    else:
+                        color = (100, 100, 100)
+                    # Calculate rectangle position in the minimap.
+                    
+                    rect = pygame.Rect(rect_x - 30, rect_y - 30, cell_width - 5, cell_height - 5)
+                    pygame.draw.rect(self.screen, color, rect)
+                    pygame.draw.rect(self.screen, (0, 0, 0), rect, 2)
     def redrawCharacter(self):
         """Clears the screen, redraws the room, characters, and room coordinates."""
         self.screen.blit(self.theNewRoom, (0, 0))
@@ -186,9 +246,9 @@ class MView:
         current_room = GameWorld.getInstance().getCurrentRoom()
         if current_room is not None:
             self.draw_room_items(current_room)
+        if self.showMinimap:
+            self.draw_minimap()    
         pygame.display.flip()
 
-
-    
 
     

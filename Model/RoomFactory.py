@@ -1,4 +1,5 @@
 from .Room import Room
+from .ItemFactory import ItemFactory
 from .EnemyFactory import EnemyFactory
 from .DungeonCharacterList import DungeonCharacterList
 import random
@@ -18,7 +19,10 @@ class RoomFactory():
     def _init_once(self):
         self.s = "s "
         self.n = "n "
+        self.k = "k "
+        self.b = "b "
         self.__myEnemyFactory = EnemyFactory.getInstance()
+        self.__myItemFactory = ItemFactory.getInstance()
 
     @classmethod
     def getInstance(cls):
@@ -32,23 +36,33 @@ class RoomFactory():
             return self.createStartRoom(theRoomType, theX, theY)
         elif theRoomType == self.n:
             return self.createNormalRoom(theRoomType, theX, theY)
+        elif theRoomType == self.k:
+            return self.createKeyRoom(theRoomType, theX, theY)
+        elif theRoomType == self.b: 
+            return self.createBossRoom(theRoomType, theX, theY)
 
     def createStartRoom(self, theRoomType: str, theX, theY):
         self.__myEnemyFactory.test_database_connection()
         room = Room(theRoomType, theX, theY, DungeonCharacterList())
         # Add a random number (0-2) of items to the start room.
-        for _ in range(random.randint(3, 5)):
-            pos = (random.randint(0, ViewUnits.SCREEN_WIDTH - 50),
-                random.randint(0, ViewUnits.SCREEN_HEIGHT - 50))
-            room.add_item(MockItem(pos))
+        self.__myItemFactory.populateRoomItems(room)
         return room
 
     def createNormalRoom(self, theRoomType, theX, theY):    
         enemylist = self.__myEnemyFactory.createNormalTemplate()
         room = Room(theRoomType, theX, theY, enemylist)
         # Add a random number (0-2) of items to a normal room.
-        for _ in range(random.randint(3, 5)):
-            pos = (random.randint(0, ViewUnits.SCREEN_WIDTH - 50),
-                random.randint(0, ViewUnits.SCREEN_HEIGHT - 50))
-            room.add_item(MockItem(pos))
+        self.__myItemFactory.populateRoomItems(room)
+        return room
+
+    def createKeyRoom(self, theRoomType, theX, theY):    
+        room = Room(theRoomType, theX, theY, DungeonCharacterList())
+        self.__myItemFactory.populateRoomItems(room)
+        return room
+
+    def createBossRoom(self, theRoomType, theX, theY):    
+        enemylist = self.__myEnemyFactory.createNormalTemplate()
+        room = Room(theRoomType, theX, theY, enemylist)
+        self.__myItemFactory.populateRoomItems(room)
+        #print("KEY BOSS")
         return room

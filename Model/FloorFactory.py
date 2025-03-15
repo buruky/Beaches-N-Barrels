@@ -7,7 +7,7 @@ from .Room import Room
 from ViewUnits import ViewUnits
 
 class FloorFactory:
-    _FLOOR_LEVEL = 5
+    _FLOOR_LEVEL = 1
     _instance = None  # Stores the single instance
 
     def __new__(cls):
@@ -21,6 +21,7 @@ class FloorFactory:
         self.grid_width = 11
         self.grid_height = 11
         self.start_pos = (5, 5)  # Center of the grid
+        self.keys_min = 0
         self.roomFact = RoomFactory.getInstance()
         #self.grid = self.generate_dungeon(level)  # Store the grid in an instance variable
         #self.update()
@@ -77,11 +78,16 @@ class FloorFactory:
         return cls._instance
 
     def createFloor(self) -> Floor:
-        grid = self.generateGrid()
+        enough_keys = True
+        while enough_keys:
+            self.keys_min = 0
+            grid = self.generateGrid()
+            enough_keys = self.keys_min < 4
+        self.grid = grid
         doors = self.connect_rooms(grid)
-        #print(Floor(grid, doors).getStartRoom().getDoorMap())
         return Floor(grid, doors)
-        
+    def getKeyMin(self):
+        return self.keys_min
     def generateGrid(self) -> list[list]:
         startx = Floor._START_POS[0]
         
@@ -143,19 +149,33 @@ class FloorFactory:
                 queue.append(neighbor)
                 added_room = True
             
-            if not added_room:
+            if added_room == False:
                 dead_ends.append(current)
+                #print(current)
+                
+        
 
+        #print([str(obj) for obj in dead_ends])
+        while queue:
+            dead = queue.pop(0)
+            dead_ends.append(dead)
+            #print("Drained dead end:", dead)
+        
+        #print("Dead ends:", [str(obj) for obj in dead_ends])
+        keys = 0
         if dead_ends:
+            # Choose one dead end randomly to be the boss room ("b ") and the rest as key rooms ("k ")
             boss_dead_end = random.choice(dead_ends)
             for dead in dead_ends:
                 room = grid[dead[0]][dead[1]]
                 if room:
                     if dead == boss_dead_end:
-                        room.setRoomType("b ")
-                    else:
-                        room.setRoomType("k ")
-        return grid  
+                         grid[dead[0]][dead[1]] = self.roomFact.createRoom("b ", dead[0], dead[1])  
+                    elif keys < 4:
+                        grid[dead[0]][dead[1]] = self.roomFact.createRoom("k ", dead[0], dead[1])  
+                        self.keys_min += 1
+                    
+        return grid
 
 
     
