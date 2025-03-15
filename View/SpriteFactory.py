@@ -19,6 +19,11 @@ class SpriteFactory:
         self.current_dir = os.path.dirname(os.path.dirname(__file__))  # Get the directory where the current script is located
         assets_path = os.path.join(self.current_dir, "Assets")
 
+
+
+        self.myRawBuddhaImage = pygame.image.load(os.path.join(assets_path, 'Buddha.jpg'))
+        self.myRawDolphinImage = pygame.image.load(os.path.join(assets_path, 'Dolphin.png'))
+        self.myRawAstronautImage = pygame.image.load(os.path.join(assets_path, 'Astronaut.jpg'))
         # Load Player Images
         self.myRawEnemyImage = pygame.image.load(os.path.join(assets_path, 'speederman.png'))
         self.myRawPirateImage = pygame.image.load(os.path.join(assets_path, 'pirate.png'))
@@ -34,8 +39,8 @@ class SpriteFactory:
 
         # Resize and Flip Sprites
 
-        # self.dolphinImage = pygame.transform.scale(self.myRawDolphinImage, ViewUnits.DEFAULT_SPRITE_DIM)  
-        # self.dolphinImage2 = pygame.transform.flip(self.dolphinImage, True, False)  
+        self.dolphinImage = pygame.transform.scale(self.myRawDolphinImage, ViewUnits.DEFAULT_SPRITE_DIM)  
+        self.dolphinImage2 = pygame.transform.flip(self.dolphinImage, True, False)  
 
         self.buddhaImage = pygame.transform.scale(self.myRawBuddhaImage, ViewUnits.DEFAULT_SPRITE_DIM)  # NEW
         self.buddhaImage2 = pygame.transform.flip(self.buddhaImage, True, False)  # NEW

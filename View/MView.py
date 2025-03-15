@@ -10,12 +10,12 @@ class MView:
     def __init__(self):
         # self.screen = screen
         current_directory = os.path.dirname(__file__)
-
+        print("YELLOWWWWW",current_directory)
         # Build the relative path to the player and enemy images
-        player_image_path = os.path.join(current_directory, '..', 'Assets', 'backround-normalRoom.png')
+        player_image_path = os.path.join(current_directory, '..', 'Assets', 'background-normalRoom.png')
         self.myRawPlayerImage = pygame.image.load(player_image_path)
         self.theTest = pygame.transform.scale(self.myRawPlayerImage, (ViewUnits.SCREEN_WIDTH,ViewUnits.SCREEN_HEIGHT))
-        player_image_path2 = os.path.join(current_directory, '..', 'Assets', 'backround-normalRoom.png')
+        player_image_path2 = os.path.join(current_directory, '..', 'Assets', 'background-normalRoom.png')
         self.myRawPlayerImage2 = pygame.image.load(player_image_path2)
         self.theTest2 = pygame.transform.scale(self.myRawPlayerImage2, (ViewUnits.SCREEN_WIDTH,ViewUnits.SCREEN_HEIGHT))
 
