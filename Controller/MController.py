@@ -116,6 +116,8 @@ class MController:
             self.__myPlayer.activate_ability()
         elif keys[pygame.K_t]:  # Press 'T' to use an item
             self.__myPlayer.use_item()
+        elif keys[pygame.K_r]:  # Press 'T' to use an item
+            self.__myPlayer.takeDamage(0.1)
         self.__myView.showMinimap = keys[pygame.K_m]
         
         # Handle shooting projectiles with cooldown

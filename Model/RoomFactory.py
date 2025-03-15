@@ -49,7 +49,8 @@ class RoomFactory():
         return room
 
     def createNormalRoom(self, theRoomType, theX, theY):    
-        enemylist = self.__myEnemyFactory.createNormalTemplate()
+        roomType = random.randint(1, 5)  # Generate a random number from 1 to 5
+        enemylist = self.__myEnemyFactory.createNormalTemplate(roomType)
         room = Room(theRoomType, theX, theY, enemylist)
         # Add a random number (0-2) of items to a normal room.
         self.__myItemFactory.populateRoomItems(room)
@@ -61,7 +62,7 @@ class RoomFactory():
         return room
 
     def createBossRoom(self, theRoomType, theX, theY):    
-        enemylist = self.__myEnemyFactory.createNormalTemplate()
+        enemylist = self.__myEnemyFactory.createBossTemplate()
         room = Room(theRoomType, theX, theY, enemylist)
         self.__myItemFactory.populateRoomItems(room)
         #print("KEY BOSS")

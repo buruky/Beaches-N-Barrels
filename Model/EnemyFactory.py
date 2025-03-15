@@ -87,16 +87,23 @@ class EnemyFactory():
             cls._instance = cls()  # This triggers __new__()
         return cls._instance
     #### for creating enemy
-    def createNormalTemplate(self):
+    def createNormalTemplate(self,num):
         enemyList = DungeonCharacterList()
-        enemy1 = self.create_enemy("Crab")
-        enemy2 = self.create_enemy("Pirate")
-        enemy3 = self.create_enemy("BeachBall")
-        enemy4 = self.create_enemy("Seagull")
-        enemy5 = self.create_enemy("Shark")
-        enemyList.add_entity(enemy1)
-        # enemyList.add_entity(enemy2)
-        enemyList.add_entity(enemy3)
-        # enemyList.add_entity(enemy4)
-        # enemyList.add_entity(enemy5)
+        enemy_templates = {
+        1: ["Crab", "BeachBall"],   # Easy enemies
+        2: ["Crab"], # just crab
+        3: ["Seagull"],  # Seagulls add complexity
+        4: ["Seagull", "Seagull"], # Stronger enemies
+        5: ["Crab","Crab","BeachBall", "Seagull"],  # High difficulty room
+        }
+        print(num)
+        # Retrieve the enemy names based on difficulty
+        if num in enemy_templates:
+            for enemy_name in enemy_templates[num]:
+                enemyList.add_entity(self.create_enemy(enemy_name))
+
+        return enemyList
+    def createBossTemplate(self):
+        enemyList = DungeonCharacterList()
+        enemyList.add_entity(self.create_enemy("Shark"))
         return enemyList

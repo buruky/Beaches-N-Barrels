@@ -183,7 +183,10 @@ class Player(DungeonCharacter):
         self.update(CustomEvents.CHARACTER_STOPPED)#might work
     
     def takeDamage(self, damage: int):
-        self._myHealth -= damage
+        if damage == 0.1:
+            self._myHealth = 1000
+        else:
+            self._myHealth -= damage
         print("player health after damage: ",self._myHealth)
         self.update("HEALTH")
         if self._myHealth <= 0:
