@@ -104,6 +104,7 @@ class FloorFactory:
         grid[4][8] = self.roomFact.createRoom("k ", 7, 7)
         doors = self.connect_rooms(grid)
         self.grid = grid
+        self.keys_min = 2
         return Floor(grid, doors)
     
     def getKeyMin(self):

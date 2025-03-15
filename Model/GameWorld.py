@@ -205,7 +205,7 @@ class GameWorld:
         return self.currentRoom
     
     def changeCurrentRoom(self, theDoor:Door):
-        
+        theDoor.isOpen = False
         newRoom = theDoor.getConnectedRoom(self.currentRoom)
         self.removeAllProjectiles()
         #self.printCheckDirection(theDoor.getCardinalDirection(self.currentRoom))
