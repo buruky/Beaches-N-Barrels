@@ -46,6 +46,20 @@ class SpriteSheet:
         self.__myRect.x = theNewX
         self.__myRect.y = theNewY
     
+    def checkCycle(self):
+        now = pygame.time.get_ticks()
+        
+        
+        if now - self.__increment > self.__myTimer:
+            # print("Total Sprites:", len(self.__mySprites[self.__myCurrentState]))
+            # print("Before update:", self.__myCurrentSpriteIndex)
+
+            self.__myCurrentSpriteIndex = (self.__myCurrentSpriteIndex + 1) % len(self.__mySprites[self.__myCurrentState])
+
+            # print("After update:", self.__myCurrentSpriteIndex)
+            # print("Current State:", self.__myCurrentState)
+
+            self.__increment = now
 
     def cycleSpriteSheet(self, theIncrement:int) -> None:
         listOfImages = self.__mySprites[self.__myCurrentState]
@@ -72,21 +86,7 @@ class SpriteSheet:
         return self.__myId
     
     def getCurrentSprite(self):
-        now = pygame.time.get_ticks()
         
-        
-        if now - self.__increment > self.__myTimer:
-            # print("Total Sprites:", len(self.__mySprites[self.__myCurrentState]))
-            # print("Before update:", self.__myCurrentSpriteIndex)
-
-            self.__myCurrentSpriteIndex = (self.__myCurrentSpriteIndex + 1) % len(self.__mySprites[self.__myCurrentState])
-
-            # print("After update:", self.__myCurrentSpriteIndex)
-            # print("Current State:", self.__myCurrentState)
-
-            self.__increment = now
-        
-
         return self.__mySprites[self.__myCurrentState][self.__myCurrentSpriteIndex]
     
     def getName(self):

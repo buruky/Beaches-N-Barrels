@@ -121,6 +121,7 @@ class MView:
         """Updates position of sprite associated with event passed in"""
         for characterSprite in self.onScreenChar:
             if theEvent.id == characterSprite.getId():
+                characterSprite.checkCycle()
                 characterSprite.setPosition(theEvent.positionX, theEvent.positionY)
                 if characterSprite.getName() in ["Dolphin", "Buddha", "Astronaut"]:
                     characterSprite.setCurrentState(theEvent.state)
