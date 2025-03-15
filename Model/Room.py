@@ -47,6 +47,13 @@ class Room:
     def killEnemy(self, theEnemy):
         self.__myEnemyList.deleteEnemy(theEnemy)
         
+    def getDoorPos(self):
+        dirToBool = dict()
+        for dir in self.DoorMap.keys():
+            if self.DoorMap[dir] != None:
+                dirToBool[dir] = True
+        return dirToBool
+
     def getRoomType(self):
         return self.__myRoomType
     def setRoomType(self, new_type: str) -> None:

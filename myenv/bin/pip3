@@ -1,6 +1,4 @@
-#!/bin/sh
-'''exec' "/Users/thienansjstar/Desktop/TCSS 360/Dungeonfinal/Beaches-N-Barrels/myenv/bin/python3.13" "$0" "$@"
-' '''
+#!/home/patrick/Documents/HW/TCSS360/BeachesNBarrels/Beaches-N-Barrels/myenv/bin/python3
 # -*- coding: utf-8 -*-
 import re
 import sys

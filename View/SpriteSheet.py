@@ -18,8 +18,11 @@ class SpriteSheet:
         self.__myCurrentSpriteIndex = 0
         self.__myCurrentState = "IDLE"
         self.__myRect = theRect
-
-    
+        
+        self.__myTimer= 150
+        self.__increment = pygame.time.get_ticks()
+        
+        
     
     def getRect(self):
         return self.__myRect
@@ -60,8 +63,10 @@ class SpriteSheet:
         
     def setCurrentState(self, theState:str) -> None:
         if theState in self.__mySprites.keys():
-            self.setCurrentState = theState
-            self.__myCurrentSpriteIndex = 0
+            if theState != self.__myCurrentState:
+                self.__myCurrentState = theState
+                
+                self.__myCurrentSpriteIndex = 0
         else:
             raise Exception("SpriteSheet.setCurrentState(): THERE IS NO LIST UNDER THAT STATE!!!")
     
@@ -70,8 +75,21 @@ class SpriteSheet:
         return self.__myId
     
     def getCurrentSprite(self):
-        # print(self.__myCurrentState)
-        # print(self.__myCurrentSpriteIndex)
+        now = pygame.time.get_ticks()
+        
+        
+        if now - self.__increment > self.__myTimer:
+            print("Total Sprites:", len(self.__mySprites[self.__myCurrentState]))
+            print("Before update:", self.__myCurrentSpriteIndex)
+
+            self.__myCurrentSpriteIndex = (self.__myCurrentSpriteIndex + 1) % len(self.__mySprites[self.__myCurrentState])
+
+            print("After update:", self.__myCurrentSpriteIndex)
+            print("Current State:", self.__myCurrentState)
+
+            self.__increment = now
+        
+
         return self.__mySprites[self.__myCurrentState][self.__myCurrentSpriteIndex]
     
     def getName(self):

@@ -14,7 +14,7 @@ class Player(DungeonCharacter):
         super().__init__(damage, health, 250, 250, speed)  # Default attackDamage = 50
         self._myHealth = health
         self._name = name
-        self._direction = None
+        self._direction = "LEFT"
         self._ability = None  # To be set by subclasses
 
         #item
@@ -134,11 +134,18 @@ class Player(DungeonCharacter):
             self._ability.use()
 
     def update(self, theEventName: str):
+        
+        if theEventName == CustomEvents.CHARACTER_MOVED:
+            state = self._direction
+        elif theEventName == CustomEvents.CHARACTER_STOPPED:
+            state = ViewUnits.DEFAULT_STATE_NAME
+
         event = pygame.event.Event(
             EventManager.event_types[theEventName],
             {"name": self.getName(),
              "positionX": self.getPositionX(),
              "positionY": self.getPositionY(),
+             "state":state,
              "id": id(self)}        
         )
         pygame.event.post(event)

@@ -26,7 +26,7 @@ class GameWorld:
                 EventManager.event_types[CustomEvents.CHANGED_ROOM],
                 {
                     "roomtype": self.currentRoom.getRoomType(),
-                    "doors":  self.currentRoom.getDoorMap(),
+                    "doors":  self.currentRoom.getDoorPos(),
                     "cords": self.currentRoom.getCords(),
                     "direction": None
                 }

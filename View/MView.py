@@ -12,10 +12,10 @@ class MView:
         current_directory = os.path.dirname(__file__)
 
         # Build the relative path to the player and enemy images
-        player_image_path = os.path.join(current_directory, '..', 'Assets', 'TestBackround.png')
+        player_image_path = os.path.join(current_directory, '..', 'Assets', 'background-normalRoom.png')
         self.myRawPlayerImage = pygame.image.load(player_image_path)
         self.theTest = pygame.transform.scale(self.myRawPlayerImage, (ViewUnits.SCREEN_WIDTH,ViewUnits.SCREEN_HEIGHT))
-        player_image_path2 = os.path.join(current_directory, '..', 'Assets', 'Testbackround2.png')
+        player_image_path2 = os.path.join(current_directory, '..', 'Assets', 'background-normalRoom.png')
         self.myRawPlayerImage2 = pygame.image.load(player_image_path2)
         self.theTest2 = pygame.transform.scale(self.myRawPlayerImage2, (ViewUnits.SCREEN_WIDTH,ViewUnits.SCREEN_HEIGHT))
 
@@ -29,6 +29,7 @@ class MView:
         self.mySpriteFactory = SpriteFactory()
         self.onScreenChar = []
         self.theRoom = pygame.Rect(0,0,  screen_width, screen_height) 
+        self.myDoorList = []
         self.theNewRoom = self.theTest
         self.cords = None
         self.playerHealth = 100
@@ -60,6 +61,28 @@ class MView:
             self.theNewRoom = self.theTest  # Set background for start room
         else:
             self.theNewRoom = self.theTest2  # Set background for other rooms
+
+        self.myDoorList = []
+        for dir, isDoor in event.doors.items():
+            if isDoor:
+                theDoor = None
+                if dir == "N":
+                    theDoor = self.mySpriteFactory.createSpriteSheet(ord(dir), "Door",ViewUnits.SOUTH_DOOR_CORD[0],ViewUnits.SOUTH_DOOR_CORD[1])
+                    theDoor.setCurrentState("UP")
+                    self.myDoorList.append(theDoor)
+                elif dir == "S":
+                    theDoor = self.mySpriteFactory.createSpriteSheet(ord(dir), "Door",ViewUnits.NORTH_DOOR_CORD[0],ViewUnits.NORTH_DOOR_CORD[1])
+                    theDoor.setCurrentState("DOWN")
+                    self.myDoorList.append(theDoor)
+                elif dir == "W":
+                    theDoor = self.mySpriteFactory.createSpriteSheet(ord(dir), "Door",ViewUnits.EAST_DOOR_CORD[0],ViewUnits.EAST_DOOR_CORD[1])
+                    theDoor.setCurrentState("LEFT")
+                    self.myDoorList.append(theDoor)
+                else:
+                    theDoor = self.mySpriteFactory.createSpriteSheet(ord(dir), "Door",ViewUnits.WEST_DOOR_CORD[0],ViewUnits.WEST_DOOR_CORD[1])
+                    theDoor.setCurrentState("RIGHT")
+                    self.myDoorList.append(theDoor)
+                    
 
         if len(self.onScreenChar) != 0:
             playerSprite = None
@@ -100,7 +123,8 @@ class MView:
         for characterSprite in self.onScreenChar:
             if theEvent.id == characterSprite.getId():
                 characterSprite.setPosition(theEvent.positionX, theEvent.positionY)
-        
+                if characterSprite.getName() in ["Dolphin", "Buddha", "Astronaut"]:
+                    characterSprite.setCurrentState(theEvent.state)
         self.redrawCharacter()
 
 
@@ -131,7 +155,8 @@ class MView:
     def redrawCharacter(self):
         """Clears the screen, redraws the room, characters, and room coordinates."""
         self.screen.blit(self.theNewRoom, (0, 0))
-        
+        for doorSprite in self.myDoorList:
+            self.screen.blit(doorSprite.getCurrentSprite(),doorSprite.getRect().topleft)
         # Draw characters
         for currentSprite in self.onScreenChar:
             self.screen.blit(currentSprite.getCurrentSprite(), currentSprite.getRect().topleft)
@@ -150,7 +175,7 @@ class MView:
         # Display room coordinates at the center of the screen
         if self.cords:
             font = pygame.font.Font(None, 50)  # Choose an appropriate font and size
-            text_surface = font.render(f"Room: {self.cords}", True, (255, 255, 255))  # White text
+            text_surface = font.render(f"Room: {self.cords}", True, (0, 0, 0))  # White text
             text_rect = text_surface.get_rect(center=(ViewUnits.SCREEN_WIDTH // 2, ViewUnits.SCREEN_HEIGHT // 2))
             
             self.screen.blit(text_surface, text_rect)
