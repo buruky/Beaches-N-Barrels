@@ -10,7 +10,6 @@ class MView:
     def __init__(self):
         # self.screen = screen
         current_directory = os.path.dirname(__file__)
-        print("YELLOWWWWW",current_directory)
         # Build the relative path to the player and enemy images
         player_image_path = os.path.join(current_directory, '..', 'Assets', 'background-normalRoom.png')
         self.myRawPlayerImage = pygame.image.load(player_image_path)
@@ -40,6 +39,7 @@ class MView:
         self.inventory = []
         self.int = 0
         self.showMinimap = False
+        self.needs_redraw = False
         self.minimap_rect = pygame.Rect(screen_width - 320, 20, 350, 350)  
         # self.theNewRoom = (10,10,10)
     
@@ -53,13 +53,19 @@ class MView:
 
     def updateHealthUI(self, event: pygame.event.Event):
         self.playerHealth = event.health
-        self.redrawCharacter()
+        self.needs_redraw = True
+
 
     def updateInventoryUI(self, event: pygame.event.Event):
         self.inventory = event.inventory
-        self.redrawCharacter()
+        self.needs_redraw = True
 
 
+    def process_updates(self):
+        """Process all updates and perform a single redraw if needed."""
+        if self.needs_redraw:
+            self.redrawCharacter()
+            self.needs_redraw = False
     def updateRoom(self, event: pygame.event.Event):
         """Updates the room background and displays room coordinates at the center."""
         if event.roomtype == "s ":
@@ -116,7 +122,8 @@ class MView:
             if theEvent.id == self.onScreenChar[i].getId():
                 self.onScreenChar.pop(i)
                 break
-        self.redrawCharacter()
+        self.needs_redraw = True
+
 
     def update_entity(self,theEvent:pygame.event):#need to find way to clear canvas when you draw
         """Adds Chracter to list and to screen with new position  """
@@ -128,7 +135,6 @@ class MView:
                     isIdInSpriteList = True
                 
         if not isIdInSpriteList:
-            
             self.addCharacterToScreenList(theEvent)
             
         """Updates position of sprite associated with event passed in"""
@@ -139,7 +145,7 @@ class MView:
                 if characterSprite.getName() in ["Dolphin", "Buddha", "Astronaut"]:
                     characterSprite.setCurrentState(theEvent.state)
         
-        self.redrawCharacter()
+        self.needs_redraw = True
 
 
     def display_game_over(self):
@@ -215,6 +221,7 @@ class MView:
                     pygame.draw.rect(self.screen, (0, 0, 0), rect, 2)
     def redrawCharacter(self):
         """Clears the screen, redraws the room, characters, and room coordinates."""
+        
         self.screen.blit(self.theNewRoom, (0, 0))
         font = pygame.font.Font(None, 25)  # Choose an appropriate font and size
 

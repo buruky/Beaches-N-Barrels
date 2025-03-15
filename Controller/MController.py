@@ -61,7 +61,7 @@ class MController:
         self.__handle_keyboard()
         self.__handle_mouse(self.__mySign)
         self.__myWorld.tick()
-
+        self.__myView.process_updates()
         if self.__myPlayer._ability:
             self.__myPlayer._ability.update()
         if self.__myPlayer._item_Ability:
@@ -73,7 +73,7 @@ class MController:
         EventManager.RegisterExistingEvent(CustomEvents.QUIT, pygame.QUIT, self.__quitGame)
         EventManager.RegisterExistingEvent(CustomEvents.MOUSE_BUTTON_DOWN, pygame.MOUSEBUTTONDOWN, self.__mouseButtonDown)
         EventManager.RegisterExistingEvent(CustomEvents.MOUSE_BUTTON_UP, pygame.MOUSEBUTTONUP, self.__mouseButtonUp)
-
+        
         EventManager.registerEvent(CustomEvents.CHARACTER_MOVED, self.__myView.update_entity)
         EventManager.registerEvent(CustomEvents.CHARACTER_STOPPED, self.__myView.update_entity)
         EventManager.registerEvent(CustomEvents.PLAYER_DIED, self.__handle_character_death)
@@ -121,7 +121,7 @@ class MController:
         
         
         # Handle minimap visibility change
-        new_minimap_state = keys[pygame.K_m]  # True if M is held, False otherwise
+        new_minimap_state = keys[pygame.K_LSHIFT]  # True if M is held, False otherwise
         if new_minimap_state != self.__myView.showMinimap:
             self.__myView.showMinimap = new_minimap_state
             self.__myView.redrawCharacter()  # Only redraw when state changes

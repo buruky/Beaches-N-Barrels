@@ -274,24 +274,15 @@ class GameWorld:
             player_rect = pygame.Rect(self.player.getPositionX(), self.player.getPositionY(), 50, 50)
             if projectile_rect.colliderect(player_rect):
                 self.player.takeDamage(projectile.getAttackDamage())  # Player takes damage
-                # projectile.Dies()  # Destroy projectile
-                # self.updateWorld()
-                return True
-        else:
-            # Check collision with enemies
-            for enemy in self.currentRoom.getEnemyList().get_entities():
-                if enemy.getName() is projectile.shooter:  #  Ignore the shooter
-                    continue
 
+                return True
+        else:#player loop
+            for enemy in self.currentRoom.getEnemyList().get_entities():
                 enemy_rect = pygame.Rect(enemy.getPositionX(), enemy.getPositionY(), 50, 50)
                 if projectile_rect.colliderect(enemy_rect):
                     enemy.takeDamage(projectile.getAttackDamage())  # Apply projectile damage
 
                     return True  # Collision detected
-
-            # Check collision with player (only if projectile was fired by an enemy)
-            
-
         return False  # No collision
 
     def collideWithDoor(self, thePlayerRect) -> str:

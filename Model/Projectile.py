@@ -71,6 +71,7 @@ class Projectile(DungeonCharacter):
         else:
             self.Dies()  # Remove projectile if it hits something
             self.update(CustomEvents.UPDATE_PROJECTILE)
+        
 
     def update(self, theEventName: str):
         """Post an event when the projectile moves."""
