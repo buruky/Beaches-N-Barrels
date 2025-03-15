@@ -77,7 +77,7 @@ class FloorFactory:
             cls._instance = cls()  # This triggers __new__()
         return cls._instance
 
-    def createFloor(self) -> Floor:
+    def createFloor1(self) -> Floor:
         enough_keys = True
         while enough_keys:
             self.keys_min = 0
@@ -86,6 +86,26 @@ class FloorFactory:
         self.grid = grid
         doors = self.connect_rooms(grid)
         return Floor(grid, doors)
+    
+    def createFloor(self) -> Floor:
+        startx = Floor._START_POS[0]
+        
+        starty = Floor._START_POS[1]
+        theHeight = ViewUnits.FLOOR_SIDE_LENGTH
+        theWidth = ViewUnits.FLOOR_SIDE_LENGTH
+        grid = [[False for _ in range(theWidth)] for _ in range(theHeight)]
+        startRoom = "s "
+        grid[startx][starty] = self.roomFact.createRoom(startRoom, startx, starty)
+        grid[5][6] = self.roomFact.createRoom("n ", 5, 6)
+        grid[5][7] = self.roomFact.createRoom("n ", 5, 7)
+        grid[5][8] = self.roomFact.createRoom("n ", 5, 8)
+        grid[5][9] = self.roomFact.createRoom("b ", 5, 9)
+        grid[6][7] = self.roomFact.createRoom("k ", 7, 7)
+        grid[4][8] = self.roomFact.createRoom("k ", 7, 7)
+        doors = self.connect_rooms(grid)
+        self.grid = grid
+        return Floor(grid, doors)
+    
     def getKeyMin(self):
         return self.keys_min
     def generateGrid(self) -> list[list]:
