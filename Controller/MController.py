@@ -118,7 +118,15 @@ class MController:
             self.__myPlayer.use_item()
         elif keys[pygame.K_r]:  # Press 'T' to use an item
             self.__myPlayer.takeDamage(0.1)
-        self.__myView.showMinimap = keys[pygame.K_m]
+        
+        
+        # Handle minimap visibility change
+        new_minimap_state = keys[pygame.K_m]  # True if M is held, False otherwise
+        if new_minimap_state != self.__myView.showMinimap:
+            self.__myView.showMinimap = new_minimap_state
+            self.__myView.redrawCharacter()  # Only redraw when state changes
+
+
         
         # Handle shooting projectiles with cooldown
         current_time = pygame.time.get_ticks()  # Get current time in milliseconds
