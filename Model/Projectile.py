@@ -6,7 +6,7 @@ from ViewUnits import ViewUnits
 from CustomEvents import CustomEvents
 
 class Projectile(DungeonCharacter):
-    def __init__(self, name: str, shooter, attackDamage: int, angle: float, speed: int, positionX: int, positionY: int):
+    def __init__(self, name: str, shooter, attackDamage: int, angle: float, speed: int, positionX: int, positionY: int, isEnemy: bool = False):
         """Initialize projectile with attributes and ensure position variables are set."""
         
         # Since DungeonCharacter requires health points, we pass a placeholder value of 1 for the health.
@@ -21,6 +21,7 @@ class Projectile(DungeonCharacter):
         self.speed = speed
         self.angle = angle  # Store the angle for movement
         self._name = name
+        self.isEnemy = isEnemy
 
         from .GameWorld import GameWorld  # Prevent circular imports
         self._game_world = GameWorld.getInstance()
@@ -62,7 +63,7 @@ class Projectile(DungeonCharacter):
                 new_x += self.speed  # Move right (increase X)
 
         # Check for collisions in the game world
-        if not self._game_world.check_projectile_collision(self):
+        if not self._game_world.check_projectile_collision(self,self.isEnemy):
             self.x = new_x
             self.y = new_y
             self.rect.topleft = (self.x, self.y)  # Update rect position

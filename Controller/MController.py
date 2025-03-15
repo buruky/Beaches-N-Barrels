@@ -27,7 +27,7 @@ class MController:
         self.__myView: Final = MView()
         self.__InitalizeEvents()
         self.__myIsRunning = True
-        self.shoot_cooldown = 300  # 300ms = 0.3 seconds between shots
+        self.shoot_cooldown = 500  # 300ms = 0.3 seconds between shots
         self.last_shot_time = 0  # Time of last shot
         
         # Show title screen and get character selection
@@ -81,7 +81,6 @@ class MController:
         EventManager.registerEvent(CustomEvents.SHOOT_PROJECTILE, self.__shoot_projectile)
         EventManager.registerEvent(CustomEvents.HEALTH, self.__myView.updateHealthUI)
         EventManager.registerEvent(CustomEvents.PICKUP_ITEM, self.__myView.updateInventoryUI)
-
         EventManager.registerEvent(CustomEvents.UPDATE_PROJECTILE, self.__myView.remove_projectile)
 
     def __handle_character_death(self, event):
@@ -151,7 +150,8 @@ class MController:
                         "damage": self.__myPlayer.getAttackDamage(),
                         "positionX": self.__myPlayer.getPositionX(),
                         "positionY": self.__myPlayer.getPositionY(),
-                        "speed": 10  # Modify the speed value as needed
+                        "speed": 10,  # Modify the speed value as needed
+                        "isEnemy": False
                     }
                 )
                 pygame.event.post(event)
@@ -179,7 +179,8 @@ class MController:
                 angle=event.direction,  # Pass angle instead of predefined direction
                 speed=event.speed,  # Set an appropriate speed
                 positionX=event.positionX,
-                positionY=event.positionY
+                positionY=event.positionY,
+                isEnemy = event.isEnemy
             )
             
             self.__myWorld.addProjectile(projectile)  # Add to the game world
