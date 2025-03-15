@@ -50,8 +50,8 @@ class Room:
 
     def getDoorPos(self):
         dirToBool = dict()
-        for dir in self.DoorMap.keys():
-            if self.DoorMap[dir] != None:
+        for dir in self.__myDoorMap.keys():
+            if self.__myDoorMap[dir] != None:
                 dirToBool[dir] = True
         return dirToBool
     
