@@ -33,7 +33,7 @@ class GameWorld:
                 EventManager.event_types[CustomEvents.CHANGED_ROOM],
                 {
                     "roomtype": self.currentRoom.getRoomType(),
-                    "doors": self.currentRoom.getDoorPos(),
+                    "doors": self.currentRoom.getDoorMap(),
                     "cords": self.currentRoom.getCords(),
                     "direction": None
                 }
@@ -138,7 +138,7 @@ class GameWorld:
                     "roomtype": self.currentRoom.getRoomType(),
                     "direction": None,
                     "cords": self.currentRoom.getCords(),
-                    "doors": self.currentRoom.getDoorPos()
+                    "doors": self.currentRoom.getDoorMap()
                 }
             )
         pygame.event.post(event)
@@ -182,7 +182,7 @@ class GameWorld:
                     "roomtype": self.currentRoom.getRoomType(),
                     "direction": None,
                     "cords": self.currentRoom.getCords(),
-                    "doors": self.currentRoom.getDoorPos()
+                    "doors": self.currentRoom.getDoorMap()
                 }
             )
         pygame.event.post(event)
@@ -196,7 +196,7 @@ class GameWorld:
                     "roomtype": self.currentRoom.getRoomType(),
                     "direction": None,
                     "cords": self.currentRoom.getCords(),
-                    "doors": self.currentRoom.getDoorPos()
+                    "doors": self.currentRoom.getDoorMap()
                 }
             )
         pygame.event.post(event)
@@ -219,7 +219,7 @@ class GameWorld:
                     "roomtype": self.currentRoom.getRoomType(),
                     "direction": self.direction,
                     "cords": self.currentRoom.getCords(),
-                    "doors": self.currentRoom.getDoorPos()
+                    "doors": self.currentRoom.getDoorMap()
                 }
             )
         pygame.event.post(event)
