@@ -12,8 +12,8 @@ class ViewUnits:
     screen_h = info.current_h
 
     # Set screen dimensions close to 1000x1100 pixels but adapt to the actual resolution
-    TARGET_WIDTH = 950  # Approximate target width
-    TARGET_HEIGHT = 850  # Approximate target height
+    TARGET_WIDTH = 960  # Approximate target width
+    TARGET_HEIGHT = 768  # Approximate target height
 
     FLOOR_SIDE_LENGTH:Final = 11
     # Ensure the screen size is proportionally close to the target without exceeding real screen
@@ -33,9 +33,14 @@ class ViewUnits:
     DEFAULT_DICT:Final = {DEFAULT_STATE_NAME: []}
     PLAYER_SPRITE_NAME = "PlayerMock"
     ENEMY_SPRITE_NAME = "EnemyMock"
-    DEFAULT_SPRITE_DIM = (DEFAULT_WIDTH,DEFAULT_HEIGHT)
+    DEFAULT_SPRITE_DIM: Final = (DEFAULT_WIDTH,DEFAULT_HEIGHT)
 
     SOUTH_DOOR_CORD =  (SCREEN_WIDTH // 2 - DEFAULT_WIDTH // 2, 0)  # Centered at the top
     WEST_DOOR_CORD = (SCREEN_WIDTH - DEFAULT_WIDTH, SCREEN_HEIGHT // 2 - DEFAULT_HEIGHT // 2)  # Right side
     NORTH_DOOR_CORD = (SCREEN_WIDTH // 2 - DEFAULT_WIDTH // 2, SCREEN_HEIGHT - DEFAULT_HEIGHT)  # Bottom
     EAST_DOOR_CORD =  (0, SCREEN_HEIGHT // 2 - DEFAULT_HEIGHT // 2)  # Left side
+
+    DIRECTION_UP:Final = "UP"
+    DIRECTION_DOWN:Final = "DOWN"
+    DIRECTION_LEFT:Final = "LEFT"
+    DIRECTION_RIGHT:Final = "RIGHT"

@@ -93,6 +93,9 @@ class Door:
             raise Exception("Door.getConnectedDirection:",
                         "THE OTHER ROOM IS NOT CONNECTED TO THIS DOOR!!!")
     
+
+
+
     def getDoorRect(self, theDirection:str) -> pygame.Rect:
         if theDirection == self.__myFirstDirection:
             return self.__myEndDoorRect

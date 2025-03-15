@@ -48,7 +48,13 @@ class Room:
         return room  
 
 
-
+    def getDoorPos(self):
+        dirToBool = dict()
+        for dir in self.DoorMap.keys():
+            if self.DoorMap[dir] != None:
+                dirToBool[dir] = True
+        return dirToBool
+    
     def addDoor(self, theDirection, theDoor):
         self.__myDoorMap[theDirection] = theDoor
         
