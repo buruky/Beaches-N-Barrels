@@ -4,7 +4,8 @@ from .DungeonCharacter import DungeonCharacter
 from .EventManager import EventManager
 from CustomEvents import CustomEvents
 from .GameWorld import GameWorld
-from .Abilities import SpeedBoostAbility
+from .Abilities import HealAbility
+from .Item import *
 import pygame
 
 class Player(DungeonCharacter):
@@ -19,12 +20,77 @@ class Player(DungeonCharacter):
 
         #item
         self.__inventory = []
-        self._item_Ability = SpeedBoostAbility(self)
+        self._item_Ability = HealAbility(self)
         
         """Update sprite when player is made"""
         self.update(CustomEvents.CHARACTER_STOPPED)
 
+    def to_dict(self):
+        """Convert player state to a dictionary for serialization, ensuring inventory is saved correctly."""
+        return {
+            "name": self._name,
+            "speed": self._mySpeed,
+            "health": self._myHealth,
+            "direction": self._direction,
+            "damage": self._myAttackDamage,
+            "positionX": self._myPositionX,
+            "positionY": self._myPositionY,
+            "inventory": [item.to_dict() for item in self.__inventory],  # ✅ Store full inventory
+            "class": self.__class__.__name__,  # ✅ Save player subclass name
+        }
 
+
+    @classmethod
+    def from_dict(cls, data):
+        """Reconstruct a Player object, ensuring the correct subclass is restored properly."""
+        from .Dolphin import Dolphin
+        from .Buddha import Buddha
+        from .Astronaut import Astronaut
+
+        class_mapping = {
+            "Dolphin": Dolphin,
+            "Buddha": Buddha,
+            "Astronaut": Astronaut,
+            "Player": Player
+        }
+
+        player_class = class_mapping.get(data.get("class", "Player"), Player)
+
+        # ✅ If the class is Dolphin/Buddha (no init params), just instantiate
+        if player_class in [Dolphin, Buddha, Astronaut]:
+            player = player_class()
+        else:
+            player = player_class(data["name"], data["speed"], data["health"], data["damage"])
+
+        # Restore base attributes
+        player._myPositionX = data["positionX"]
+        player._myPositionY = data["positionY"]
+        player._direction = data["direction"]
+
+        # ✅ Restore inventory correctly on the instance
+        if "inventory" in data:
+            from .Item import UsableItem  # Ensure item classes are imported
+            player.__inventory = []
+            for item_data in data["inventory"]:
+                item_class_name = item_data.get("class", "UsableItem")  # Default to UsableItem
+                item_class = globals().get(item_class_name, UsableItem)  # Find the correct item class
+
+                if hasattr(item_class, 'from_dict'):
+                    item_instance = item_class.from_dict(item_data)  # ✅ Create the item instance
+                    player.__inventory.append(item_instance)  # ✅ Append to instance inventory
+                else:
+                    print(f"Error: {item_class_name} does not have a from_dict method")
+
+        return player
+
+
+    
+    
+    
+    def restore_abilities(self):
+        """Ensure player abilities are restored after loading."""
+        for ability in self.abilities:
+            ability.restore_state()  # If abilities store cooldowns, restore them
     def getAttackDamage(self) -> int:
         return self._myAttackDamage
     
@@ -80,14 +146,9 @@ class Player(DungeonCharacter):
         self.__inventory.append(item)
         print(f"Picked up {item}")
         print([str(obj) for obj in self.__inventory])
-        event = pygame.event.Event(
-            EventManager.event_types["PICKUP_ITEM"],
-            {"name": self.getName(),
-             "inventory": self.__inventory
-            }        
-        )
-        pygame.event.post(event)
+        self.update("PICKUP_ITEM")
 
+   
     def getInventory(self) -> list:
         return self.__inventory
     
@@ -95,7 +156,7 @@ class Player(DungeonCharacter):
         ### use item when t is pressed
         if self.__inventory:
             item = self.__inventory[0]
-            if item.name == "MockItem":
+            if item.getName() == "MockItem":
                 if not self._item_Ability.active:
                     self.__inventory.pop(0)
                     self._item_Ability.use()
@@ -103,8 +164,7 @@ class Player(DungeonCharacter):
             else:
                 #other items
                 print("other items")
-            #event to update the UI
-            #self.update("ITEM_USED")
+
         #else:
             #print("No items available to use!")
      
@@ -117,13 +177,7 @@ class Player(DungeonCharacter):
     def takeDamage(self, damage: int):
         self._myHealth -= damage
         print("player health after damage: ",self._myHealth)
-        event = pygame.event.Event(
-            EventManager.event_types["TOOK_DAMAGE"],
-            {"name": self.getName(),
-             "health": self.getHealth()
-            }        
-        )
-        pygame.event.post(event)
+        self.update("HEALTH")
         if self._myHealth <= 0:
             self.Dies()
 
@@ -133,14 +187,28 @@ class Player(DungeonCharacter):
         if self._ability:
             self._ability.use()
 
+
     def update(self, theEventName: str):
-        event = pygame.event.Event(
-            EventManager.event_types[theEventName],
-            {"name": self.getName(),
-             "positionX": self.getPositionX(),
-             "positionY": self.getPositionY(),
-             "id": id(self)}        
-        )
+        if theEventName == "CHARACTER_MOVED" or theEventName == "CHARACTER_STOPPED":
+            event = pygame.event.Event(
+                EventManager.event_types[theEventName],
+                {"name": self.getName(),
+                "positionX": self.getPositionX(),
+                "positionY": self.getPositionY(),
+                "id": id(self)}        
+            )
+        elif theEventName == "HEALTH":
+            event = pygame.event.Event(
+                EventManager.event_types[theEventName],
+                {"name": self.getName(),
+                "health": self.getHealth()}        
+            )
+        elif theEventName == "PICKUP_ITEM":
+            event = pygame.event.Event(
+                EventManager.event_types[theEventName],
+                {"name": self.getName(),
+                "inventory": self.getInventory()}        
+            )
         pygame.event.post(event)
 
     def update_items(self) -> None:

@@ -23,7 +23,33 @@ class Door:
         self.isOpen = False
     
 
-    
+    def to_dict(self):
+        """Convert Door to a dictionary."""
+        return {
+            "direction": self.__myFirstDirection,
+            "connected_direction": self.__myEndDirection,
+            "room_coords": self.__myFirstRoom.getCords() if self.__myFirstRoom else None,
+            "neighbor_coords": self.__myEndRoom.getCords() if self.__myEndRoom else None,
+            "is_open": self.isOpen,
+        }
+
+    @classmethod
+    def from_dict(cls, data):
+        """Reconstruct a Door from a dictionary. Room linking happens in Floor.from_dict()."""
+        door = cls(
+            data["direction"],
+            data["connected_direction"],
+            None,  # Placeholder, will be linked later
+            None   # Placeholder, will be linked later
+        )
+        door.isOpen = data["is_open"]
+        door._room_coords = tuple(data["room_coords"])  # Temporarily store room coordinates
+        door._neighbor_coords = tuple(data["neighbor_coords"])  # Temporarily store neighbor coordinates
+        return door
+
+
+
+
     def __getDoorPositionRect(self, theDirection):
         return pygame.Rect(Door.theCordMap[theDirection], (50,50))
     

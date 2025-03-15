@@ -21,11 +21,16 @@ class SpriteFactory:
         self.myRawEnemyImage = pygame.image.load(os.path.join(assets_path, 'speederman.png'))
         self.myRawPirateImage = pygame.image.load(os.path.join(assets_path, 'pirate.png'))
         self.myRawCrabImage = pygame.image.load(os.path.join(assets_path, 'crab.png'))
+        self.myRawBeachBallImage = pygame.image.load(os.path.join(assets_path, 'BeachBall.png'))
+        self.myRawSeagullImage = pygame.image.load(os.path.join(assets_path, 'seagull.png'))
+        self.myRawSharkImage = pygame.image.load(os.path.join(assets_path, 'Shark.png'))
 
         # Load Projectile Image
         self.myRawProjectileImage = pygame.image.load(os.path.join(assets_path, 'projectileDolphin.png'))
         self.myRaw2ProjectileImage = pygame.image.load(os.path.join(assets_path, 'projectileBuddha.png'))
         self.myRaw3ProjectileImage = pygame.image.load(os.path.join(assets_path, 'projectileAstronaut.png'))
+        self.myRaw4ProjectileImage = pygame.image.load(os.path.join(assets_path, 'projectileShark.png'))
+
 
         # Resize and Flip Sprites
         self.myPlayerImage = pygame.transform.scale(self.myRawPlayerImage, ViewUnits.DEFAULT_SPRITE_DIM)
@@ -48,6 +53,15 @@ class SpriteFactory:
 
         self.crabImage = pygame.transform.scale(self.myRawCrabImage, ViewUnits.DEFAULT_SPRITE_DIM)
         self.crabImage2 = pygame.transform.flip(self.crabImage, True, False)
+
+        self.ballImage = pygame.transform.scale(self.myRawBeachBallImage, ViewUnits.DEFAULT_SPRITE_DIM)
+        self.ballImage2 = pygame.transform.flip(self.ballImage, True, False)
+
+        self.seagullImage = pygame.transform.scale(self.myRawSeagullImage, (100,100))
+        self.seagullImage2 = pygame.transform.flip(self.seagullImage, True, False)
+
+        self.sharkImage = pygame.transform.scale(self.myRawSharkImage, (100,100))
+        self.sharkImage2 = pygame.transform.flip(self.sharkImage, True, False)
         
         # Resize (and optionally flip) the projectile image.
         # Assuming the projectile is symmetric, flipping might not be necessary,
@@ -55,6 +69,7 @@ class SpriteFactory:
         self.projectileDolphinImage = pygame.transform.scale(self.myRawProjectileImage, ViewUnits.DEFAULT_SPRITE_DIM)
         self.projectileBuddhaImage = pygame.transform.scale(self.myRaw2ProjectileImage, ViewUnits.DEFAULT_SPRITE_DIM)
         self.projectileAstronautImage = pygame.transform.scale(self.myRaw3ProjectileImage, (100,100))
+        self.projectileSharkImage = pygame.transform.scale(self.myRaw4ProjectileImage, (100,100))
 
         # Initialize the sprite sheets dictionary if needed
         self.listOfSpriteSheets = {}
@@ -64,7 +79,7 @@ class SpriteFactory:
         if theName == ViewUnits.PLAYER_SPRITE_NAME:
             return self.createPlayerSpriteSheet(theId, thePositionX, thePositionY)
         elif theName == "Dolphin":
-            return self.createDolphinSpriteSheet(theId, thePositionX, thePositionY)  
+            return self.createDolphinSpriteSheet(theId, thePositionX, thePositionY)
         elif theName == "Buddha":
             return self.createBuddhaSpriteSheet(theId, thePositionX, thePositionY)  # NEW
         elif theName == "Astronaut":
@@ -73,14 +88,23 @@ class SpriteFactory:
             return self.createPirateSpriteSheet(theId, thePositionX, thePositionY)
         elif theName == "Crab":
             return self.createCrabSpriteSheet(theId, thePositionX, thePositionY)
+        elif theName == "BeachBall":
+            return self.createBeachBallSpriteSheet(theId, thePositionX, thePositionY)
+        elif theName == "Shark":
+            return self.createSharkSpriteSheet(theId, thePositionX, thePositionY)
+        elif theName == "Seagull":
+            return self.createSeagullSpriteSheet(theId, thePositionX, thePositionY)  # NEW
         elif theName == "ProjectileDolphin":
             return self.createProjectileDolphinSpriteSheet(theId, thePositionX, thePositionY)
-        elif theName == "ProjectileBuddha":
+        elif theName == "ProjectileShark":
+            return self.createProjectileSharkSpriteSheet(theId, thePositionX, thePositionY)
+        elif theName == "ProjectileBuddha" or theName == "ProjectileSeagull":
             return self.createProjectileBuddhaSpriteSheet(theId, thePositionX, thePositionY)
         elif theName == "ProjectileAstronaut" or theName == "ProjectilePirate":
             return self.createProjectileAstronautSpriteSheet(theId, thePositionX, thePositionY)
         else:  # Default to generic enemy
             return self.createEnemySpriteSheet(theId, thePositionX, thePositionY)
+
 
     def createPlayerSpriteSheet(self, theId, thePositionX, thePositionY):
         """Creates a player sprite sheet."""
@@ -99,6 +123,15 @@ class SpriteFactory:
         dolphinRect.y = thePositionY
 
         return SpriteSheet(theId, "Dolphin", imageDict, dolphinRect)  
+    
+    def createSharkSpriteSheet(self, theId, thePositionX, thePositionY):
+        """Creates a Dolphin sprite sheet."""
+        imageDict = {ViewUnits.DEFAULT_STATE_NAME: [self.sharkImage, self.sharkImage2]}  
+        sharkRect = copy.copy(ViewUnits.DEFAULT_RECT)
+        sharkRect.x = thePositionX
+        sharkRect.y = thePositionY
+
+        return SpriteSheet(theId, "Shark", imageDict, sharkRect)  
 
     def createBuddhaSpriteSheet(self, theId, thePositionX, thePositionY):
         """Creates a Buddha sprite sheet."""
@@ -144,6 +177,15 @@ class SpriteFactory:
         crabRect.y = thePositionY
 
         return SpriteSheet(theId, "Crab", imageDict, crabRect)
+    
+    def createBeachBallSpriteSheet(self, theId, thePositionX, thePositionY):
+        """Creates a Crab sprite sheet."""
+        imageDict = {ViewUnits.DEFAULT_STATE_NAME: [self.ballImage2, self.ballImage]}
+        ballRect = copy.copy(ViewUnits.DEFAULT_RECT)
+        ballRect.x = thePositionX
+        ballRect.y = thePositionY
+
+        return SpriteSheet(theId, "BeachBall", imageDict, ballRect)
 
     def createProjectileDolphinSpriteSheet(self, theId, thePositionX, thePositionY):
         """Creates a Projectile sprite sheet."""
@@ -162,6 +204,15 @@ class SpriteFactory:
         projectileRect.y = thePositionY
 
         return SpriteSheet(theId, "ProjectileAstronaut", imageDict, projectileRect)
+    
+    def createProjectileSharkSpriteSheet(self, theId, thePositionX, thePositionY):
+        """Creates a Projectile sprite sheet."""
+        imageDict = {ViewUnits.DEFAULT_STATE_NAME: [self.projectileSharkImage, self.projectileSharkImage]}
+        projectileRect = copy.copy(ViewUnits.DEFAULT_RECT)
+        projectileRect.x = thePositionX
+        projectileRect.y = thePositionY
+
+        return SpriteSheet(theId, "ProjectileShark", imageDict, projectileRect)
     def createProjectileBuddhaSpriteSheet(self, theId, thePositionX, thePositionY):
         """Creates a Projectile sprite sheet."""
         imageDict = {ViewUnits.DEFAULT_STATE_NAME: [self.projectileBuddhaImage, self.projectileBuddhaImage]}
@@ -170,6 +221,15 @@ class SpriteFactory:
         projectileRect.y = thePositionY
 
         return SpriteSheet(theId, "ProjectileBuddha", imageDict, projectileRect)
+    def createSeagullSpriteSheet(self, theId, thePositionX, thePositionY):
+        """Creates a Seagull sprite sheet."""
+        imageDict = {ViewUnits.DEFAULT_STATE_NAME: [self.seagullImage2, self.seagullImage]}
+        seagullRect = copy.copy(ViewUnits.DEFAULT_RECT)
+        seagullRect.x = thePositionX
+        seagullRect.y = thePositionY
+
+        return SpriteSheet(theId, "Seagull", imageDict, seagullRect)
+
 
     def add(self, theSpriteSheet):
         """Adds a sprite sheet to the internal list."""

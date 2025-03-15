@@ -25,6 +25,50 @@ class FloorFactory:
         #self.grid = self.generate_dungeon(level)  # Store the grid in an instance variable
         #self.update()
         
+
+    def to_dict(self):
+        """Convert FloorFactory state to a dictionary for serialization."""
+        return {
+            "grid_width": self.grid_width,
+            "grid_height": self.grid_height,
+            "start_pos": self.start_pos,
+            "floor_level": self._FLOOR_LEVEL,
+            "grid": [[room.to_dict() if isinstance(room, Room) else None for room in row] for row in self.generateGrid()],
+            "doors": [door.to_dict() for door in self.connect_rooms(self.generateGrid())],
+        }
+    @classmethod
+    def from_dict(cls, data):
+        """Reconstruct FloorFactory from a dictionary."""
+        instance = cls.getInstance()  # Ensure Singleton
+        instance.grid_width = data["grid_width"]
+        instance.grid_height = data["grid_height"]
+        instance.start_pos = tuple(data["start_pos"])
+
+        from .Room import Room
+        instance.grid = [
+            [Room.from_dict(room_data) if room_data else None for room_data in row]
+            for row in data["grid"]
+        ]
+
+        # Rebuild doors and link them back to the rooms
+        from .Door import Door
+        door_objects = [Door.from_dict(door_data) for door_data in data["doors"]]
+
+        # Link doors back to rooms
+        for door in door_objects:
+            room_coords = tuple(door.room_coords)
+            neighbor_coords = tuple(door.neighbor_coords)
+
+            room = instance.grid[room_coords[0]][room_coords[1]]
+            neighbor = instance.grid[neighbor_coords[0]][neighbor_coords[1]]
+
+            door.__myFirstRoom = room
+            door.__myEndRoom = neighbor
+
+            room.addDoor(door.__myFirstDirection, door)
+            neighbor.addDoor(door.__myEndDirection, door)
+
+        return instance
     @classmethod
     def getInstance(cls):
         """Getter for the singleton instance."""

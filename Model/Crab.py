@@ -1,4 +1,5 @@
 from .Enemy import Enemy
+import pygame
 
 class Crab(Enemy):
     """A fast but weak enemy that moves side to side."""
@@ -27,3 +28,25 @@ class Crab(Enemy):
     def _toggle_direction(self):
         """Switches the Crab's movement direction when hitting a wall."""
         self._direction = "RIGHT" if self._direction == "LEFT" else "LEFT"
+
+    @classmethod
+    def from_dict(cls, data):
+        """Reconstruct a Crab enemy from a dictionary, restoring its movement state."""
+        crab = cls(
+            data["damage"],
+            data["health"],
+            data["positionX"],
+            data["positionY"],
+            data["speed"]
+        )
+
+        # Restore game world reference
+        from .GameWorld import GameWorld
+        crab._game_world = GameWorld.getInstance()
+
+        # ✅ Restore movement state correctly
+        crab._direction = data["direction"]
+        crab._move_timer = pygame.time.get_ticks()  # Reset movement timer
+
+        return crab
+

@@ -52,8 +52,8 @@ class Enemy(DungeonCharacter, ABC):
 
     def _check_collision_and_update_position(self, new_x, new_y, ignore):
         """Helper method to check for collisions before updating position."""
-        new_x = max(0, min(new_x, self.SCREEN_WIDTH - 50))  # Keep inside width
-        new_y = max(0, min(new_y, self.SCREEN_HEIGHT - 50))  # Keep inside height
+        new_x = max(0, min(new_x, self.SCREEN_WIDTH - 150))  # Keep inside width
+        new_y = max(0, min(new_y, self.SCREEN_HEIGHT - 150))  # Keep inside height
 
         from .GameWorld import GameWorld
         if not GameWorld.getInstance().check_collision(pygame.Rect(new_x, new_y, 50, 50), ignore):
@@ -69,16 +69,17 @@ class Enemy(DungeonCharacter, ABC):
     def getName(self):
         return self._name
     
-    def shoot(self, theEventName: str):
+    def shoot(self, theEventName: str,angle):
         """Post an event when the projectile moves."""
         event = pygame.event.Event(
                     EventManager.event_types[theEventName],
                     {"shooter": self.getName(),
-                    "direction": self._direction,
+                    "direction": angle,
                     "damage": self.getAttackDamage(),
                     "positionX": self.getPositionX(),
                     "positionY": self.getPositionY(),
-                    "speed": 5}        
+                    "speed": self._mySpeed * 10,
+                    "isEnemy": True}   
                 )
         pygame.event.post(event)
 
@@ -116,3 +117,34 @@ class Enemy(DungeonCharacter, ABC):
 
     def toString(self):
         return f"{self._name} at ({self._myPositionX}, {self._myPositionY})"
+
+    def to_dict(self):
+        """Convert player state to a dictionary for serialization."""
+        return {
+            "name": self._name,
+            "speed": self._mySpeed,
+            "health": self._myHealth,
+            "direction": self._direction,
+            "damage": self._myAttackDamage,
+            "positionX": self._myPositionX,
+            "positionY": self._myPositionY,
+            # "inventory": [item.to_dict() for item in self.__inventory],  # Convert inventory items if needed
+            # "ability_active": self._item_Ability.active if self._item_Ability else None
+        }
+    @classmethod
+    def from_dict(cls, data):
+        """Reconstruct an Enemy from a dictionary while ensuring movement logic is restored correctly."""
+        enemy = cls(
+            data["name"],
+            data["damage"],
+            data["health"],
+            data["speed"],      # ✅ Correct order
+            data["positionX"],  # ✅ Correct order
+            data["positionY"]
+        )
+
+        # Restore movement properties
+        enemy._direction = data["direction"]
+        enemy._move_timer = pygame.time.get_ticks()  # ✅ Reset movement timer
+
+        return enemy

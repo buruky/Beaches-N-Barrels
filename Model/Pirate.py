@@ -55,3 +55,36 @@ class Pirate(Enemy):
             
 
         super().moveCharacter()
+
+    def to_dict(self):
+        """Convert enemy state to a dictionary for serialization."""
+        return {
+            "name": self._name,
+            "speed": self._mySpeed,
+            "health": self._myHealth,
+            "direction": self._direction,
+            "damage": self._myAttackDamage,
+            "positionX": self._myPositionX,
+            "positionY": self._myPositionY,
+        }
+    @classmethod
+    def from_dict(cls, data):
+        """Reconstruct a Pirate enemy from a dictionary, ensuring it properly tracks the player."""
+        pirate = cls(
+            data["damage"],
+            data["health"],
+            data["positionX"],
+            data["positionY"],
+            data["speed"]
+        )
+
+        # Restore game world reference
+        from .GameWorld import GameWorld
+        pirate._game_world = GameWorld.getInstance()
+
+        # ✅ Restore movement state correctly
+        pirate._direction = data["direction"]
+        pirate.last_shot_time = pygame.time.get_ticks()  # Reset shot cooldown
+
+
+        return pirate

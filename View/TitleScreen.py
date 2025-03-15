@@ -92,6 +92,7 @@ class TitleScreen:
                         if selected_character:
                             return selected_character  # Return selected character
                     elif self.load_button.collidepoint(event.pos):
+                        return "Load"  
                         print("Load button clicked! (No function yet)")  # Placeholder action
                     elif self.quit_button.collidepoint(event.pos):
                         print("Quit button clicked!")  # Debugging line

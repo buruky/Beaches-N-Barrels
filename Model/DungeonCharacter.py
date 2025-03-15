@@ -29,3 +29,4 @@ class DungeonCharacter(ABC):
     @abstractmethod
     def toString() -> str:
         pass
+    

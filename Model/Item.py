@@ -7,14 +7,48 @@ class UsableItem:
     until their cooldown expires. Each item has its own cooldown (duration) in milliseconds.
     """
     def __init__(self, name: str, description: str = "", cooldown: int = 3000):
-        self.name = name
-        self.description = description
-        self.cooldown = cooldown  # cooldown duration in milliseconds
-        self.active = False
-        self.start_time = None  # Time when the item was activated
+        self._name = name
+        self._description = description
+        self._cooldown = cooldown  # cooldown duration in milliseconds
+        self._active = False
+        self._start_time = None  # Time when the item was activated
+   
+    def getName(self):
+        return self._name
+    
+    def to_dict(self):
+        """Convert player state to a dictionary for serialization."""
+        data = {
+            "name": self._name,
+            "description": self._description,
+            "cooldown": self._cooldown,
+            "active": self._active,
+            "start_time": self._start_time,
+            "class": self.__class__.__name__  # Store class type for deserialization
+        }
+        return data
+    
+    @classmethod
+    def from_dict(cls, data):
+        """Reconstruct a Player object from a dictionary."""
+        required_keys = ["name", "description", "cooldown", "active", "start_time"]
+        for key in required_keys:
+            if key not in data:
+                raise ValueError(f"Missing key in saved data: {key}")
+            
+        item = cls(data["name"],
+                   data["description"],
+                   data["cooldown"]
+                   )
+        
+        # Restore additional attributes
+        item._active = data.get("active", False)  # Default to False if missing
+        item._start_time = data.get("start_time", None)  # Default to None if missing
 
+        return item
+    
     def __str__(self):
-        return self.name
+        return self._name
 
 class MockItem(UsableItem):
     """
@@ -29,5 +63,31 @@ class MockItem(UsableItem):
         self.position = position
         # Create a collision rectangle (50x50) at the given position.
         self.rect = pygame.Rect(position[0], position[1], 50, 50)
+   
+    def to_dict(self):
+        """Convert item to dictionary including position data."""
+        data = super().to_dict()  # Get parent class dictionary
+        data["position"] = tuple(self.position)  # Ensure it's stored as a tuple
+        data["class"] = self.__class__.__name__  # Store class type for deserialization
+        return data
+
+
+    @classmethod
+    def from_dict(cls, data):
+        """Reconstruct a MockItem from dictionary, ensuring position is properly restored."""
+        position = tuple(data.get("position", (10, 10)))  # Ensure it's a tuple
+        item = cls(position=position)
+
+        # Restore optional state fields
+        item._active = data.get("active", False)  # Default to inactive
+        item._start_time = data.get("start_time", None)  # Default to None
+
+        # Restore correct collision rectangle at the right position
+        item.rect = pygame.Rect(position[0], position[1], 50, 50)
+
+        return item
+
+
+    
     def __str__(self):
         return "MockItem"
