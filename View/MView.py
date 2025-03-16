@@ -1,6 +1,6 @@
 import os
 import pygame
-#from Model.GameWorld import GameWorld
+from .UI import UI  # Import the UI class from the UI.py file
 from .SpriteSheet import SpriteSheet
 from .SpriteFactory import SpriteFactory
 from ViewUnits import ViewUnits
@@ -20,8 +20,8 @@ class MView:
         player_image_path3 = os.path.join(current_directory, '..', 'Assets', 'key.png')
         self.myRawPlayerImage3 = pygame.image.load(player_image_path3)
         self.theTest3 = pygame.transform.scale(self.myRawPlayerImage3, (ViewUnits.SCREEN_WIDTH,ViewUnits.SCREEN_HEIGHT))
-
-
+        
+        
 
         door_image_path = os.path.join(current_directory, '..', 'Assets', 'door.png')
         self.mydoor = pygame.image.load(door_image_path)
@@ -36,12 +36,15 @@ class MView:
         self.theNewRoom = self.theTest
         self.cords = None
         self.playerHealth = 100
+        self.maxHealth = 100
         self.inventory = []
         self.int = 0
         self.showMinimap = False
         self.needs_redraw = False
         self.minimap_rect = pygame.Rect(screen_width - 320, 20, 350, 350)  
+        self.ui = UI(self.screen)  # Create the UI instance
         # self.theNewRoom = (10,10,10)
+        self.bossRoom = True
     
     def getScreen(self):
         return self.screen
@@ -50,15 +53,24 @@ class MView:
         """Clear the screen before drawing the next frame."""
         self.screen.fill((0, 0, 0))  # Fill screen with black
 
+    def updateBossHealthUI(self, event: pygame.event.Event):
+        self.BossHealth = event.health
+        self.bossMaxHealth = event.maxHealth
+        self.bossRoom = event.isdead
+        self.needs_redraw = True
+    
+
 
     def updateHealthUI(self, event: pygame.event.Event):
         self.playerHealth = event.health
+        self.maxHealth = event.maxHealth
         self.needs_redraw = True
 
 
     def updateInventoryUI(self, event: pygame.event.Event):
         self.inventory = event.inventory
-        self.needs_redraw = True
+        print("YUR",self.inventory)
+        self.redrawCharacter()
 
 
     def process_updates(self):
@@ -219,28 +231,13 @@ class MView:
                     rect = pygame.Rect(rect_x - 30, rect_y - 30, cell_width - 5, cell_height - 5)
                     pygame.draw.rect(self.screen, color, rect)
                     pygame.draw.rect(self.screen, (0, 0, 0), rect, 2)
+    
     def redrawCharacter(self):
         """Clears the screen, redraws the room, characters, and room coordinates."""
         
         self.screen.blit(self.theNewRoom, (0, 0))
-        font = pygame.font.Font(None, 25)  # Choose an appropriate font and size
-
-        text_surface = font.render(f"Inventory: {[i+1 for i in range(len(self.inventory))]}", True, (255, 255, 255))  # White text        
-        text_rect = text_surface.get_rect(center=(100,100))
-        self.screen.blit(text_surface, text_rect)
-
-        font = pygame.font.Font(None, 50)  # Choose an appropriate font and size
-        text_surface = font.render(f"health: {self.playerHealth}", True, (255, 255, 255))  # White text
-        text_rect = text_surface.get_rect(center=(ViewUnits.SCREEN_WIDTH - 100, ViewUnits.SCREEN_HEIGHT - 100))
         
-        self.screen.blit(text_surface, text_rect)
-        # Display room coordinates at the center of the screen
-        if self.cords:
-            font = pygame.font.Font(None, 50)  # Choose an appropriate font and size
-            text_surface = font.render(f"Room: {self.cords}", True, (0,0,0))  # White text
-            text_rect = text_surface.get_rect(center=(ViewUnits.SCREEN_WIDTH // 2, ViewUnits.SCREEN_HEIGHT // 2))
-            
-            self.screen.blit(text_surface, text_rect)
+        self.ui.draw_room_coordinates(self.cords)  # Draw room coordinates
 
         for doorSprite in self.myDoorList:
             self.screen.blit(doorSprite.getCurrentSprite(),doorSprite.getRect().topleft)
@@ -255,7 +252,12 @@ class MView:
         if current_room is not None:
             self.draw_room_items(current_room)
         if self.showMinimap:
-            self.draw_minimap()    
+            self.draw_minimap()  
+        if not self.bossRoom:
+            self.ui.draw_boss_health(self.BossHealth, self.bossMaxHealth)  # Draw health  
+
+        self.ui.draw_inventory(self.inventory)  # Draw inventory
+        self.ui.draw_health(self.playerHealth, self.maxHealth)  # Draw health  
         pygame.display.flip()
 
 

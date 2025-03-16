@@ -15,3 +15,5 @@ class CustomEvents:
     UPDATE_PROJECTILE:Final = "UPDATE_PROJECTILE"
     HEALTH:Final = "HEALTH"
     PICKUP_ITEM:Final = "PICKUP_ITEM"
+    BOSS_ROOM:Final = "BOSS_ROOM"
+

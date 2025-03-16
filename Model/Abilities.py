@@ -54,7 +54,9 @@ class HealAbility(Ability):
     def activate(self):
         print("Heal Activated!")
         self.player._myHealth += 50  # Increase health by 50
-        self.player.takeDamage(0)
+        if self.player._myHealth > self.player.getMaxHealth():
+            self.player.setMaxHealth(self.player._myHealth)
+        # self.player.takeDamage(0)
 
     def deactivate(self):
         print("Heal Ended.")

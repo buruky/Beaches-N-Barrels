@@ -2,6 +2,8 @@ from .Enemy import Enemy
 import pygame
 import random
 import math
+from .EventManager import EventManager
+
 
 
 class Shark(Enemy):
@@ -18,6 +20,15 @@ class Shark(Enemy):
 
         self.is_angry = False  # Track if the shark is in an "angry" state for special attacks
         self.boss_health_threshold = healthPoints * 0.5  # The health threshold at which the shark becomes angrier
+        self.maxHealth = self._myHealth
+        # event = pygame.event.Event(
+        #     EventManager.event_types["BOSS_ROOM"],
+        #     {"name": self.getName(),
+        #     "health": self._myHealth,
+        #     "maxHealth": self.maxHealth
+        #     }        
+        # )
+        # pygame.event.post(event)
 
     def update(self):
         """Updates the shark's movement and actions."""
@@ -30,7 +41,15 @@ class Shark(Enemy):
         # Perform the special attack if the cooldown allows
         if current_time - self.last_special_attack_time >= self.special_attack_cooldown:
             self.perform_special_attack()
-
+        event = pygame.event.Event(
+            EventManager.event_types["BOSS_ROOM"],
+            {"name": self.getName(),
+            "health": self._myHealth,
+            "maxHealth": self.maxHealth,
+            "isdead":False
+            }        
+        )
+        pygame.event.post(event)
         # Regular movement and shooting at player
         self.moveCharacter()
 
@@ -100,6 +119,22 @@ class Shark(Enemy):
             # Shoot in the direction of the player
             self.shoot("SHOOT_PROJECTILE", angle)
             self.last_shot_time = current_time  # Update last shot tim
+
+    def Dies(self):
+        """Handles enemy death."""
+        print(f"{self._name} has been defeated!")
+        event = pygame.event.Event(
+            EventManager.event_types["BOSS_ROOM"],
+            {"name": self.getName(),
+            "health": self._myHealth,
+            "maxHealth": self.maxHealth,
+            "isdead": True
+            }        
+        )
+        pygame.event.post(event)
+        from .GameWorld import GameWorld
+        GameWorld.getInstance().removeEnemy(self)
+
 
     def to_dict(self):
             """Convert enemy state to a dictionary for serialization."""

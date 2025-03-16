@@ -12,6 +12,7 @@ import sqlite3
 import random
 from ViewUnits import ViewUnits
 
+
 class EnemyFactory():
     _instance = None  # Stores the single instance
     _DEFAULT_SPEED:Final = 2
@@ -108,6 +109,7 @@ class EnemyFactory():
         return enemyList
     def createBossTemplate(self):
         enemyList = DungeonCharacterList()
+        
         enemyList.add_entity(self.create_enemy("Shark"))
         return enemyList
     

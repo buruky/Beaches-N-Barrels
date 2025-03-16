@@ -1,6 +1,8 @@
 import random
 import pygame
 from .Enemy import Enemy
+from .EventManager import EventManager
+
 
 class Barrel(Enemy):
     """A miniboss enemy that runs away from the player and dashes at the player every few seconds."""
@@ -8,17 +10,25 @@ class Barrel(Enemy):
     def __init__(self, attackDamage: int, healthPoints: int, positionX: int, positionY: int, speed: int):
         super().__init__("Barrel", attackDamage, healthPoints, speed, positionX, positionY)
         self.dash_cooldown = 5000  # Cooldown between dashes (5 seconds)
-        self.dash_duration = 2000  # Duration of the dash (2 seconds)
+        self.dash_duration = 750  # Duration of the dash (2 seconds)
         self.last_dash_time = 0  # Time of last dash
         self.dash_end_time = 0  # Time when the dash ends
-        
+        self.maxHealth = self._myHealth
         self.is_dashing = False  # Track if the barrel is in the middle of a dash
         self.direction = random.choice(["UP", "DOWN", "LEFT", "RIGHT"])  # Random direction for movement
 
     def moveCharacter(self):
         """Move the BarrelGuard away from the player and dash occasionally."""
         current_time = pygame.time.get_ticks()
-
+        event = pygame.event.Event(
+            EventManager.event_types["BOSS_ROOM"],
+            {"name": self.getName(),
+            "health": self._myHealth,
+            "maxHealth": self.maxHealth,
+            "isdead":False
+            }        
+        )
+        pygame.event.post(event)
         # Get player position
         player_pos = self.get_player_position()
 
@@ -27,7 +37,6 @@ class Barrel(Enemy):
             
             # Check if the barrel should dash (cooldown + not currently dashing)
             if current_time - self.last_dash_time >= self.dash_cooldown and not self.is_dashing:
-                print("Dashing towards the player!")
                 self._dash_towards_player(player_x, player_y)
                 self.last_dash_time = current_time  # Reset dash cooldown
                 self.dash_end_time = current_time + self.dash_duration  # Set when dash should end
@@ -35,13 +44,13 @@ class Barrel(Enemy):
 
             elif self.is_dashing and current_time < self.dash_end_time:
                 # Continue dashing, prevent other movement during dash
-                print("Barrel is dashing, still moving...")
+                self._dash_towards_player(player_x, player_y)
+
                 return  # Skip further movement logic while dashing
 
             elif self.is_dashing and current_time >= self.dash_end_time:
                 # Reset the dashing state after the dash duration ends
                 self.is_dashing = False
-                print("Dash ended, Barrel resumes regular movement.")
 
             # Only allow the barrel to move away or move randomly if it's not dashing
             if not self.is_dashing:
@@ -60,16 +69,30 @@ class Barrel(Enemy):
         new_x, new_y = self._myPositionX, self._myPositionY
         
         if player_x < self._myPositionX:
-            new_x += self._mySpeed  # Move right (away from player)
+            new_x += self._mySpeed + 1  # Move right (away from player)
         elif player_x > self._myPositionX:
-            new_x -= self._mySpeed  # Move left (away from player)
+            new_x -= self._mySpeed + 1 # Move left (away from player)
 
         if player_y < self._myPositionY:
-            new_y += self._mySpeed  # Move down (away from player)
+            new_y += self._mySpeed + 1 # Move down (away from player)
         elif player_y > self._myPositionY:
-            new_y -= self._mySpeed  # Move up (away from player)
+            new_y -= self._mySpeed + 1 # Move up (away from player)
 
         self._check_collision_and_update_position(new_x, new_y, self)
+    def Dies(self):
+        """Handles enemy death."""
+        print(f"{self._name} has been defeated!")
+        event = pygame.event.Event(
+            EventManager.event_types["BOSS_ROOM"],
+            {"name": self.getName(),
+            "health": self._myHealth,
+            "maxHealth": self.maxHealth,
+            "isdead": True
+            }        
+        )
+        pygame.event.post(event)
+        from .GameWorld import GameWorld
+        GameWorld.getInstance().removeEnemy(self)
 
     def _random_movement(self):
         """Random movement if the player is not too close."""

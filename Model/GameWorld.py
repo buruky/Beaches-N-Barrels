@@ -24,7 +24,7 @@ class GameWorld:
         """Initialize the game world only once."""
         
         self.__myFloorFactory = FloorFactory.getInstance()
-        self.__myFloor = self.__myFloorFactory.createDemoFloor()
+        self.__myFloor = self.__myFloorFactory.createFloor()
         self.currentRoom = self.__myFloor.getStartRoom()
            
     
@@ -38,7 +38,6 @@ class GameWorld:
                 }
             )
         pygame.event.post(event)
-        print(self.currentRoom.getDoorMap())
   
         self.__myFloor.print_dungeon()           
         self.player = None # player
@@ -55,8 +54,19 @@ class GameWorld:
             cls._instance = cls()  # This triggers __new__()
         return cls._instance
 
-
-
+    def setDemo(self):
+        self.__myFloor = self.__myFloorFactory.createDemoFloor()
+        self.currentRoom = self.__myFloor.getStartRoom()
+        event = pygame.event.Event(
+            EventManager.event_types[CustomEvents.CHANGED_ROOM],
+            {
+                "roomtype": self.currentRoom.getRoomType(),
+                "doors": self.currentRoom.getDoorPos(),
+                "cords": self.currentRoom.getCords(),
+                "direction": None
+            }
+        )
+        pygame.event.post(event)
     def to_dict(self):
         """Serialize the entire GameWorld into a dictionary."""
         return {
@@ -157,11 +167,12 @@ class GameWorld:
         """Checks if the player's rectangle collides with any item in the current room.
         If a collision is detected, remove the item from the room and return it."""
         items = self.currentRoom.get_items()
-        for item in items:
-            if thePlayerRect.colliderect(item.rect):
-                # Remove the item from the room.
-                items.remove(item)
-                return item
+        if not self.player.invFull:    
+            for item in items:
+                if thePlayerRect.colliderect(item.rect):
+                    # Remove the item from the room.
+                    items.remove(item)
+                    return item
         return None
     
     def getPlayer(self):
@@ -293,40 +304,4 @@ class GameWorld:
     
 
 
-
-     # def save_state(self):
-    #     """Saves only the player state to a file using pickle."""
-    #     if not self.player:
-    #         print("No player to save.")
-    #         return
-
-    #     save_data = {"player": self.player.to_dict()}  # Wrap in "player" key
-
-    #     try:
-    #         with open(self.SAVE_FILE, "wb") as file:
-    #             pickle.dump(save_data, file)
-    #         print("Player saved successfully.", self.player.getInventory())  # Debugging line
-    #     except Exception as e:
-    #         print(f"Error saving player: {e}")
-
-    # def load_state(self):
-    #     """Loads only the player state from a file."""
-    #     if not os.path.exists(self.SAVE_FILE):
-    #         print("No saved player found.")
-    #         return
-
-    #     try:
-    #         with open(self.SAVE_FILE, "rb") as file:
-    #             save_data = pickle.load(file)
-
-    #         print(f"Loaded player data: {save_data}")  # Debugging line
-
-    #         from .Player import Player  # Ensure Player is recognized at runtime
-    #         if "player" in save_data:
-    #             self.player = Player.from_dict(save_data["player"])
-    #             print("Player loaded successfully.")
-    #         else:
-    #             print("Error: Player data missing in save file.")
-    #     except Exception as e:
-    #         print(f"Error loading player: {e}")
  
