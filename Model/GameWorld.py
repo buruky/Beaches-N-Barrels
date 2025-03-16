@@ -166,9 +166,12 @@ class GameWorld:
     def collideWithItem(self, thePlayerRect):
         """Checks if the player's rectangle collides with any item in the current room.
         If a collision is detected, remove the item from the room and return it."""
-        items = self.currentRoom.get_items()
-        if not self.player.invFull:    
-            for item in items:
+        items = self.currentRoom.get_items() 
+        
+        for item in items:
+            print("WEEEEEEE",str(item))
+            print(str(item) != "Key")
+            if not self.player.invFull or str(item) == "Key":
                 if thePlayerRect.colliderect(item.rect):
                     # Remove the item from the room.
                     items.remove(item)

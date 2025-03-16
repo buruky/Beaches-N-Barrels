@@ -104,4 +104,4 @@ class KeyItem(UsableItem):
 
     
     def __str__(self):
-        return "MockItem"
+        return "Key"
