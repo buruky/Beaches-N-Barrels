@@ -128,8 +128,7 @@ class Enemy(DungeonCharacter, ABC):
             "damage": self._myAttackDamage,
             "positionX": self._myPositionX,
             "positionY": self._myPositionY,
-            # "inventory": [item.to_dict() for item in self.__inventory],  # Convert inventory items if needed
-            # "ability_active": self._item_Ability.active if self._item_Ability else None
+
         }
     @classmethod
     def from_dict(cls, data):

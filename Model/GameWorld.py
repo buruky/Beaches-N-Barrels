@@ -24,9 +24,8 @@ class GameWorld:
         """Initialize the game world only once."""
         
         self.__myFloorFactory = FloorFactory.getInstance()
-        self.__myFloor = self.__myFloorFactory.createFloor()
+        self.__myFloor = self.__myFloorFactory.createDemoFloor()
         self.currentRoom = self.__myFloor.getStartRoom()
-        self.maxProj= 10
            
     
         event = pygame.event.Event(
@@ -85,13 +84,12 @@ class GameWorld:
         
         #  Ensure the dungeon is printed correctly
         self.__myFloor.print_dungeon()
-
         #  Post event to update room state
         event = pygame.event.Event(
             EventManager.event_types[CustomEvents.CHANGED_ROOM],
             {
                 "roomtype": self.currentRoom.getRoomType(),
-                "doors": self.currentRoom.getDoorMap(),
+                "doors": self.currentRoom.getDoorPos(),
                 "cords": self.currentRoom.getCords(),
                 "direction": None
             }
@@ -103,9 +101,6 @@ class GameWorld:
 
         print("Game loaded successfully! Player abilities restored.")
 
-    
-    
-   
 
     def loadWorld(self):
         self.player.update(CustomEvents.CHARACTER_MOVED)
@@ -187,7 +182,6 @@ class GameWorld:
             )
         pygame.event.post(event)
 
-    
     def testRandomKillEnemy(self):
         self.currentRoom.randomKillEnemy()
         event = pygame.event.Event(
@@ -258,9 +252,7 @@ class GameWorld:
     def check_projectile_collision(self, projectile,isEnemy):
         """Checks if a projectile collides with an enemy, player, or obstacle."""
         projectile_rect = pygame.Rect(projectile.getPositionX(), projectile.getPositionY(), 10, 10)
-        if len(self.projectiles) >= self.maxProj:
-            self.removeProjectile(self.projectiles[0])
-            return True
+        
         room_width = ViewUnits.SCREEN_WIDTH
         room_height = ViewUnits.SCREEN_HEIGHT
 

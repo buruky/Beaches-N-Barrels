@@ -4,6 +4,7 @@ from .Crab import Crab
 from .Pirate import Pirate
 from .Seagull import Seagull
 from .BeachBall import BeachBall
+from .Barrel import Barrel
 from .Shark import Shark
 from .DungeonCharacterList import DungeonCharacterList
 from .database import initialize_enemy_db
@@ -64,6 +65,8 @@ class EnemyFactory():
             return Seagull(attack, health, random.randint(0,screen_width), random.randint(0, screen_height), speed)
         elif enemy_type == "Shark":
             return Shark(attack, health, random.randint(0,screen_width), random.randint(0, screen_height), speed)
+        elif enemy_type == "Barrel":
+            return Barrel(attack, health, random.randint(0,screen_width), random.randint(0, screen_height), speed)
 
         else:
             return None
@@ -106,4 +109,9 @@ class EnemyFactory():
     def createBossTemplate(self):
         enemyList = DungeonCharacterList()
         enemyList.add_entity(self.create_enemy("Shark"))
+        return enemyList
+    
+    def createKeyTemplate(self):
+        enemyList = DungeonCharacterList()
+        enemyList.add_entity(self.create_enemy("Barrel"))
         return enemyList

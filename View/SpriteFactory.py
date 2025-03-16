@@ -111,7 +111,7 @@ class SpriteFactory:
             return self.createPirateSpriteSheet(theId, thePositionX, thePositionY)
         elif theName == "Crab":
             return self.createCrabSpriteSheet(theId, thePositionX, thePositionY)
-        elif theName == "BeachBall":
+        elif theName == "BeachBall" or theName == "Barrel":
             return self.createBeachBallSpriteSheet(theId, thePositionX, thePositionY)
         elif theName == "Shark":
             return self.createSharkSpriteSheet(theId, thePositionX, thePositionY)

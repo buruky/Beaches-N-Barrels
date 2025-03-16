@@ -27,49 +27,7 @@ class FloorFactory:
         #self.update()
         
 
-    def to_dict(self):
-        """Convert FloorFactory state to a dictionary for serialization."""
-        return {
-            "grid_width": self.grid_width,
-            "grid_height": self.grid_height,
-            "start_pos": self.start_pos,
-            "floor_level": self._FLOOR_LEVEL,
-            "grid": [[room.to_dict() if isinstance(room, Room) else None for room in row] for row in self.generateGrid()],
-            "doors": [door.to_dict() for door in self.connect_rooms(self.generateGrid())],
-        }
-    @classmethod
-    def from_dict(cls, data):
-        """Reconstruct FloorFactory from a dictionary."""
-        instance = cls.getInstance()  # Ensure Singleton
-        instance.grid_width = data["grid_width"]
-        instance.grid_height = data["grid_height"]
-        instance.start_pos = tuple(data["start_pos"])
-
-        from .Room import Room
-        instance.grid = [
-            [Room.from_dict(room_data) if room_data else None for room_data in row]
-            for row in data["grid"]
-        ]
-
-        # Rebuild doors and link them back to the rooms
-        from .Door import Door
-        door_objects = [Door.from_dict(door_data) for door_data in data["doors"]]
-
-        # Link doors back to rooms
-        for door in door_objects:
-            room_coords = tuple(door.room_coords)
-            neighbor_coords = tuple(door.neighbor_coords)
-
-            room = instance.grid[room_coords[0]][room_coords[1]]
-            neighbor = instance.grid[neighbor_coords[0]][neighbor_coords[1]]
-
-            door.__myFirstRoom = room
-            door.__myEndRoom = neighbor
-
-            room.addDoor(door.__myFirstDirection, door)
-            neighbor.addDoor(door.__myEndDirection, door)
-
-        return instance
+    
     @classmethod
     def getInstance(cls):
         """Getter for the singleton instance."""
@@ -77,7 +35,7 @@ class FloorFactory:
             cls._instance = cls()  # This triggers __new__()
         return cls._instance
 
-    def createFloor1(self) -> Floor:
+    def createFloor(self) -> Floor:
         enough_keys = True
         while enough_keys:
             self.keys_min = 0
@@ -87,25 +45,29 @@ class FloorFactory:
         doors = self.connect_rooms(grid)
         return Floor(grid, doors)
     
-    def createFloor(self) -> Floor:
+    def createDemoFloor(self) -> Floor:
         startx = Floor._START_POS[0]
-        
         starty = Floor._START_POS[1]
         theHeight = ViewUnits.FLOOR_SIDE_LENGTH
         theWidth = ViewUnits.FLOOR_SIDE_LENGTH
         grid = [[False for _ in range(theWidth)] for _ in range(theHeight)]
+        
+        # Initialize rooms
         startRoom = "s "
         grid[startx][starty] = self.roomFact.createRoom(startRoom, startx, starty)
+        
+        # Manually add rooms (ensure these rooms are linked properly)
         grid[5][6] = self.roomFact.createRoom("n ", 5, 6)
         grid[5][7] = self.roomFact.createRoom("n ", 5, 7)
         grid[5][8] = self.roomFact.createRoom("n ", 5, 8)
         grid[5][9] = self.roomFact.createRoom("b ", 5, 9)
         grid[6][7] = self.roomFact.createRoom("k ", 7, 7)
         grid[4][8] = self.roomFact.createRoom("k ", 7, 7)
+        
+        # Manually set up doors (optional, depending on how doors are managed)
         doors = self.connect_rooms(grid)
         self.grid = grid
         return Floor(grid, doors)
-    
     def getKeyMin(self):
         return self.keys_min
     def generateGrid(self) -> list[list]:

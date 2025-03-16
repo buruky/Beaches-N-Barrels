@@ -55,9 +55,11 @@ class Floor:
             [Room.from_dict(room) if room else None for room in row]
             for row in data["grid"]
         ]
+        print("GGGGGGGGGG")
 
         # Reconstruct doors (without linking rooms yet)
         door_list = [Door.from_dict(door) for door in data["door_list"]]
+
 
         # Create the Floor object
         floor = cls(grid, door_list)
@@ -69,7 +71,7 @@ class Floor:
 
             door._Door__myFirstRoom = grid[room_coords[0]][room_coords[1]]
             door._Door__myEndRoom = grid[neighbor_coords[0]][neighbor_coords[1]]
-
+            
             # Ensure doors are added back into their respective rooms
             door._Door__myFirstRoom.addDoor(door._Door__myFirstDirection, door)
             door._Door__myEndRoom.addDoor(door._Door__myEndDirection, door)

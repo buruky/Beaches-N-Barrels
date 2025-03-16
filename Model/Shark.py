@@ -3,7 +3,6 @@ import pygame
 import random
 import math
 
-from ViewUnits import ViewUnits
 
 class Shark(Enemy):
     """A boss enemy representing a shark with special abilities."""
@@ -101,3 +100,36 @@ class Shark(Enemy):
             # Shoot in the direction of the player
             self.shoot("SHOOT_PROJECTILE", angle)
             self.last_shot_time = current_time  # Update last shot tim
+
+    def to_dict(self):
+            """Convert enemy state to a dictionary for serialization."""
+            return {
+                "name": self._name,
+                "speed": self._mySpeed,
+                "health": self._myHealth,
+                "direction": self._direction,
+                "damage": self._myAttackDamage,
+                "positionX": self._myPositionX,
+                "positionY": self._myPositionY,
+            }
+    @classmethod
+    def from_dict(cls, data):
+        """Reconstruct a Shark enemy from a dictionary, ensuring it properly tracks the player."""
+        Shark = cls(
+            data["damage"],
+            data["health"],
+            data["positionX"],
+            data["positionY"],
+            data["speed"]
+        )
+
+        # Restore game world reference
+        from .GameWorld import GameWorld
+        Shark._game_world = GameWorld.getInstance()
+
+        # ✅ Restore movement state correctly
+        Shark._direction = data["direction"]
+        Shark.last_shot_time = pygame.time.get_ticks()  # Reset shot cooldown
+
+
+        return Shark
