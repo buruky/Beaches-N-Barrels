@@ -101,7 +101,7 @@ class TitleScreen:
         self.screen.blit(start_img, self.start_button.topleft)
         self.screen.blit(load_img, self.load_button.topleft)
         self.screen.blit(demo_img, self.demo_button.topleft)
-        self.screen.blit(quit_img, self.quit_button.topleft)
+        # self.screen.blit(quit_img, self.quit_button.topleft)
         self.screen.blit(guide_img, self.guide_button.topleft)  # NEW
 
         pygame.display.flip()
@@ -121,9 +121,9 @@ class TitleScreen:
                             return selected_character  
                     elif self.load_button.collidepoint(event.pos):
                         return "Load"  
-                    elif self.quit_button.collidepoint(event.pos):
-                        pygame.quit()
-                        exit()
+                    # elif self.quit_button.collidepoint(event.pos):
+                    #     pygame.quit()
+                    #     exit()
                     elif self.demo_button.collidepoint(event.pos):  
                         selected_character = self.character_selection_screen()  
                         if selected_character:

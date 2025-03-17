@@ -373,7 +373,7 @@ class MView:
         if self.showMinimap:
             self.draw_minimap()  
         else:
-            title_surface = self.font_small.render("\"SHIFT\" for", True, (255, 215, 0))  
+            title_surface = self.font_small.render("\"LSHIFT\" for", True, (255, 215, 0))  
             title_rect = title_surface.get_rect(center=(ViewUnits.SCREEN_WIDTH-80, 30))
             self.screen.blit(title_surface, title_rect)
             title_surface1 = self.font_small.render("Minimap", True, (255, 215, 0))  
