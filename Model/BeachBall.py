@@ -1,3 +1,5 @@
+from CustomEvents import CustomEvents
+from Model.EventManager import EventManager
 from .Enemy import Enemy
 import random
 import pygame
@@ -119,6 +121,20 @@ class BeachBall(Enemy):
 
         # Update position after dash and check for collisions
         self._check_collision_and_update_position(new_x, new_y, self)
+        
+    def _post_move_event(self):
+        """Posts an event when the enemy moves."""
+        event = pygame.event.Event(
+            EventManager.event_types[CustomEvents.CHARACTER_MOVED],
+            {
+                "name": self._name,
+                "id": id(self),
+                "positionX": self._myPositionX,
+                "state":self._direction,
+                "positionY": self._myPositionY
+            }
+        )
+        pygame.event.post(event)
 
     def to_dict(self):
         """Convert enemy state to a dictionary for serialization."""

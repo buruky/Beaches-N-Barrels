@@ -241,7 +241,12 @@ class SpriteFactory:
     
     def createBeachBallSpriteSheet(self, theId, thePositionX, thePositionY):
         """Creates a Crab sprite sheet."""
-        imageDict = {ViewUnits.DEFAULT_STATE_NAME: [self.ballImage2, self.ballImage]}
+        imageDict = {ViewUnits.DEFAULT_STATE_NAME: self.getAssetList("BeachBall", ViewUnits.DEFAULT_STATE_NAME),
+                     ViewUnits.DIRECTION_UP: self.getAssetList("BeachBall", ViewUnits.DIRECTION_UP),
+                     ViewUnits.DIRECTION_DOWN: self.getAssetList("BeachBall",ViewUnits.DIRECTION_DOWN),
+                     ViewUnits.DIRECTION_LEFT: self.getAssetList("BeachBall", ViewUnits.DIRECTION_LEFT),
+                     ViewUnits.DIRECTION_RIGHT: self.getAssetList("BeachBall"   , ViewUnits.DIRECTION_RIGHT),
+                     }  
         ballRect = copy.copy(ViewUnits.DEFAULT_RECT)
         ballRect.x = thePositionX
         ballRect.y = thePositionY
@@ -310,7 +315,7 @@ class SpriteFactory:
     def createKeySpriteSheet(self, theId, thePositionX, thePositionY):
         """Creates a Key sprite sheet."""
         imageDict = {ViewUnits.DEFAULT_STATE_NAME: [self.keyImage, self.keyImage2]}
-        keyRect = copy.copy(ViewUnits.DEFAULT_RECT)
+        keyRect = copy.copy(ViewUnits.DEFAULT_SPRITE_RECT)
         keyRect.x = thePositionX
         keyRect.y = thePositionY
         return SpriteSheet(theId, "Key", imageDict, keyRect)

@@ -18,10 +18,11 @@ class MView:
         player_image_path2 = os.path.join(current_directory, '..', 'Assets', 'background-normalRoom.png')
         self.myRawPlayerImage2 = pygame.image.load(player_image_path2)
         self.theTest2 = pygame.transform.scale(self.myRawPlayerImage2, (ViewUnits.SCREEN_WIDTH,ViewUnits.SCREEN_HEIGHT))
-        player_image_path3 = os.path.join(current_directory, '..', 'Assets', 'key.png')
-        self.myRawPlayerImage3 = pygame.image.load(player_image_path3)
-        self.theTest3 = pygame.transform.scale(self.myRawPlayerImage3, (ViewUnits.SCREEN_WIDTH,ViewUnits.SCREEN_HEIGHT))
-        
+        player_image_path3 = os.path.join(current_directory, '..', 'Assets', 'background-keyRoom.png')
+        self.keyRoomBackground = pygame.image.load(player_image_path3)
+        self.theTest3 = pygame.transform.scale(self.keyRoomBackground, (ViewUnits.SCREEN_WIDTH,ViewUnits.SCREEN_HEIGHT))
+        self.bossRoomPath = os.path.join(current_directory, '..', 'Assets', 'background-bossRoom.png')        
+        # self.BossRoom = pygame.image.load(self.bossRoomPath)
         
 
         door_image_path = os.path.join(current_directory, '..', 'Assets', 'door.png')
@@ -153,7 +154,8 @@ class MView:
             if theEvent.id == characterSprite.getId():
                 characterSprite.checkCycle()
                 characterSprite.setPosition(theEvent.positionX, theEvent.positionY)
-                if characterSprite.getName() in ["Dolphin", "Buddha", "Astronaut"]:
+                print(characterSprite.getName())
+                if characterSprite.getName() in ["Dolphin", "Buddha", "Astronaut"] or characterSprite.getName() =="BeachBall":
                     characterSprite.setCurrentState(theEvent.state)
         
         self.needs_redraw = True

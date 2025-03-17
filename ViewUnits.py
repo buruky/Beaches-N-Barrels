@@ -29,6 +29,10 @@ class ViewUnits:
                                       DEFAULT_POSITION_Y),
                                       (DEFAULT_WIDTH,
                                        DEFAULT_HEIGHT ))
+    DEFAULT_SPRITE_RECT = pygame.Rect((DEFAULT_POSITION_X,
+                                      DEFAULT_POSITION_Y),
+                                      (64,
+                                       64 ))
     DEFAULT_STATE_NAME = "IDLE"
     DEFAULT_DICT:Final = {DEFAULT_STATE_NAME: []}
     PLAYER_SPRITE_NAME = "PlayerMock"
@@ -36,8 +40,8 @@ class ViewUnits:
     DEFAULT_SPRITE_DIM: Final = (DEFAULT_WIDTH,DEFAULT_HEIGHT)
 
     SOUTH_DOOR_CORD =  (SCREEN_WIDTH // 2 - DEFAULT_WIDTH // 2, 0)  # Centered at the top
-    WEST_DOOR_CORD = (SCREEN_WIDTH - DEFAULT_WIDTH, SCREEN_HEIGHT // 2 - DEFAULT_HEIGHT // 2)  # Right side
-    NORTH_DOOR_CORD = (SCREEN_WIDTH // 2 - DEFAULT_WIDTH // 2, SCREEN_HEIGHT - DEFAULT_HEIGHT)  # Bottom
+    WEST_DOOR_CORD = (SCREEN_WIDTH - DEFAULT_WIDTH +20, SCREEN_HEIGHT // 2 - (DEFAULT_HEIGHT // 2))  # Right side
+    NORTH_DOOR_CORD = (SCREEN_WIDTH // 2 - DEFAULT_WIDTH // 2, SCREEN_HEIGHT - DEFAULT_HEIGHT+12)  # Bottom
     EAST_DOOR_CORD =  (0, SCREEN_HEIGHT // 2 - DEFAULT_HEIGHT // 2)  # Left side
 
     DIRECTION_UP:Final = "UP"
