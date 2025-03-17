@@ -69,17 +69,17 @@ class InvincibilityAbility(Ability):
     """Temporarily makes the player invincible."""
     def __init__(self, player):
         super().__init__(player, duration=6000)  # Set specific duration for speed boost
-        self.tempHealth = self.player._myHealth
+        #self.tempHealth = self.player._myHealth
 
     
     def activate(self):
-        self.tempHealth = self.player._myHealth
-        self.tempMax = self.player.maxHealth
-        self.player._myHealth = 9999
-        self.player.maxHealth = 9999
-        self.player.update("HEALTH")
-        self.player._myHealth = self.tempHealth
-        self.player.maxHealth = self.tempMax
+        #self.tempHealth = self.player._myHealth
+        #self.tempMax = self.player.maxHealth
+        #self.player._myHealth = 9999
+        #self.player.maxHealth = 9999
+        #self.player.update("HEALTH")
+        #self.player._myHealth = self.tempHealth
+        #self.player.maxHealth = self.tempMax
 
         self.player.setCanDie(False)  # Simulating invincibility
 
@@ -93,7 +93,7 @@ class InvincibilityAbility(Ability):
 class Invincibility(Ability):
     """Temporarily makes the player invincible."""
     def __init__(self, player):
-        super().__init__(player, duration=50000)  # Set specific duration for speed boost
+        super().__init__(player, duration=2000)  # Set specific duration for speed boost
         self.tempHealth = self.player._myHealth
 
     

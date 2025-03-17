@@ -155,6 +155,7 @@ class Player(DungeonCharacter):
             if exit_direction in exit_coords:
                 teleport_x, teleport_y = exit_coords[exit_direction]
                 self.teleportCharacter(teleport_x, teleport_y)
+                self._invincibility.use()
 
 
         collidedItem = GameWorld.getInstance().collideWithItem(pygame.Rect(new_x, new_y, 50, 50))
@@ -205,7 +206,6 @@ class Player(DungeonCharacter):
     
     def use_item(self, idx) -> None:
         """Use the item from inventory at the specified index and replace it with None."""
-        self._invincibility.use()
         if idx < len(self.__inventory):
             item = self.__inventory[idx]
             if item is not None:
