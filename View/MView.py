@@ -311,19 +311,15 @@ class MView:
         self.screen.blit(self.theNewRoom, (0, 0))
         
         #self.ui.draw_room_coordinates(self.cords)  # Draw room coordinates
-
         for doorSprite in self.myDoorList:
             self.screen.blit(doorSprite.getCurrentSprite(),doorSprite.getRect().topleft)
-        
+        current_room = GameWorld.getInstance().getCurrentRoom()
+        if current_room is not None:
+            self.draw_room_items(current_room)
         # Draw characters
         for currentSprite in self.onScreenChar:
             self.screen.blit(currentSprite.getCurrentSprite(), currentSprite.getRect().topleft)
 
-        
-        
-        current_room = GameWorld.getInstance().getCurrentRoom()
-        if current_room is not None:
-            self.draw_room_items(current_room)
         if self.showMinimap:
             self.draw_minimap()  
         if not self.bossRoom:

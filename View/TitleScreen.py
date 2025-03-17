@@ -15,6 +15,10 @@ class TitleScreen:
         button_spacing = ViewUnits.SCREEN_HEIGHT // 8  # Space between buttons
         center_x = (ViewUnits.SCREEN_WIDTH - self.start_image.get_width()) // 2
         start_y = ViewUnits.SCREEN_HEIGHT // 2
+        font_path = os.path.join(os.path.dirname(__file__), "..", "Assets", "editundo.ttf")
+        self.font_small = pygame.font.Font(font_path, 25)  # Small font for inventory
+        self.font_med = pygame.font.Font(font_path, 40)
+        self.font_large = pygame.font.Font(font_path, 60)
 
         # Create button rects
         self.start_button = pygame.Rect(center_x, start_y, self.start_image.get_width(), self.start_image.get_height())
@@ -140,8 +144,8 @@ class TitleScreen:
         back_button = pygame.Rect(20, 20, self.back_image.get_width(), self.back_image.get_height())
 
         wave_offset = 0  # Used for wave animation
-        font_title = pygame.font.Font(None, 60)
-        font_text = pygame.font.Font(None, 36)
+        font_title = self.font_med
+        font_text = self.font_small
 
         while True:
             # Animated waves effect

@@ -41,7 +41,12 @@ class SpriteFactory:
         self.keyIcon = pygame.transform.scale(self.myRawKeyIcon, ViewUnits.DEFAULT_SPRITE_DIM)
         self.keyIcon2 = pygame.transform.flip(self.keyIcon, True, False)
 
-
+        heart_path = os.path.join(assets_path, 'heart.png')
+        self.myRawHeartImage = pygame.image.load(heart_path)
+        self.heartImage = pygame.transform.scale(self.myRawHeartImage, ViewUnits.DEFAULT_SPRITE_DIM)
+        skull_path = os.path.join(assets_path, 'skull.png')
+        self.myRawSkullImage = pygame.image.load(skull_path)
+        self.skullImage = pygame.transform.scale(self.myRawSkullImage, (60,60))
         # NEW: Load additional item images
         self.myRawPotionImage = pygame.image.load(os.path.join(assets_path, 'potion.png'))
         self.myRawPoisonImage = pygame.image.load(os.path.join(assets_path, 'poison.png'))

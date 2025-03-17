@@ -7,8 +7,8 @@ from Model.GameWorld import GameWorld
 class UI:
     def __init__(self, screen):
         """Initializes the UI class with a reference to the screen."""
-        font_path = os.path.join(os.path.dirname(__file__), "..", "Assets", "editundo.ttf")
         self.screen = screen
+        font_path = os.path.join(os.path.dirname(__file__), "..", "Assets", "editundo.ttf")
         self.font_small = pygame.font.Font(font_path, 25)  # Small font for inventory
         self.font_med = pygame.font.Font(font_path, 37)
         self.font_large = pygame.font.Font(font_path, 50)  # Large font for health
@@ -76,72 +76,100 @@ class UI:
         self.screen.blit(text_surface, (x + 50, y + 30))
 
     def draw_health(self, player_health, max_health):
-        """Draw the player's health as a bar, centered at the bottom of the screen."""
-        bar_width = 400  
-        bar_height = 40  
+        """Draw the player's health as a red bar with a border, a heart icon on the left,
+        positioned in the bottom right of the screen. The health bar background is semi-transparent with a tint.
+        """
+        bar_width = 400 
+        bar_height = 40   
+        right_margin = 10
+        bottom_margin = 10
+        x_offset = ViewUnits.SCREEN_WIDTH - bar_width - right_margin
+        y_offset = ViewUnits.SCREEN_HEIGHT - bar_height - bottom_margin
 
-        x_offset = (ViewUnits.SCREEN_WIDTH - bar_width) - 10  # Position the bar at the center of the screen
-        y_offset = ViewUnits.SCREEN_HEIGHT - bar_height - 10  # Position at the bottom of the screen with a small gap
+        # Draw a thick border around the health bar
+        border_color = (20, 0, 0)  # Dark red border
+        border_thickness = 4
+        pygame.draw.rect(self.screen, border_color, 
+                        (x_offset - 2, y_offset - 2, bar_width + 4, bar_height + 4), 
+                        border_radius=10)
 
-        # Round the corners by setting the border_radius for rounded corners
-        border_radius = 30  # Set the desired radius for the corners
+        # Create a semi-transparent surface for the health bar background with a slight tint.
+        health_bg_surface = pygame.Surface((bar_width, bar_height), pygame.SRCALPHA)
+        # Fill with a red tint and 150/255 alpha (adjust the alpha value for transparency)
+        health_bg_surface.fill((200, 0, 0, 150))
+        self.screen.blit(health_bg_surface, (x_offset, y_offset))
         
-        # Draw the background of the health bar (gray), with rounded corners
-        pygame.draw.rect(self.screen, (50, 50, 50), (x_offset, y_offset, bar_width, bar_height), border_radius=border_radius)
-
         # Calculate the width of the health bar based on the current health
-        health_percentage = player_health / max_health  # Calculate health percentage (0 to 1)
-        health_bar_width = bar_width * health_percentage  # Scale the bar width based on health
+        health_percentage = player_health / max_health
+        health_bar_width = bar_width * health_percentage
 
-        # Choose the color for the health bar (green for full, red for low)
-        if player_health > 70:
-            bar_color = (144, 238, 144)  
-        elif player_health > 30:
-            bar_color = (255, 255, 170)  
-        else:
-            bar_color = (255, 0, 0)  
+        # Draw the foreground of the health bar (bright red) with rounded corners
+        bar_color = (160, 0, 0)
+        pygame.draw.rect(self.screen, bar_color, 
+                        (x_offset, y_offset, health_bar_width, bar_height), 
+                        border_radius=10)
 
-        # Draw the foreground of the health bar (current health), with rounded corners
-        pygame.draw.rect(self.screen, bar_color, (x_offset, y_offset, health_bar_width, bar_height), border_radius=border_radius)
-
-        # Optional: Draw text on top of the health bar (e.g., health percentage)
-        font = self.font_med  # Smaller font size for text inside the bar
-        text_surface = font.render(f"{player_health}/{max_health}", True, (0,0,0))  # White text
-        text_rect = text_surface.get_rect(center=(x_offset + bar_width // 2, y_offset + bar_height // 2))
+        # Draw the health text using a pixelated font
+        text_surface = self.font_med.render(f"{player_health}", True, (255, 255, 255))
+        text_rect = text_surface.get_rect(center=(x_offset + 65, y_offset + bar_height // 2))
         self.screen.blit(text_surface, text_rect)
+        
+        # Draw a heart icon to the left of the health bar
+        heart_icon_size = 50
+        heart_x = x_offset - heart_icon_size + 30
+        heart_y = y_offset + (bar_height - heart_icon_size) // 2 
+        heart_sprite = self.mySpriteFactory.heartImage  
+        heart_sprite = pygame.transform.scale(heart_sprite, (heart_icon_size, heart_icon_size))
+        self.screen.blit(heart_sprite, (heart_x, heart_y))
+
 
     def draw_boss_health(self, enemy_health, max_health):
-        """Draw the enemy's health bar, placed at the top of the screen in boss rooms."""
-        print
-        # Set the dimensions of the health bar
-        bar_width = 800  # Health bar width, larger for a boss
-        bar_height = 20  # Health bar height
-        
+        """Draw the boss's health bar with a thick border, a semi-transparent background,
+        and a boss icon on the left side.
+        """
+        bar_width = 600   # Width of the health bar
+        bar_height = 30   # Height of the health bar
         # Position the health bar at the top-center of the screen
-        x_offset = (ViewUnits.SCREEN_WIDTH - bar_width) // 2  # Center the bar horizontally
-        y_offset = 10  # Position it near the top of the screen
-        
-        # Round the corners by setting the border_radius for rounded corners
-        border_radius = 10  # Set the desired radius for the corners
-        
-        # Draw the background of the health bar (gray)
-        pygame.draw.rect(self.screen, (50, 50, 50), (x_offset, y_offset, bar_width, bar_height), border_radius=border_radius)
-        
-        # Calculate the width of the health bar based on the current health
-        health_percentage = enemy_health / max_health  # Calculate health percentage (0 to 1)
-        health_bar_width = bar_width * health_percentage  # Scale the bar width based on health
-        
+        x_offset = (ViewUnits.SCREEN_WIDTH - bar_width) // 2
+        y_offset = 20  # Distance from the top
 
-        bar_color = (250, 0, 0)  # Soft pastel red
-        
-        # Draw the foreground of the health bar (current health), with rounded corners
-        pygame.draw.rect(self.screen, bar_color, (x_offset, y_offset, health_bar_width, bar_height), border_radius=border_radius)
-        
-        # Optional: Draw text on top of the health bar (e.g., health percentage)
-        font = self.font_small  # Smaller font size for text inside the bar
-        text_surface = font.render(f"{enemy_health}/{max_health}", True, (255, 255, 255))  # White text
-        text_rect = text_surface.get_rect(center=(x_offset + bar_width // 2, y_offset + bar_height // 2))
+        # Draw a thick dark red border around the boss health bar
+        border_color = (200, 0, 0)
+        border_thickness = 4
+        pygame.draw.rect(self.screen, border_color, 
+                        (x_offset - 2, y_offset - 2, bar_width + 4, bar_height + 4), 
+                        border_radius=10)
+
+        # Create a semi-transparent background surface with a tint for the boss health bar
+        bg_surface = pygame.Surface((bar_width, bar_height), pygame.SRCALPHA)
+        bg_surface.fill((50, 50, 50, 150))  # Dark gray with transparency
+        self.screen.blit(bg_surface, (x_offset, y_offset))
+
+        # Calculate the width of the boss health bar based on enemy health
+        health_percentage = enemy_health / max_health
+        health_bar_width = bar_width * health_percentage
+
+        bar_color = (160, 0, 0)
+        pygame.draw.rect(self.screen, bar_color, 
+                        (x_offset, y_offset, health_bar_width, bar_height), 
+                        border_radius=10)
+
+        # Render the boss health text using the pixelated font
+        text_surface = self.font_med.render(f"{enemy_health}/{max_health}", True, (255, 255, 255))
+        text_rect = text_surface.get_rect(center=(x_offset + bar_width // 2 - 200, y_offset + bar_height // 2))
         self.screen.blit(text_surface, text_rect)
+
+        # Define boss icon parameters
+        boss_icon_size = 60
+        # Position the boss icon to the left of the health bar, with a gap of 10 pixels
+        icon_x = x_offset - boss_icon_size +30
+        icon_y = y_offset + (bar_height - boss_icon_size) // 2
+
+        # Retrieve the boss icon from SpriteFactory (use a dedicated boss image if available;
+        # otherwise, you can use the crab image as a placeholder)
+        boss_icon = self.mySpriteFactory.skullImage  # Replace with a dedicated boss image if available
+        boss_icon = pygame.transform.scale(boss_icon, (boss_icon_size, boss_icon_size))
+        self.screen.blit(boss_icon, (icon_x, icon_y))
 
 
     def draw_room_coordinates(self, cords):
