@@ -210,7 +210,7 @@ class MController:
         directions = []
 
         # Handle activating abilities
-        if keys[pygame.K_e]:  # Press 'E' to activate ability
+        if keys[pygame.K_SPACE]:  # Press 'E' to activate ability
             self.__myPlayer.activate_ability()
             self.__myView.redrawCharacter()
         elif keys[pygame.K_1]:  # Press 'T' to use an item

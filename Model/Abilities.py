@@ -38,10 +38,10 @@ class SpeedBoostAbility(Ability):
         super().__init__(player, duration=3000)  # Set specific duration for speed boost
 
     def activate(self):
-        self.player._mySpeed *= 2  # Double speed
+        self.player._mySpeed *= 1.5 # Double speed
 
     def deactivate(self):
-        self.player._mySpeed /= 2  # Restore speed
+        self.player._mySpeed /= 1.5 # Restore speed
         super().deactivate()
 
 class HealAbility(Ability):
@@ -82,11 +82,12 @@ class InvincibilityAbility(Ability):
         #self.player.maxHealth = self.tempMax
 
         self.player.setCanDie(False)  # Simulating invincibility
-
+        print("invincible")
     def deactivate(self):
 
         self.player.update("HEALTH")
         self.player.setCanDie(True)
+        print("not Invincible")
         super().deactivate()
 
 
@@ -110,7 +111,7 @@ class Invincibility(Ability):
         print("invince stop")
         super().deactivate()
 
-class LowGravityAbility(Ability):
+class LowGravityAbility1(Ability):
     """Simulates low gravity jumping."""
     def __init__(self, player):
         super().__init__(player, duration=4000)  # Set specific duration for speed boost
@@ -122,4 +123,49 @@ class LowGravityAbility(Ability):
 
     def deactivate(self):
         # self.player._mySpeed /= 0.5
+        super().deactivate()
+
+class LowGravityAbility(Ability):
+    """Allows the player (Astronaut) to dash a fixed distance in the direction they're facing."""
+    def __init__(self, player, duration=100, cooldown = 2200, dash_distance=200):
+        """
+        duration: How long the dash ability is considered 'active' (in milliseconds).  
+        dash_distance: The number of pixels to dash.
+        """
+        super().__init__(player, duration)
+        self.dash_distance = dash_distance
+        self.cooldown = cooldown
+        self.last_used = -cooldown
+        
+    def use(self):
+        current_time = pygame.time.get_ticks()
+        if current_time - self.last_used < self.cooldown:
+            print("Dash ability is cooling down.")
+            return  # Cooldown has not elapsed; do nothing.
+        # Otherwise, proceed to use dash.
+        self.last_used = current_time  # Record the time dash is used.
+        super().use()  # This sets active to True and calls activate().
+
+    def activate(self):
+        print("Dash Activated!")
+        dx, dy = 0, 0
+        direction = self.player._direction  
+        if direction == "LEFT":
+            dx = -self.dash_distance
+        elif direction == "RIGHT":
+            dx = self.dash_distance
+        elif direction == "UP":
+            dy = -self.dash_distance
+        elif direction == "DOWN":
+            dy = self.dash_distance
+        new_x = self.player._myPositionX + dx
+        new_y = self.player._myPositionY + dy
+        new_x = max(0, min(new_x, ViewUnits.SCREEN_WIDTH - ViewUnits.DEFAULT_WIDTH))
+        new_y = max(0, min(new_y, ViewUnits.SCREEN_HEIGHT - ViewUnits.DEFAULT_HEIGHT))
+
+        self.player.teleportCharacter(new_x, new_y)
+        self.deactivate()
+
+    def deactivate(self):
+        print("Dash Ended.")
         super().deactivate()

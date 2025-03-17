@@ -18,11 +18,15 @@ class MView:
         player_image_path2 = os.path.join(current_directory, '..', 'Assets', 'background-normalRoom.png')
         self.myRawPlayerImage2 = pygame.image.load(player_image_path2)
         self.theTest2 = pygame.transform.scale(self.myRawPlayerImage2, (ViewUnits.SCREEN_WIDTH,ViewUnits.SCREEN_HEIGHT))
-        player_image_path3 = os.path.join(current_directory, '..', 'Assets', 'background-normalRoom.png')
+        player_image_path3 = os.path.join(current_directory, '..', 'Assets', 'key.png')
         self.keyRoomBackground = pygame.image.load(player_image_path3)
         self.theTest3 = pygame.transform.scale(self.keyRoomBackground, (ViewUnits.SCREEN_WIDTH,ViewUnits.SCREEN_HEIGHT))
         self.bossRoomPath = os.path.join(current_directory, '..', 'Assets', 'background-bossRoom.png')        
         # self.BossRoom = pygame.image.load(self.bossRoomPath)
+        font_path = os.path.join(os.path.dirname(__file__), "..", "Assets", "editundo.ttf")
+        self.font_small = pygame.font.Font(font_path, 25)  # Small font for inventory
+        self.font_med = pygame.font.Font(font_path, 37)
+        self.font_large = pygame.font.Font(font_path, 50)  # Large font for health
         
 
         door_image_path = os.path.join(current_directory, '..', 'Assets', 'door.png')
@@ -322,6 +326,14 @@ class MView:
 
         if self.showMinimap:
             self.draw_minimap()  
+        else:
+            title_surface = self.font_small.render("\"SHIFT\" for", True, (255, 215, 0))  
+            title_rect = title_surface.get_rect(center=(ViewUnits.SCREEN_WIDTH-80, 30))
+            self.screen.blit(title_surface, title_rect)
+            title_surface1 = self.font_small.render("Minimap", True, (255, 215, 0))  
+            title_rect1 = title_surface.get_rect(center=(ViewUnits.SCREEN_WIDTH-50, 50))
+            self.screen.blit(title_surface, title_rect)
+            self.screen.blit(title_surface1, title_rect1)
         if not self.bossRoom:
             self.ui.draw_boss_health(self.BossHealth, self.bossMaxHealth)  # Draw health  
 

@@ -143,7 +143,7 @@ class TitleScreen:
         guide_text = [
             ("Welcome to Beaches-N-Barrels!", None),
             ("1. Use W, A, S, D to move your character.",None),
-            ("2. Press E to activate your character's ability.", None),
+            ("2. Press SPACE to activate your character's ability.", None),
             ("3. Use 1 - 4 to activate items from your inventory.", None),
             ("4. Hold Left Shift to toggle the minimap view.", None),
             ("5. Use Arrow Keys to shoot.",None),
