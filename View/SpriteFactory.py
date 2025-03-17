@@ -21,7 +21,7 @@ class SpriteFactory:
 
 
 
-        self.myRawBuddhaImage = pygame.image.load(os.path.join(assets_path, 'Buddha.png'))
+        self.myRawBuddhaImage = pygame.image.load(os.path.join(assets_path, 'Buddha.jpg'))
         self.myRawDolphinImage = pygame.image.load(os.path.join(assets_path, 'Dolphin.png'))
         self.myRawAstronautImage = pygame.image.load(os.path.join(assets_path, 'Astronaut.jpg'))
         # Load Player Images
@@ -71,7 +71,7 @@ class SpriteFactory:
         self.seagullImage = pygame.transform.scale(self.myRawSeagullImage, (100,100))
         self.seagullImage2 = pygame.transform.flip(self.seagullImage, True, False)
 
-        self.sharkImage = pygame.transform.scale(self.myRawSharkImage, (200,200))
+        self.sharkImage = pygame.transform.scale(self.myRawSharkImage, (100,100))
         self.sharkImage2 = pygame.transform.flip(self.sharkImage, True, False)
 
         # NEW: Resize and flip item images
@@ -110,7 +110,7 @@ class SpriteFactory:
             return self.createPirateSpriteSheet(theId, thePositionX, thePositionY)
         elif theName == "Crab":
             return self.createCrabSpriteSheet(theId, thePositionX, thePositionY)
-        elif theName == "BeachBall" or theName == "Barrel":
+        elif theName == "BeachBall":
             return self.createBeachBallSpriteSheet(theId, thePositionX, thePositionY)
         elif theName == "Shark":
             return self.createSharkSpriteSheet(theId, thePositionX, thePositionY)
@@ -199,10 +199,16 @@ class SpriteFactory:
 
     def createAstronautSpriteSheet(self, theId, thePositionX, thePositionY):
         """Creates an Astronaut sprite sheet."""
-        imageDict = {ViewUnits.DEFAULT_STATE_NAME: [self.astronautImage, self.astronautImage2]}  
+        imageDict = imageDict = {
+                    ViewUnits.DEFAULT_STATE_NAME: self.getAssetList(self.ASTRONAUT_STRING, ViewUnits.DEFAULT_STATE_NAME),
+                     ViewUnits.DIRECTION_UP: self.getAssetList(self.ASTRONAUT_STRING, ViewUnits.DIRECTION_UP),
+                     ViewUnits.DIRECTION_DOWN: self.getAssetList(self.ASTRONAUT_STRING,ViewUnits.DIRECTION_DOWN),
+                     ViewUnits.DIRECTION_LEFT: self.getAssetList(self.ASTRONAUT_STRING, ViewUnits.DIRECTION_LEFT),
+                     ViewUnits.DIRECTION_RIGHT: self.getAssetList(self.ASTRONAUT_STRING, ViewUnits.DIRECTION_RIGHT) 
+                    }    
         astronautRect = copy.copy(ViewUnits.DEFAULT_RECT)
         astronautRect.x = thePositionX
-        astronautRect.y = thePositionY
+        astronautRect .y = thePositionY
 
         return SpriteSheet(theId, "Astronaut", imageDict, astronautRect)
 
