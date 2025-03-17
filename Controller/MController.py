@@ -79,6 +79,31 @@ class MController:
             self.__myPlayer = character_map.get(selected_character, Dolphin)()
             self.__myWorld.setPlayer(self.__myPlayer)
 
+    
+    def change_music(self, event):
+        """
+        Changes the background music to a new song based on an event.
+        :param event: Event containing `event.song` (string, e.g., "battleTheme.mp3")
+        """
+        assets_path = os.path.join(os.path.dirname(__file__), "..", "Assets/sounds")
+        new_song_path = os.path.join(assets_path, event.song)  # Get song filename from event
+
+        # Stop current music
+        pygame.mixer.stop()  # Stops all currently playing sounds
+
+        try:
+            # Load and play the new music
+            new_music = pygame.mixer.Sound(new_song_path)
+            new_music.set_volume(0.05)  # Adjust volume as needed
+            new_music.play(-1)  # Loop indefinitely
+            self.current_music = new_music  # Store reference to track current music
+
+            print(f"Now playing: {event.song}")
+
+        except Exception as e:
+            print(f"Error loading music: {event.song} - {e}")
+
+
     def ControllerTick(self):
         """Main game loop tick, handling events, updating entities, and checking abilities."""
         self.__handleEvents()
@@ -101,15 +126,20 @@ class MController:
         EventManager.registerEvent(CustomEvents.CHARACTER_MOVED, self.__myView.update_entity)
         EventManager.registerEvent(CustomEvents.CHARACTER_STOPPED, self.__myView.update_entity)
         EventManager.registerEvent(CustomEvents.PLAYER_DIED, self.__handle_character_death)
+        EventManager.registerEvent(CustomEvents.PLAYER_DIED, self.gameWon)
         
         EventManager.registerEvent(CustomEvents.CHANGED_ROOM, self.__myView.updateRoom)
         EventManager.registerEvent(CustomEvents.SHOOT_PROJECTILE, self.__shoot_projectile)
         EventManager.registerEvent(CustomEvents.HEALTH, self.__myView.updateHealthUI)
         EventManager.registerEvent(CustomEvents.BOSS_ROOM, self.__myView.updateBossHealthUI)
+        EventManager.registerEvent(CustomEvents.SONG_CHANGE, self.change_music)
 
         EventManager.registerEvent(CustomEvents.PICKUP_ITEM, self.__myView.updateInventoryUI)
         EventManager.registerEvent(CustomEvents.UPDATE_PROJECTILE, self.__myView.remove_projectile)
 
+
+    def gameWon(self, event):
+        print("WOOHOOOO")
     def __handle_character_death(self, event):
         """Displays 'Game Over' and stops the game loop."""
         self.__myView.display_game_over()

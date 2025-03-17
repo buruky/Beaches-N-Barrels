@@ -3,6 +3,7 @@ import pygame
 import random
 import math
 from .EventManager import EventManager
+from CustomEvents import CustomEvents
 
 
 
@@ -22,6 +23,7 @@ class Shark(Enemy):
         self.is_angry = False  # Track if the shark is in an "angry" state for special attacks
         self.boss_health_threshold = healthPoints * 0.5  # The health threshold at which the shark becomes angrier
         self.maxHealth = self._myHealth
+        self.firstEnt = True
         # event = pygame.event.Event(
         #     EventManager.event_types["BOSS_ROOM"],
         #     {"name": self.getName(),
@@ -52,6 +54,14 @@ class Shark(Enemy):
             }        
         )
         pygame.event.post(event)
+        if self.firstEnt:
+            event = pygame.event.Event(
+                EventManager.event_types["SONG_CHANGE"],
+                {"song": "MarksTheme.mp3"
+                }        
+            )
+            pygame.event.post(event)
+            self.firstEnt = False
 
         # Regular movement and shooting at player
         self.moveCharacter()
@@ -126,15 +136,8 @@ class Shark(Enemy):
     def Dies(self):
         """Handles enemy death."""
         print(f"{self._name} has been defeated!")
-        event = pygame.event.Event(
-            EventManager.event_types["BOSS_ROOM"],
-            {"name": self.getName(),
-            "health": self._myHealth,
-            "maxHealth": self.maxHealth,
-            "isdead": True
-            }        
-        )
-        pygame.event.post(event)
+        won_event = pygame.event.Event(EventManager.event_types[CustomEvents.GAME_WON])
+        pygame.event.post(won_event)
         from .GameWorld import GameWorld
         GameWorld.getInstance().removeEnemy(self)
 

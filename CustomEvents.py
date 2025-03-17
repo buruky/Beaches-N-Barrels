@@ -16,4 +16,6 @@ class CustomEvents:
     HEALTH:Final = "HEALTH"
     PICKUP_ITEM:Final = "PICKUP_ITEM"
     BOSS_ROOM:Final = "BOSS_ROOM"
+    SONG_CHANGE:Final = "SONG_CHANGE"
+    GAME_WON:Final = "GAME_WON"
 

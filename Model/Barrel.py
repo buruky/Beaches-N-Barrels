@@ -16,6 +16,7 @@ class Barrel(Enemy):
         self.maxHealth = self._myHealth
         self.is_dashing = False  # Track if the barrel is in the middle of a dash
         self.direction = random.choice(["UP", "DOWN", "LEFT", "RIGHT"])  # Random direction for movement
+        self.firstEnt = True
 
     def moveCharacter(self):
         """Move the BarrelGuard away from the player and dash occasionally."""
@@ -29,6 +30,14 @@ class Barrel(Enemy):
             }        
         )
         pygame.event.post(event)
+        if self.firstEnt:
+            event = pygame.event.Event(
+                EventManager.event_types["SONG_CHANGE"],
+                {"song": "keyRoom.mp3"
+                }        
+            )
+            pygame.event.post(event)
+            self.firstEnt = False
         # Get player position
         player_pos = self.get_player_position()
 
@@ -91,6 +100,7 @@ class Barrel(Enemy):
             }        
         )
         pygame.event.post(event)
+        
         from .GameWorld import GameWorld
         GameWorld.getInstance().removeEnemy(self)
 

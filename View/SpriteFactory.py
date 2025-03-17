@@ -71,7 +71,7 @@ class SpriteFactory:
         self.seagullImage = pygame.transform.scale(self.myRawSeagullImage, (100,100))
         self.seagullImage2 = pygame.transform.flip(self.seagullImage, True, False)
 
-        self.sharkImage = pygame.transform.scale(self.myRawSharkImage, (100,100))
+        self.sharkImage = pygame.transform.scale(self.myRawSharkImage, (200,200))
         self.sharkImage2 = pygame.transform.flip(self.sharkImage, True, False)
 
         # NEW: Resize and flip item images

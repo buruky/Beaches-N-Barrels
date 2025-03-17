@@ -26,7 +26,7 @@ class GameWorld:
         self.__myFloorFactory = FloorFactory.getInstance()
         self.__myFloor = self.__myFloorFactory.createFloor()
         self.currentRoom = self.__myFloor.getStartRoom()
-           
+        self.changedRoom = False
     
         event = pygame.event.Event(
                 EventManager.event_types[CustomEvents.CHANGED_ROOM],
@@ -247,6 +247,17 @@ class GameWorld:
                 }
             )
         pygame.event.post(event)
+        if self.currentRoom.getRoomType() == "n " :
+            if self.changedRoom:
+                print("INHEREEE")
+                event = pygame.event.Event(
+                    EventManager.event_types["SONG_CHANGE"],
+                    {"song": "MainTheme.mp3"
+                    }        
+                )
+                pygame.event.post(event)
+        else:
+            self.changedRoom = True
 
     def activateRoom(self, theCurrentRoom):
         """Lets know doors and entities in room that should be shown on screen"""
