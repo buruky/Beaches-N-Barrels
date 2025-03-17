@@ -9,6 +9,7 @@ from .Abilities import SpeedBoostAbility
 from .FloorFactory import FloorFactory
 from .Item import *
 import pygame
+from .Abilities import InvincibilityAbility
 
 class Player(DungeonCharacter):
     """Parent class for all player heroes with shared movement and event handling."""
@@ -26,6 +27,8 @@ class Player(DungeonCharacter):
         self.invFull = False
         self.__inventory = [None,None,None,None]
         self._item_Ability = HealAbility(self)
+        self._item_Invincibility = InvincibilityAbility(self)
+        self._item_Speed = SpeedBoostAbility(self)
         self._lastDoorTeleportTime = 0 
         
         """Update sprite when player is made"""
@@ -196,19 +199,26 @@ class Player(DungeonCharacter):
     
     def use_item(self, idx) -> None:
         """Use the item from inventory at the specified index and replace it with None."""
-        if idx < len(self.__inventory):  # Ensure the index is valid
-            item = self.__inventory[idx]  # Get the item at the specified index
-            
-            if item is not None:  # Check if the item exists at the given index
-                if str(item) == "MockItem":  # Check for a specific item type (MockItem in this case)
-                    if not self._item_Ability.active:
-                        self._item_Ability.use()  # Use the ability associated with the item
-                        self.__inventory[idx] = None  # Replace the used item with None in the inventory
-                        self.invFull = False  # Mark inventory as not full
+        if idx < len(self.__inventory):
+            item = self.__inventory[idx]
+            if item is not None:
+                if item._name == "MockItem" and not self._item_Ability.active:
+                    self._item_Ability.use()
+                    self.__inventory[idx] = None
+                    self.invFull = False
+                elif item._name == "InvincibilityItem" and not self._item_Invincibility.active:
+                    self._item_Invincibility.use()
+                    self.__inventory[idx] = None
+                    self.invFull = False
+                elif item._name == "SpeedItem" and not self._item_Speed.active:
+                    self._item_Speed.use()
+                    self.__inventory[idx] = None
+                    self.invFull = False
                 else:
                     # Handle other types of items (abilities, consumables, etc.)
                     # Replace the item with None once used
-                    self.__inventory[idx] = None  # Replace the used item with None
+                    print("No usable item at this slot or ability on cooldown.")
+                    # self.__inventory[idx] = None  # Replace the used item with None
 
      
     def teleportCharacter(self, num1: int, num2: int) -> None:

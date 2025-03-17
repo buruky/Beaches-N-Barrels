@@ -47,7 +47,9 @@ class SpriteFactory:
         self.myRawPoisonImage = pygame.image.load(os.path.join(assets_path, 'poison.png'))
         self.myRawKeyImage = pygame.image.load(os.path.join(assets_path, 'key_item.png'))
         # Resize and Flip Sprites
-
+        self.myRawHealPotionImage = pygame.image.load(os.path.join(assets_path, 'healPotion.png'))
+        self.myRawInvincePotionImage = pygame.image.load(os.path.join(assets_path, 'invincePotion.png'))
+        self.myRawSpeedPotionImage = pygame.image.load(os.path.join(assets_path, 'speedPotion.png'))
        
 
         self.buddhaImage = pygame.transform.scale(self.myRawBuddhaImage, ViewUnits.DEFAULT_SPRITE_DIM)  # NEW
@@ -84,7 +86,14 @@ class SpriteFactory:
         self.keyImage = pygame.transform.scale(self.myRawKeyImage, (35,50))
         self.keyImage2 = pygame.transform.flip(self.keyImage, True, False)
 
-        
+        self.healPotionImage = pygame.transform.scale(self.myRawHealPotionImage, (32,32))
+        self.healPotionImage2 = pygame.transform.flip(self.healPotionImage, True, False)
+
+        self.invincePotionImage = pygame.transform.scale(self.myRawInvincePotionImage, (32,32))
+        self.invincePotionImage2 = pygame.transform.flip(self.invincePotionImage, True, False)
+
+        self.speedPotionImage = pygame.transform.scale(self.myRawSpeedPotionImage, (32,32))
+        self.speedPotionImage2 = pygame.transform.flip(self.speedPotionImage, True, False)
         # Resize (and optionally flip) the projectile image.
         # Assuming the projectile is symmetric, flipping might not be necessary,
         # but we create two images for consistency.
@@ -132,6 +141,12 @@ class SpriteFactory:
             return self.createPoisonSpriteSheet(theId, thePositionX, thePositionY)  # NEW
         elif theName == "Key":
             return self.createKeySpriteSheet(theId, thePositionX, thePositionY)  # NEW
+        elif theName == "HealPotion":
+            return self.createHealPotionSpriteSheet(theId, thePositionX, thePositionY)
+        elif theName == "InvincePotion":
+            return self.createInvincePotionSpriteSheet(theId, thePositionX, thePositionY)
+        elif theName == "SpeedPotion":
+            return self.createSpeedPotionSpriteSheet(theId, thePositionX, thePositionY)
         else:  # Default to generic enemy
             return self.createEnemySpriteSheet(theId, thePositionX, thePositionY)
 
@@ -149,6 +164,26 @@ class SpriteFactory:
                 image = pygame.image.load(image_path)
                 images.append(image)
         return images
+    def createHealPotionSpriteSheet(self, theId, thePositionX, thePositionY):
+        imageDict = {ViewUnits.DEFAULT_STATE_NAME: [self.healPotionImage, self.healPotionImage2]}
+        potionRect = copy.copy(ViewUnits.DEFAULT_RECT)
+        potionRect.x = thePositionX
+        potionRect.y = thePositionY
+        return SpriteSheet(theId, "HealPotion", imageDict, potionRect)
+
+    def createInvincePotionSpriteSheet(self, theId, thePositionX, thePositionY):
+        imageDict = {ViewUnits.DEFAULT_STATE_NAME: [self.invincePotionImage, self.invincePotionImage2]}
+        potionRect = copy.copy(ViewUnits.DEFAULT_RECT)
+        potionRect.x = thePositionX
+        potionRect.y = thePositionY
+        return SpriteSheet(theId, "InvincePotion", imageDict, potionRect)
+
+    def createSpeedPotionSpriteSheet(self, theId, thePositionX, thePositionY):
+        imageDict = {ViewUnits.DEFAULT_STATE_NAME: [self.speedPotionImage, self.speedPotionImage2]}
+        potionRect = copy.copy(ViewUnits.DEFAULT_RECT)
+        potionRect.x = thePositionX
+        potionRect.y = thePositionY
+        return SpriteSheet(theId, "SpeedPotion", imageDict, potionRect)
     def createDolphinSpriteSheet(self, theId, thePositionX, thePositionY):
         """Creates a Dolphin sprite sheet."""
        

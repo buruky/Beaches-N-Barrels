@@ -44,8 +44,12 @@ class UI:
             # If the slot is not empty, draw the item image
             if item:
                 if str(item) == "MockItem":
-                    item_image = self.mySpriteFactory.poisonImage  # Example: potion image from SpriteFactory
-                else:
+                    item_image = self.mySpriteFactory.healPotionImage  # Example: potion image from SpriteFactory
+                elif str(item) == "InvincibilityItem":
+                    item_image = self.mySpriteFactory.invincePotionImage
+                elif str(item) == "SpeedItem":
+                    item_image = self.mySpriteFactory.speedPotionImage                
+                else:    
                     item_image = None  # Handle other item images if needed
 
                 if item_image:
@@ -99,7 +103,7 @@ class UI:
 
     def draw_boss_health(self, enemy_health, max_health):
         """Draw the enemy's health bar, placed at the top of the screen in boss rooms."""
-        
+        print
         # Set the dimensions of the health bar
         bar_width = 800  # Health bar width, larger for a boss
         bar_height = 20  # Health bar height

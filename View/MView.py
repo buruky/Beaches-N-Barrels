@@ -154,7 +154,6 @@ class MView:
             if theEvent.id == characterSprite.getId():
                 characterSprite.checkCycle()
                 characterSprite.setPosition(theEvent.positionX, theEvent.positionY)
-                print(characterSprite.getName())
                 if characterSprite.getName() in ["Dolphin", "Buddha", "Astronaut"] or characterSprite.getName() =="BeachBall":
                     characterSprite.setCurrentState(theEvent.state)
         
@@ -251,17 +250,17 @@ class MView:
             # Determine which sprite sheet to use based on the item type.
             if item._name == "KeyItem":
                 item_sprite = self.mySpriteFactory.createKeySpriteSheet(id(item), pos_x, pos_y)
-            elif item._name == "PotionItem":
-                item_sprite = self.mySpriteFactory.createPotionSpriteSheet(id(item), pos_x, pos_y)
+            elif item._name == "InvincibilityItem":
+                item_sprite = self.mySpriteFactory.createInvincePotionSpriteSheet(id(item), pos_x, pos_y)
             elif item._name == "MockItem":
-                item_sprite = self.mySpriteFactory.createPoisonSpriteSheet(id(item), pos_x, pos_y)
+                item_sprite = self.mySpriteFactory.createHealPotionSpriteSheet(id(item), pos_x, pos_y)
+            elif item._name == "SpeedItem":
+                item_sprite = self.mySpriteFactory.createSpeedPotionSpriteSheet(id(item), pos_x, pos_y)
             else:
-                # Fallback: use a default item sprite. Adjust this as needed.
                 item_sprite = self.mySpriteFactory.createCrabSpriteSheet(id(item), pos_x, pos_y)
-            
+
             # Draw the sprite at its designated position.
             self.screen.blit(item_sprite.getCurrentSprite(), item_sprite.getRect().topleft)
-
     def draw_minimap(self):
         """Draws a minimap of the floor using rectangles to represent rooms."""
         gameworld = GameWorld.getInstance()
