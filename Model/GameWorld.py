@@ -329,7 +329,8 @@ class GameWorld:
                     
                     self.changeCurrentRoom(door)
                     #self.printConnectedDoors(self.currentRoom)
-                    return door.getConnectedDoorDirection(self.currentRoom)#maybe return cords
+                    #return door.getConnectedDoorDirection(self.currentRoom)#maybe return cords
+                    return door
         return None
     
 

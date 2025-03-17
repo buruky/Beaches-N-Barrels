@@ -26,6 +26,7 @@ class Player(DungeonCharacter):
         self.invFull = False
         self.__inventory = [None,None,None,None]
         self._item_Ability = HealAbility(self)
+        self._lastDoorTeleportTime = 0 
         
         """Update sprite when player is made"""
         self.update(CustomEvents.CHARACTER_STOPPED)
@@ -133,10 +134,24 @@ class Player(DungeonCharacter):
             self._myPositionY = new_y
 
         collidedDoor = GameWorld.getInstance().collideWithDoor(pygame.Rect(new_x, new_y, 50, 50))
-        if collidedDoor is not None:
-            self.teleportCharacter(ViewUnits.SCREEN_WIDTH//2, ViewUnits.SCREEN_HEIGHT//2)
+        current_time = pygame.time.get_ticks()
+        if collidedDoor is not None  and current_time - self._lastDoorTeleportTime > 1000:
+            self._lastDoorTeleportTime = current_time
+            current_room = GameWorld.getInstance().getCurrentRoom()
+            exit_direction = collidedDoor.getConnectedDoorDirection(current_room)
+            exit_coords = {
+                "N": (ViewUnits.SCREEN_WIDTH // 2, 200),
+                "S": (ViewUnits.SCREEN_WIDTH // 2, ViewUnits.SCREEN_HEIGHT - 200), 
+                "E": (ViewUnits.SCREEN_WIDTH - 200, ViewUnits.SCREEN_HEIGHT // 2),
+                "W": (200, ViewUnits.SCREEN_HEIGHT // 2)
+            }
+            if exit_direction in exit_coords:
+                teleport_x, teleport_y = exit_coords[exit_direction]
+                self.teleportCharacter(teleport_x, teleport_y)
+
 
         collidedItem = GameWorld.getInstance().collideWithItem(pygame.Rect(new_x, new_y, 50, 50))
+        
         if collidedItem is not None:
             self.pickup(collidedItem)
 
