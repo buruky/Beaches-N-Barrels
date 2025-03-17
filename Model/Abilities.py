@@ -71,9 +71,13 @@ class InvincibilityAbility(Ability):
     
     def activate(self):
         self.tempHealth = self.player._myHealth
+        self.tempMax = self.player.maxHealth
         self.player._myHealth = 9999
+        self.player.maxHealth = 9999
         self.player.update("HEALTH")
         self.player._myHealth = self.tempHealth
+        self.player.maxHealth = self.tempMax
+
         self.player._canDie = False  # Simulating invincibility
 
     def deactivate(self):

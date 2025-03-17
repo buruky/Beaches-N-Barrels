@@ -21,7 +21,7 @@ class SpriteFactory:
 
 
 
-        self.myRawBuddhaImage = pygame.image.load(os.path.join(assets_path, 'Buddha.jpg'))
+        self.myRawBuddhaImage = pygame.image.load(os.path.join(assets_path, 'Buddha.png'))
         self.myRawDolphinImage = pygame.image.load(os.path.join(assets_path, 'Dolphin.png'))
         self.myRawAstronautImage = pygame.image.load(os.path.join(assets_path, 'Astronaut.jpg'))
         # Load Player Images

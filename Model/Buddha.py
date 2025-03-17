@@ -13,11 +13,18 @@ class Buddha(Player):
         self._ability = InvincibilityAbility(self)
         self.update("HEALTH")
     def takeDamage(self, damage: int):
-        if self._canDie: 
-            self._myHealth -= damage
+        if damage == 0.1:
+            self._myHealth = 1000
+            self.maxHealth = 1000
+            
             self.update("HEALTH")
-            if self._myHealth <= 0:
-                self.Dies()
+
+        else:
+            if self._canDie: 
+                self._myHealth -= damage
+                self.update("HEALTH")
+                if self._myHealth <= 0:
+                    self.Dies()
     def setAbility(self):
         self.update("HEALTH")
         self._ability = InvincibilityAbility(self)

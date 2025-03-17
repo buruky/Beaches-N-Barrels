@@ -29,6 +29,8 @@ class Enemy(DungeonCharacter, ABC):
         return self._myRect
     def update(self):
         """Updates the enemy's movement and actions."""
+        self._myRect = pygame.Rect(self._myPositionX, self._myPositionY,ViewUnits.DEFAULT_WIDTH, ViewUnits.DEFAULT_HEIGHT)# will be replaced by sprite image with no location data
+
         current_time = pygame.time.get_ticks()
         if current_time - self._move_timer > 1000:  # Change direction every 1 sec
             self._direction = random.choice(["UP", "DOWN", "LEFT", "RIGHT"])
