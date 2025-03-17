@@ -93,47 +93,89 @@ class MView:
             self.redrawCharacter()
             self.needs_redraw = False
     def updateRoom(self, event: pygame.event.Event):
-        """Updates the room background and displays room coordinates at the center."""
+        """Updates the room background and creates door sprites.
+        The door that connects to a boss room uses a boss door sprite.
+        """
+        # Set background based on room type.
         if event.roomtype == "s ":
-            self.theNewRoom = self.theTest  # Set background for start room
-        else:
-            self.theNewRoom = self.normalRoomImage  # Set background for other rooms
-
-        self.myDoorList = []
-        for dir, isDoor in event.doors.items():
-            if isDoor:
-                theDoor = None
-                if dir == "N":
-                    theDoor = self.mySpriteFactory.createSpriteSheet(ord(dir), "Door",ViewUnits.SOUTH_DOOR_CORD[0],ViewUnits.SOUTH_DOOR_CORD[1])
-                    theDoor.setCurrentState("UP")
-                    self.myDoorList.append(theDoor)
-                elif dir == "S":
-                    theDoor = self.mySpriteFactory.createSpriteSheet(ord(dir), "Door",ViewUnits.NORTH_DOOR_CORD[0],ViewUnits.NORTH_DOOR_CORD[1])
-                    theDoor.setCurrentState("DOWN")
-                    self.myDoorList.append(theDoor)
-                elif dir == "W":
-                    theDoor = self.mySpriteFactory.createSpriteSheet(ord(dir), "Door",ViewUnits.EAST_DOOR_CORD[0],ViewUnits.EAST_DOOR_CORD[1])
-                    theDoor.setCurrentState("LEFT")
-                    self.myDoorList.append(theDoor)
-                else:
-                    theDoor = self.mySpriteFactory.createSpriteSheet(ord(dir), "Door",ViewUnits.WEST_DOOR_CORD[0],ViewUnits.WEST_DOOR_CORD[1])
-                    theDoor.setCurrentState("RIGHT")
-                    self.myDoorList.append(theDoor)
-        if event.roomtype == "s ":
-            self.theNewRoom = self.theTest  # Set background for start room
+            self.theNewRoom = self.theTest
         elif event.roomtype == "k ":
-            self.theNewRoom = self.keyRoomImage  # Set background for key room
+            self.theNewRoom = self.keyRoomImage
         elif event.roomtype == "n ":
-            self.theNewRoom = self.normalRoomImage  # Set background for other rooms
+            self.theNewRoom = self.normalRoomImage
         elif event.roomtype == "b ":
-            self.theNewRoom = self.normalRoomImage  # Set background for other rooms
-        if len(self.onScreenChar) != 0:
+            self.theNewRoom = self.normalRoomImage
+
+        # Clear the current door list.
+        self.myDoorList = []
+        # Get the current room from GameWorld.
+        current_room = GameWorld.getInstance().getCurrentRoom()
+        door_map = current_room.getDoorMap()  # Should return a dictionary: direction -> Door object
+        for direction, door in door_map.items():
+            if door is None:
+                continue
+            connected_room = door.getConnectedRoom(current_room)
+            if connected_room and connected_room.getRoomType().strip() == "b":
+                # This door connects to a boss room – use the boss door sprite.
+                door_sprite = self.mySpriteFactory.createSpriteSheet(
+                    ord(direction), "Door", 
+                    self._getDoorX(direction), 
+                    self._getDoorY(direction))
+                if direction == "N":
+                    door_sprite.setCurrentState("UP")
+                elif direction == "S":
+                    door_sprite.setCurrentState("DOWN")
+                elif direction == "W":
+                    door_sprite.setCurrentState("LEFT")
+                elif direction == "E":
+                    door_sprite.setCurrentState("RIGHT")
+            else:
+                # Use the normal door sprite.
+                door_sprite = self.mySpriteFactory.createSpriteSheet(
+                    ord(direction), "Door", 
+                    self._getDoorX(direction), 
+                    self._getDoorY(direction))
+                # Set the door state based on direction.
+                if direction == "N":
+                    door_sprite.setCurrentState("UP")
+                elif direction == "S":
+                    door_sprite.setCurrentState("DOWN")
+                elif direction == "W":
+                    door_sprite.setCurrentState("LEFT")
+                elif direction == "E":
+                    door_sprite.setCurrentState("RIGHT")
+            self.myDoorList.append(door_sprite)
+
+        if self.onScreenChar:
             playerSprite = None
-            for i in range(len(self.onScreenChar)):
-                if self.onScreenChar[i].getName() in ["Dolphin", "Buddha", "Astronaut"]:
-                    playerSprite = self.onScreenChar[i]
+            for sprite in self.onScreenChar:
+                if sprite.getName() in ["Dolphin", "Buddha", "Astronaut"]:
+                    playerSprite = sprite
             self.onScreenChar = [playerSprite]
         self.cords = event.cords
+
+    def _getDoorX(self, direction):
+        if direction == "N":
+            return ViewUnits.SOUTH_DOOR_CORD[0]
+        elif direction == "S":
+            return ViewUnits.NORTH_DOOR_CORD[0]
+        elif direction == "W":
+            return ViewUnits.EAST_DOOR_CORD[0]
+        elif direction == "E":
+            return ViewUnits.WEST_DOOR_CORD[0]
+        return 0
+
+    def _getDoorY(self, direction):
+        if direction == "N":
+            return ViewUnits.SOUTH_DOOR_CORD[1]
+        elif direction == "S":
+            return ViewUnits.NORTH_DOOR_CORD[1]
+        elif direction == "W":
+            return ViewUnits.EAST_DOOR_CORD[1]
+        elif direction == "E":
+            return ViewUnits.WEST_DOOR_CORD[1]
+        return 0
+
 
 
     def addCharacterToScreenList(self, theEvent:pygame.event):
