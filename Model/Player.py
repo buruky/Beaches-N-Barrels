@@ -172,6 +172,7 @@ class Player(DungeonCharacter):
         """Add an item to the player's inventory if space is available."""
         if item._name == "KeyItem":
             self.keyCount += 1
+            self.update("PICKUP_KEY")
         else:
             # Check for the first available slot (None)
             added = False
@@ -194,8 +195,12 @@ class Player(DungeonCharacter):
 
     def setMaxKeys(self):
         GameWorld.getInstance().setFoundKeys(True)
+
     def getInventory(self) -> list:
         return self.__inventory
+    
+    def getKey(self):
+        return  self.keyCount
     
     def use_item(self, idx) -> None:
         """Use the item from inventory at the specified index and replace it with None."""
@@ -273,6 +278,12 @@ class Player(DungeonCharacter):
                 EventManager.event_types[theEventName],
                 {"name": self.getName(),
                 "inventory": self.getInventory()}        
+            )
+        elif theEventName == "PICKUP_KEY":
+            event = pygame.event.Event(
+                EventManager.event_types[theEventName],
+                {"name": self.getName(),
+                "keyInventory": self.getKey()}        
             )
         pygame.event.post(event)
 

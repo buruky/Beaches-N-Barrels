@@ -162,6 +162,7 @@ class MController:
         EventManager.registerEvent(CustomEvents.SONG_CHANGE, self.change_music)
 
         EventManager.registerEvent(CustomEvents.PICKUP_ITEM, self.__myView.updateInventoryUI)
+        EventManager.registerEvent(CustomEvents.PICKUP_KEY, self.__myView.updateKeyInventoryUI)
         EventManager.registerEvent(CustomEvents.UPDATE_PROJECTILE, self.__myView.remove_projectile)
 
 

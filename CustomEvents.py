@@ -15,6 +15,7 @@ class CustomEvents:
     UPDATE_PROJECTILE:Final = "UPDATE_PROJECTILE"
     HEALTH:Final = "HEALTH"
     PICKUP_ITEM:Final = "PICKUP_ITEM"
+    PICKUP_KEY:Final = "PICKUP_KEY"
     BOSS_ROOM:Final = "BOSS_ROOM"
     SONG_CHANGE:Final = "SONG_CHANGE"
     GAME_WON:Final = "GAME_WON"

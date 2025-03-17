@@ -40,6 +40,7 @@ class MView:
         self.playerHealth = 100
         self.maxHealth = 100
         self.inventory = []
+        self.keyInventory = 0
         self.int = 0
         self.showMinimap = False
         self.needs_redraw = False
@@ -72,6 +73,10 @@ class MView:
     def updateInventoryUI(self, event: pygame.event.Event):
         self.inventory = event.inventory
         self.redrawCharacter()
+
+    def updateKeyInventoryUI(self, event: pygame.event.Event):
+        self.keyInventory = event.keyInventory
+        self.redrawCharacter()   
 
 
     def process_updates(self):
@@ -305,7 +310,7 @@ class MView:
         
         self.screen.blit(self.theNewRoom, (0, 0))
         
-        self.ui.draw_room_coordinates(self.cords)  # Draw room coordinates
+        #self.ui.draw_room_coordinates(self.cords)  # Draw room coordinates
 
         for doorSprite in self.myDoorList:
             self.screen.blit(doorSprite.getCurrentSprite(),doorSprite.getRect().topleft)
@@ -325,6 +330,7 @@ class MView:
             self.ui.draw_boss_health(self.BossHealth, self.bossMaxHealth)  # Draw health  
 
         self.ui.draw_inventory(self.inventory)  # Draw inventory
+        self.ui.draw_key_count(self.keyInventory)
         self.ui.draw_health(self.playerHealth, self.maxHealth)  # Draw health  
         pygame.display.flip()
 
