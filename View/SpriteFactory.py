@@ -48,8 +48,7 @@ class SpriteFactory:
         self.myRawKeyImage = pygame.image.load(os.path.join(assets_path, 'key_item.png'))
         # Resize and Flip Sprites
 
-        self.dolphinImage = pygame.transform.scale(self.myRawDolphinImage, ViewUnits.DEFAULT_SPRITE_DIM)  
-        self.dolphinImage2 = pygame.transform.flip(self.dolphinImage, True, False)  
+       
 
         self.buddhaImage = pygame.transform.scale(self.myRawBuddhaImage, ViewUnits.DEFAULT_SPRITE_DIM)  # NEW
         self.buddhaImage2 = pygame.transform.flip(self.buddhaImage, True, False)  # NEW
@@ -145,13 +144,14 @@ class SpriteFactory:
 
         for image_file in image_files:
             if re.search(theState, image_file):
+                
                 image_path = os.path.join(assets_folder, image_file)
                 image = pygame.image.load(image_path)
                 images.append(image)
         return images
     def createDolphinSpriteSheet(self, theId, thePositionX, thePositionY):
         """Creates a Dolphin sprite sheet."""
-        imageDict = {ViewUnits.DEFAULT_STATE_NAME: [self.dolphinImage, self.dolphinImage2]}  
+       
         imageDict = {ViewUnits.DEFAULT_STATE_NAME: self.getAssetList(self.DOLPHIN_STRING, ViewUnits.DEFAULT_STATE_NAME),
                      ViewUnits.DIRECTION_UP: self.getAssetList(self.DOLPHIN_STRING, ViewUnits.DIRECTION_UP),
                      ViewUnits.DIRECTION_DOWN: self.getAssetList(self.DOLPHIN_STRING,ViewUnits.DIRECTION_DOWN),
@@ -184,7 +184,13 @@ class SpriteFactory:
 
     def createBuddhaSpriteSheet(self, theId, thePositionX, thePositionY):
         """Creates a Buddha sprite sheet."""
-        imageDict = {ViewUnits.DEFAULT_STATE_NAME: [self.buddhaImage, self.buddhaImage2]}  
+        imageDict = imageDict = {
+                    ViewUnits.DEFAULT_STATE_NAME: self.getAssetList(self.BUDDHA_STRING, ViewUnits.DEFAULT_STATE_NAME),
+                     ViewUnits.DIRECTION_UP: self.getAssetList(self.BUDDHA_STRING, ViewUnits.DIRECTION_UP),
+                     ViewUnits.DIRECTION_DOWN: self.getAssetList(self.BUDDHA_STRING,ViewUnits.DIRECTION_DOWN),
+                     ViewUnits.DIRECTION_LEFT: self.getAssetList(self.BUDDHA_STRING, ViewUnits.DIRECTION_LEFT),
+                     ViewUnits.DIRECTION_RIGHT: self.getAssetList(self.BUDDHA_STRING, ViewUnits.DIRECTION_RIGHT) 
+                    }    
         buddhaRect = copy.copy(ViewUnits.DEFAULT_RECT)
         buddhaRect.x = thePositionX
         buddhaRect.y = thePositionY
