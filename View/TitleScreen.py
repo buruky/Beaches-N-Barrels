@@ -37,7 +37,7 @@ class TitleScreen:
         assets_path = os.path.join(current_directory, '..', 'Assets')
         pygame.mixer.init()
         pygame.mixer.music.load(os.path.join(assets_path, "waves.mp3"))  # Beach wave sound
-        pygame.mixer.music.set_volume(0.2)
+        pygame.mixer.music.set_volume(0.4)
         pygame.mixer.music.play(-1)  # Loop indefinitely
         assets_path = os.path.join(os.path.dirname(__file__), "..", "Assets")
         self.shoot_sound = pygame.mixer.Sound(os.path.join(assets_path, "BeachTheme.mp3"))
@@ -226,6 +226,7 @@ class TitleScreen:
         assets_path = os.path.join(current_directory, '..', 'Assets')
         self.shoot_sound.stop()
         self.shoot_sound.play()
+        pygame.mixer.music.set_volume(.2)
         # Load character selection images
         dolphin_img = pygame.image.load(os.path.join(assets_path, 'Dolphin.png'))
         buddha_img = pygame.image.load(os.path.join(assets_path, 'Buddha.png'))
