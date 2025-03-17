@@ -32,7 +32,7 @@ class TitleScreen:
         current_directory = os.path.dirname(__file__)
         assets_path = os.path.join(current_directory, '..', 'Assets')
         pygame.mixer.init()
-        pygame.mixer.music.load(os.path.join(assets_path, "boom.mp3"))  # Beach wave sound
+        pygame.mixer.music.load(os.path.join(assets_path, "waves.mp3"))  # Beach wave sound
 
         pygame.mixer.music.set_volume(0.2)
         pygame.mixer.music.play(-1)  # Loop indefinitely
