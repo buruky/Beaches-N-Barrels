@@ -65,6 +65,7 @@ class FloorFactory:
         grid[4][8] = self.roomFact.createRoom("k ", 4, 8)
         
         # Manually set up doors (optional, depending on how doors are managed)
+        self.keys_min = 2
         doors = self.connect_rooms(grid)
         self.grid = grid
         return Floor(grid, doors)

@@ -11,6 +11,7 @@ class Shark(Enemy):
     
     def __init__(self, attackDamage: int, healthPoints: int, positionX: int, positionY: int, speed: int, shoot_distance: int = 300):
         super().__init__("Shark", attackDamage, healthPoints, speed, positionX, positionY)
+        
         self.shoot_distance = shoot_distance  # Distance for the shark to shoot at the player
         self.special_attack_cooldown = 5000  # Time between special attacks (5 seconds)
         self.last_special_attack_time = 0
@@ -31,6 +32,7 @@ class Shark(Enemy):
         # pygame.event.post(event)
 
     def update(self):
+        self._myRect = pygame.Rect(self._myPositionX, self._myPositionY,200,200)
         """Updates the shark's movement and actions."""
         current_time = pygame.time.get_ticks()
         
@@ -50,7 +52,7 @@ class Shark(Enemy):
             }        
         )
         pygame.event.post(event)
-        
+
         # Regular movement and shooting at player
         self.moveCharacter()
 

@@ -23,6 +23,10 @@ class Enemy(DungeonCharacter, ABC):
         from .GameWorld import GameWorld
         self._game_world = GameWorld.getInstance()
 
+
+
+    def getRect(self):
+        return self._myRect
     def update(self):
         """Updates the enemy's movement and actions."""
         current_time = pygame.time.get_ticks()

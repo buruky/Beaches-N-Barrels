@@ -68,7 +68,16 @@ class Door:
             raise Exception("Door.getConnectedRoom:",
                         "THE ROOM PASSED IS NOT CONNECTED TO THIS DOOR!!!") 
     def toggleDoor(self, theNewState:bool):
-        self.isOpen = theNewState
+        boss_room = False
+        if self.__myFirstRoom.getRoomType() == "b ":
+            boss_room = True
+        elif self.__myEndRoom.getRoomType() == "b ":
+            boss_room = True
+
+        if boss_room and not theNewState:
+            self.isOpen = False
+        else:
+            self.isOpen = theNewState
 
     def getState(self):
         return self.isOpen

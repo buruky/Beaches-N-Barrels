@@ -171,8 +171,9 @@ class Player(DungeonCharacter):
             # Check if the inventory is now full after adding the item
             if None not in self.__inventory:
                 self.invFull = True
-            if self.__myFloorFactory.getKeyMin() <= self.keyCount:
-                print("FOUND ALL KEYS")
+        if self.__myFloorFactory.getKeyMin() <= self.keyCount:
+            print("FOUND ALL KEYS")
+            GameWorld.getInstance().setFoundKeys(True)
 
    
     def getInventory(self) -> list:

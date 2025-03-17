@@ -44,6 +44,7 @@ class GameWorld:
         self.item = []
         self.last_damage_time = 0  # Track last damage taken
         self.projectiles = []
+        self._foundKeys = False
 
 
 
@@ -125,6 +126,17 @@ class GameWorld:
         for entity in self.projectiles:
             if entity.is_active:
                 entity.moveCharacter()
+        for door in self.currentRoom.getDoorMap().values():
+            if door is not None:
+                connected_room = door.getConnectedRoom(self.currentRoom)
+                if connected_room.getRoomType() == "b ":
+                    if self.getFoundKeys():
+                        door.toggleDoor(True)
+
+                        break
+
+                    else:
+                        door.toggleDoor(False)
 
 
 
@@ -212,8 +224,14 @@ class GameWorld:
     def getCurrentRoom(self):
         return self.currentRoom
     
+    def setFoundKeys(self, theFound):
+        self._foundKeys = theFound
+
+    def getFoundKeys(self):
+        return self._foundKeys
+    
     def changeCurrentRoom(self, theDoor:Door):
-        
+        theDoor.isOpen = False
         newRoom = theDoor.getConnectedRoom(self.currentRoom)
         self.removeAllProjectiles()
         #self.printCheckDirection(theDoor.getCardinalDirection(self.currentRoom))
@@ -242,7 +260,7 @@ class GameWorld:
 
         for enemy in self.currentRoom.getEnemyList().get_entities():
             if enemy != ignore:  # Don't check collision with itself
-                enemy_rect = pygame.Rect(enemy.getPositionX(), enemy.getPositionY(), 50, 50)
+                enemy_rect = enemy.getRect()
                 if rect.colliderect(enemy_rect):
                     if ignore is self.player and (current_time - self.last_damage_time > DAMAGE_COOLDOWN):
                         self.player.takeDamage(enemy.getAttackDamage())  # Only take damage if cooldown has passed
@@ -284,7 +302,7 @@ class GameWorld:
                 return True
         else:#player loop
             for enemy in self.currentRoom.getEnemyList().get_entities():
-                enemy_rect = pygame.Rect(enemy.getPositionX(), enemy.getPositionY(), 50, 50)
+                enemy_rect = enemy.getRect()
                 if projectile_rect.colliderect(enemy_rect):
                     enemy.takeDamage(projectile.getAttackDamage())  # Apply projectile damage
 
