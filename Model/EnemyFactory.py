@@ -65,9 +65,9 @@ class EnemyFactory():
         elif enemy_type == "Seagull":
             return Seagull(attack, health, random.randint(0,screen_width), random.randint(0, screen_height), speed)
         elif enemy_type == "Shark":
-            return Shark(attack, health, random.randint(0,screen_width), random.randint(0, screen_height), speed)
+            return Shark(attack, health, 250, 250, speed)
         elif enemy_type == "Barrel":
-            return Barrel(attack, health, random.randint(0,screen_width), random.randint(0, screen_height), speed)
+            return Barrel(attack, health, 250, 250, speed)
 
         else:
             return None

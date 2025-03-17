@@ -10,7 +10,7 @@ class Barrel(Enemy):
     def __init__(self, attackDamage: int, healthPoints: int, positionX: int, positionY: int, speed: int):
         super().__init__("Barrel", attackDamage, healthPoints, speed, positionX, positionY)
         self.dash_cooldown = 5000  # Cooldown between dashes (5 seconds)
-        self.dash_duration = 750  # Duration of the dash (2 seconds)
+        self.dash_duration = 1100  # Duration of the dash (2 seconds)
         self.last_dash_time = 0  # Time of last dash
         self.dash_end_time = 0  # Time when the dash ends
         self.maxHealth = self._myHealth

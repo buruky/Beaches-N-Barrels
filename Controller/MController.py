@@ -111,8 +111,16 @@ class MController:
 
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_k:
                 self.__myWorld.testRandomKillEnemy()
-                self.__myView.redrawCharacter()
-            
+                event = pygame.event.Event(
+                EventManager.event_types["BOSS_ROOM"],
+                {"name": "",
+                "health": 0,
+                "maxHealth": 0,
+                "isdead":True
+                }        
+                )
+                pygame.event.post(event)
+                
             EventManager.dispatch_event(event)
 
     def __handle_keyboard(self):
@@ -123,14 +131,19 @@ class MController:
         # Handle activating abilities
         if keys[pygame.K_e]:  # Press 'E' to activate ability
             self.__myPlayer.activate_ability()
+            self.__myView.redrawCharacter()
         elif keys[pygame.K_1]:  # Press 'T' to use an item
             self.__myPlayer.use_item(0)
+            self.__myView.redrawCharacter()
         elif keys[pygame.K_2]:  # Press 'T' to use an item
             self.__myPlayer.use_item(1)
+            self.__myView.redrawCharacter()
         elif keys[pygame.K_3]:  # Press 'T' to use an item
             self.__myPlayer.use_item(2)
+            self.__myView.redrawCharacter()
         elif keys[pygame.K_4]:  # Press 'T' to use an item
             self.__myPlayer.use_item(3)
+            self.__myView.redrawCharacter()
         elif keys[pygame.K_r]:  # Press 'T' to use an item
             self.__myPlayer.takeDamage(0.1)
             self.__myView.redrawCharacter()
