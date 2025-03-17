@@ -285,7 +285,7 @@ class GameWorld:
         return False  # No collision
     
     def getFloor(self):
-        return self.__myFloorFactory
+        return self.__myFloor
 
 
     def check_projectile_collision(self, projectile,isEnemy):

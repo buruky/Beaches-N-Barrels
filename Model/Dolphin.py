@@ -23,7 +23,7 @@ class Dolphin(Player):
         # ✅ Save ability active state & elapsed time
         data["ability_active"] = self._ability.active
         if self._ability.active:
-            data["elapsed_time"] = pygame.time.get_ticks() - self._ability.start_time  # ✅ Save elapsed time
+            data["elapsed_time"] = pygame.time.get_ticks() - self._ability.start_time  #  Save elapsed time
 
         return data
 
@@ -46,9 +46,9 @@ class Dolphin(Player):
             
             if elapsed_time < dolphin._ability.duration:
                 dolphin._ability.active = True
-                dolphin._ability.start_time = pygame.time.get_ticks() - elapsed_time  # ✅ Restore exact start time
+                dolphin._ability.start_time = pygame.time.get_ticks() - elapsed_time  #  Restore exact start time
             else:
-                dolphin._ability.deactivate()  # ✅ Expired, so deactivate immediately
+                dolphin._ability.deactivate()  # Expired, so deactivate immediately
 
         dolphin._ability.update()
         return dolphin

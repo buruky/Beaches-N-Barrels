@@ -10,6 +10,7 @@ from .FloorFactory import FloorFactory
 from .Item import *
 import pygame
 from .Abilities import InvincibilityAbility
+import os
 
 class Player(DungeonCharacter):
     """Parent class for all player heroes with shared movement and event handling."""
@@ -30,7 +31,13 @@ class Player(DungeonCharacter):
         self._item_Speed = SpeedBoostAbility(self)
         self._invincibility = Invincibility(self)
         self._canDie = True
-        self._lastDoorTeleportTime = 0 
+        self._lastDoorTeleportTime = 0
+        assets_path = os.path.join(os.path.dirname(__file__), "..", "Assets/sounds")
+ 
+        self.pickup_sound = pygame.mixer.Sound(os.path.join(assets_path, "item.mp3"))  # A sound effect
+
+        # Set individual sound volumes
+        self.pickup_sound.set_volume(0.4)
         
         """Update sprite when player is made"""
         self.update(CustomEvents.CHARACTER_STOPPED)
@@ -177,6 +184,7 @@ class Player(DungeonCharacter):
         """Add an item to the player's inventory if space is available."""
         if item._name == "KeyItem":
             self.keyCount += 1
+            self.pickup_sound.play()
             self.update("PICKUP_KEY")
         else:
             # Check for the first available slot (None)
@@ -185,6 +193,7 @@ class Player(DungeonCharacter):
                 if self.__inventory[i] is None:  # Find the first empty slot
                     self.__inventory[i] = item  # Add the item to the empty slot
                     added = True
+                    self.pickup_sound.play()
                     self.update("PICKUP_ITEM")  # Notify the game that the player picked up an item
                     break
 
