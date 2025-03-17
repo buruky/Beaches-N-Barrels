@@ -182,9 +182,10 @@ class GameWorld:
         items = self.currentRoom.get_items() 
         
         for item in items:
+            if item is None:
+                continue
             if not self.player.invFull or str(item) == "Key":
                 if thePlayerRect.colliderect(item.rect):
-                    # Remove the item from the room.
                     items.remove(item)
                     return item
         return None

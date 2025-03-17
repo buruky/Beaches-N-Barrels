@@ -142,6 +142,9 @@ class MController:
             self.__myPlayer._item_Invincibility.update()
         if self.__myPlayer._item_Speed:
             self.__myPlayer._item_Speed.update()
+        if self.__myPlayer._invincibility.update:
+            self.__myPlayer._invincibility.update()
+
         return self.__myIsRunning
     
     def __InitalizeEvents(self):
@@ -162,6 +165,7 @@ class MController:
         EventManager.registerEvent(CustomEvents.SONG_CHANGE, self.change_music)
 
         EventManager.registerEvent(CustomEvents.PICKUP_ITEM, self.__myView.updateInventoryUI)
+        EventManager.registerEvent(CustomEvents.PICKUP_KEY, self.__myView.updateKeyInventoryUI)
         EventManager.registerEvent(CustomEvents.UPDATE_PROJECTILE, self.__myView.remove_projectile)
 
 
@@ -206,7 +210,7 @@ class MController:
         directions = []
 
         # Handle activating abilities
-        if keys[pygame.K_e]:  # Press 'E' to activate ability
+        if keys[pygame.K_SPACE]:  # Press 'E' to activate ability
             self.__myPlayer.activate_ability()
             self.__myView.redrawCharacter()
         elif keys[pygame.K_1]:  # Press 'T' to use an item

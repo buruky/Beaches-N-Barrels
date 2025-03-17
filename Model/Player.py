@@ -5,7 +5,7 @@ from .EventManager import EventManager
 from CustomEvents import CustomEvents
 from .GameWorld import GameWorld
 from .Abilities import HealAbility
-from .Abilities import SpeedBoostAbility
+from .Abilities import SpeedBoostAbility,Invincibility
 from .FloorFactory import FloorFactory
 from .Item import *
 import pygame
@@ -22,13 +22,14 @@ class Player(DungeonCharacter):
         self._direction = "LEFT"  # Default direction
         self._ability = None  # To be set by subclasses
         self.__myFloorFactory = FloorFactory.getInstance()
-        #item
         self.keyCount = 0
         self.invFull = False
         self.__inventory = [None,None,None,None]
         self._item_Ability = HealAbility(self)
         self._item_Invincibility = InvincibilityAbility(self)
         self._item_Speed = SpeedBoostAbility(self)
+        self._invincibility = Invincibility(self)
+        self._canDie = True
         self._lastDoorTeleportTime = 0 
         
         """Update sprite when player is made"""
@@ -45,7 +46,8 @@ class Player(DungeonCharacter):
             "positionX": self._myPositionX,
             "positionY": self._myPositionY,
             "inventory": [item.to_dict() if item is not None else None for item in self.__inventory],
-            "class": self.__class__.__name__,  # ✅ Save player subclass name
+            "class": self.__class__.__name__,  
+            "keys": self.keyCount
         }
 
 
@@ -65,7 +67,7 @@ class Player(DungeonCharacter):
 
         player_class = class_mapping.get(data.get("class", "Player"), Player)
 
-        # ✅ If the class is Dolphin/Buddha (no init params), just instantiate
+        #  If the class is Dolphin/Buddha (no init params), just instantiate
         if player_class in [Dolphin, Buddha, Astronaut]:
             player = player_class()
         else:
@@ -75,22 +77,24 @@ class Player(DungeonCharacter):
         player._myPositionX = data["positionX"]
         player._myPositionY = data["positionY"]
         player._direction = data["direction"]
+        player.keyCount = data["keys"]
+        player.update("PICKUP_KEY")
 
-        # ✅ Restore inventory correctly on the instance
+        #  Restore inventory correctly on the instance
         if "inventory" in data:
             from .Item import UsableItem  # Ensure item classes are imported
             player.__inventory = []
-
+            
             for item_data in data["inventory"]:
                 if item_data is None:
-                    player.__inventory.append(None)  # ✅ Preserve None values
+                    player.__inventory.append(None)  #  Preserve None values
                 else:
                     item_class_name = item_data.get("class", "UsableItem")  # Default to UsableItem
                     item_class = globals().get(item_class_name, UsableItem)  # Find the correct item class
 
                     if hasattr(item_class, 'from_dict'):
-                        item_instance = item_class.from_dict(item_data)  # ✅ Create the item instance
-                        player.__inventory.append(item_instance)  # ✅ Append to instance inventory
+                        item_instance = item_class.from_dict(item_data)  #  Create the item instance
+                        player.__inventory.append(item_instance)  #  Append to instance inventory
                     else:
                         print(f"Error: {item_class_name} does not have a from_dict method")
         return player
@@ -154,6 +158,7 @@ class Player(DungeonCharacter):
             if exit_direction in exit_coords:
                 teleport_x, teleport_y = exit_coords[exit_direction]
                 self.teleportCharacter(teleport_x, teleport_y)
+                self._invincibility.use()
 
 
         collidedItem = GameWorld.getInstance().collideWithItem(pygame.Rect(new_x, new_y, 50, 50))
@@ -172,6 +177,7 @@ class Player(DungeonCharacter):
         """Add an item to the player's inventory if space is available."""
         if item._name == "KeyItem":
             self.keyCount += 1
+            self.update("PICKUP_KEY")
         else:
             # Check for the first available slot (None)
             added = False
@@ -194,8 +200,12 @@ class Player(DungeonCharacter):
 
     def setMaxKeys(self):
         GameWorld.getInstance().setFoundKeys(True)
+
     def getInventory(self) -> list:
         return self.__inventory
+    
+    def getKey(self):
+        return  self.keyCount
     
     def use_item(self, idx) -> None:
         """Use the item from inventory at the specified index and replace it with None."""
@@ -214,10 +224,10 @@ class Player(DungeonCharacter):
                     self._item_Speed.use()
                     self.__inventory[idx] = None
                     self.invFull = False
-                else:
+                #else:
                     # Handle other types of items (abilities, consumables, etc.)
                     # Replace the item with None once used
-                    print("No usable item at this slot or ability on cooldown.")
+                    # print("No usable item at this slot or ability on cooldown.")
                     # self.__inventory[idx] = None  # Replace the used item with None
 
      
@@ -233,10 +243,11 @@ class Player(DungeonCharacter):
             self._myHealth = 1000
             self.maxHealth = 1000
         else:
-            self._myHealth -= damage
+            if self._canDie == True:
+                self._myHealth -= damage
         # print("player health after damage: ",self._myHealth)
         self.update("HEALTH")
-        if self._myHealth <= 0:
+        if self._myHealth <= 0 :
             self.Dies()
 
 
@@ -245,7 +256,10 @@ class Player(DungeonCharacter):
         if self._ability:
             self._ability.use()
 
-
+    def setCanDie(self,canDie):
+        self._canDie = canDie
+    
+    
     def update(self, theEventName: str):
         if theEventName == CustomEvents.CHARACTER_MOVED:
             state = self._direction
@@ -273,6 +287,12 @@ class Player(DungeonCharacter):
                 EventManager.event_types[theEventName],
                 {"name": self.getName(),
                 "inventory": self.getInventory()}        
+            )
+        elif theEventName == "PICKUP_KEY":
+            event = pygame.event.Event(
+                EventManager.event_types[theEventName],
+                {"name": self.getName(),
+                "keyInventory": self.getKey()}        
             )
         pygame.event.post(event)
 

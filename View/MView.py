@@ -18,11 +18,15 @@ class MView:
         player_image_path2 = os.path.join(current_directory, '..', 'Assets', 'background-normalRoom.png')
         self.myRawPlayerImage2 = pygame.image.load(player_image_path2)
         self.theTest2 = pygame.transform.scale(self.myRawPlayerImage2, (ViewUnits.SCREEN_WIDTH,ViewUnits.SCREEN_HEIGHT))
-        player_image_path3 = os.path.join(current_directory, '..', 'Assets', 'background-normalRoom.png')
+        player_image_path3 = os.path.join(current_directory, '..', 'Assets', 'key.png')
         self.keyRoomBackground = pygame.image.load(player_image_path3)
         self.theTest3 = pygame.transform.scale(self.keyRoomBackground, (ViewUnits.SCREEN_WIDTH,ViewUnits.SCREEN_HEIGHT))
         self.bossRoomPath = os.path.join(current_directory, '..', 'Assets', 'background-bossRoom.png')        
         # self.BossRoom = pygame.image.load(self.bossRoomPath)
+        font_path = os.path.join(os.path.dirname(__file__), "..", "Assets", "editundo.ttf")
+        self.font_small = pygame.font.Font(font_path, 25)  # Small font for inventory
+        self.font_med = pygame.font.Font(font_path, 37)
+        self.font_large = pygame.font.Font(font_path, 50)  # Large font for health
         
 
         door_image_path = os.path.join(current_directory, '..', 'Assets', 'door.png')
@@ -40,10 +44,11 @@ class MView:
         self.playerHealth = 100
         self.maxHealth = 100
         self.inventory = []
+        self.keyInventory = 0
         self.int = 0
         self.showMinimap = False
         self.needs_redraw = False
-        self.minimap_rect = pygame.Rect(screen_width - 320, 20, 350, 350)  
+        self.minimap_rect = pygame.Rect(screen_width - 350 , 0, 350, 350)  
         self.ui = UI(self.screen)  # Create the UI instance
         # self.theNewRoom = (10,10,10)
         self.bossRoom = True
@@ -72,6 +77,10 @@ class MView:
     def updateInventoryUI(self, event: pygame.event.Event):
         self.inventory = event.inventory
         self.redrawCharacter()
+
+    def updateKeyInventoryUI(self, event: pygame.event.Event):
+        self.keyInventory = event.keyInventory
+        self.redrawCharacter()   
 
 
     def process_updates(self):
@@ -262,69 +271,74 @@ class MView:
             # Draw the sprite at its designated position.
             self.screen.blit(item_sprite.getCurrentSprite(), item_sprite.getRect().topleft)
     def draw_minimap(self):
-        """Draws a minimap of the floor using rectangles to represent rooms."""
+        """Draws a minimap of the floor using rounded rectangles to represent rooms with beach-themed colors and a border."""
         gameworld = GameWorld.getInstance()
         floor = gameworld.getFloor()  
         grid = floor.get_dungeon()  
         grid_rows = len(grid)
         grid_cols = len(grid[0]) if grid_rows > 0 else 0
-        # Use the defined minimap rect to set the drawing area.
-        minimap_area = self.minimap_rect  # Ensure this is set (e.g., in __init__)
+        minimap_area = self.minimap_rect  
         cell_width = minimap_area.width / grid_cols
         cell_height = minimap_area.height / grid_rows
+
+        # Use a border_radius for rounded corners.
+        border_radius = 5
 
         for row in range(grid_rows):
             for col in range(grid_cols):
                 room = grid[row][col]
                 if room:
-                    rect_x = minimap_area.x + col * cell_width 
-                    rect_y = minimap_area.y + row * cell_height 
+                    # Calculate position of each cell in the minimap.
+                    rect_x = minimap_area.x + col * cell_width
+                    rect_y = minimap_area.y + row * cell_height
+
                     room_type = room.getRoomType()
+                    # Beach-themed colors:
                     if room_type == "s ":
-                        color = (0, 255, 0 , 180)
+                        color = (173, 216, 230)
                     elif room_type == "n ":
-                        color = (124, 113, 113) 
+                        color = (240, 230, 140)  
                     elif room_type == "k ":
-                        color = (0, 0, 255) 
-                        key_sprite = self.mySpriteFactory.createKeyIconSpriteSheet(id(room), rect_x, rect_y)
-                        #self.screen.blit(key_sprite.getCurrentSprite(), (rect_x, rect_y))
+                        color = (255, 140, 120)
                     elif room_type == "b ":
-                        color = (255, 0, 0)    # Red for boss room.
-                        #crab_sprite = self.mySpriteFactory.createCrabSpriteSheet(id(room), rect_x, rect_y)
-                        #self.screen.blit(crab_sprite.getCurrentSprite(), (rect_x, rect_y))
+                        color = (160, 0, 0) 
                     else:
-                        color = (100, 100, 100)
-                    # Calculate rectangle position in the minimap.
-                    
-                    rect = pygame.Rect(rect_x - 30, rect_y - 30, cell_width - 5, cell_height - 5)
-                    pygame.draw.rect(self.screen, color, rect)
-                    pygame.draw.rect(self.screen, (0, 0, 0), rect, 2)
-    
+                        color = (200, 200, 200)
+
+                    rect = pygame.Rect(rect_x, rect_y, cell_width - 2, cell_height - 2)
+                    pygame.draw.rect(self.screen, color, rect, border_radius=border_radius)
+                    pygame.draw.rect(self.screen, (0, 0, 0), rect, 2, border_radius=border_radius)
+
     def redrawCharacter(self):
         """Clears the screen, redraws the room, characters, and room coordinates."""
         
         self.screen.blit(self.theNewRoom, (0, 0))
         
-        self.ui.draw_room_coordinates(self.cords)  # Draw room coordinates
-
+        #self.ui.draw_room_coordinates(self.cords)  # Draw room coordinates
         for doorSprite in self.myDoorList:
             self.screen.blit(doorSprite.getCurrentSprite(),doorSprite.getRect().topleft)
-        
+        current_room = GameWorld.getInstance().getCurrentRoom()
+        if current_room is not None:
+            self.draw_room_items(current_room)
         # Draw characters
         for currentSprite in self.onScreenChar:
             self.screen.blit(currentSprite.getCurrentSprite(), currentSprite.getRect().topleft)
 
-        
-        
-        current_room = GameWorld.getInstance().getCurrentRoom()
-        if current_room is not None:
-            self.draw_room_items(current_room)
         if self.showMinimap:
             self.draw_minimap()  
+        else:
+            title_surface = self.font_small.render("\"SHIFT\" for", True, (255, 215, 0))  
+            title_rect = title_surface.get_rect(center=(ViewUnits.SCREEN_WIDTH-80, 30))
+            self.screen.blit(title_surface, title_rect)
+            title_surface1 = self.font_small.render("Minimap", True, (255, 215, 0))  
+            title_rect1 = title_surface.get_rect(center=(ViewUnits.SCREEN_WIDTH-50, 50))
+            self.screen.blit(title_surface, title_rect)
+            self.screen.blit(title_surface1, title_rect1)
         if not self.bossRoom:
             self.ui.draw_boss_health(self.BossHealth, self.bossMaxHealth)  # Draw health  
 
         self.ui.draw_inventory(self.inventory)  # Draw inventory
+        self.ui.draw_key_count(self.keyInventory)
         self.ui.draw_health(self.playerHealth, self.maxHealth)  # Draw health  
         pygame.display.flip()
 
