@@ -108,7 +108,6 @@ class MView:
             self.theNewRoom = self.theTest  # Set background for start room
         elif event.roomtype == "k ":
             self.theNewRoom = self.theTest3  # Set background for key room
-            print("Key")
         elif event.roomtype == "n ":
             self.theNewRoom = self.theTest2  # Set background for other rooms
         elif event.roomtype == "b ":

@@ -30,7 +30,7 @@ class Ability:
     def deactivate(self):
         """Stops the ability after duration."""
         self.active = False
-        print(f"{self.__class__.__name__} ability ended.")
+        # print(f"{self.__class__.__name__} ability ended.")
 
 class SpeedBoostAbility(Ability):
     """Temporarily increases speed."""
@@ -38,11 +38,9 @@ class SpeedBoostAbility(Ability):
         super().__init__(player, duration=3000)  # Set specific duration for speed boost
 
     def activate(self):
-        print("Speed Boost Activated!")
         self.player._mySpeed *= 2  # Double speed
 
     def deactivate(self):
-        print("Speed Boost Ended.")
         self.player._mySpeed /= 2  # Restore speed
         super().deactivate()
 
@@ -52,14 +50,12 @@ class HealAbility(Ability):
         super().__init__(player, duration=3000)  # Set specific duration for speed boost
 
     def activate(self):
-        print("Heal Activated!")
         self.player._myHealth += 50  # Increase health by 50
         if self.player._myHealth > self.player.getMaxHealth():
             self.player.setMaxHealth(self.player._myHealth)
-        # self.player.takeDamage(0)
+        self.player.takeDamage(0)
 
     def deactivate(self):
-        print("Heal Ended.")
         # self.player._myHealth -= 50
         self.player.takeDamage(0)
 
@@ -74,7 +70,6 @@ class InvincibilityAbility(Ability):
 
     
     def activate(self):
-        print("Invincibility Activated!")
         self.tempHealth = self.player._myHealth
         self.player._myHealth = 9999
         self.player.update("HEALTH")
@@ -82,7 +77,6 @@ class InvincibilityAbility(Ability):
         self.player._canDie = False  # Simulating invincibility
 
     def deactivate(self):
-        print("Invincibility Ended.")
 
         self.player.update("HEALTH")
         self.player._canDie = True
@@ -94,12 +88,10 @@ class LowGravityAbility(Ability):
         super().__init__(player, duration=4000)  # Set specific duration for speed boost
     
     def activate(self):
-        print("Low Gravity Activated!")
         randX = random.randint(0, ViewUnits.SCREEN_WIDTH)
         randY = random.randint(0, ViewUnits.SCREEN_HEIGHT)
         self.player.teleportCharacter(randX, randY)
 
     def deactivate(self):
-        print("Low Gravity Ended.")
         # self.player._mySpeed /= 0.5
         super().deactivate()

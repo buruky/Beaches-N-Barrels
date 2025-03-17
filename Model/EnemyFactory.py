@@ -77,9 +77,8 @@ class EnemyFactory():
             cursor = connection.cursor()
             cursor.execute("SELECT * FROM enemy_data")
             rows = cursor.fetchall()
-            print("Loaded enemy data from database:")
-            for row in rows:
-                print(row)
+            # for row in rows:
+            #     print(row)
             connection.close()
         except Exception as e:
             print("Error connecting to database:", e)
@@ -100,7 +99,6 @@ class EnemyFactory():
         4: ["Seagull", "Seagull"], # Stronger enemies
         5: ["Crab","Crab","BeachBall", "Seagull"],  # High difficulty room
         }
-        print(num)
         # Retrieve the enemy names based on difficulty
         if num in enemy_templates:
             for enemy_name in enemy_templates[num]:

@@ -151,7 +151,6 @@ class Player(DungeonCharacter):
         """Add an item to the player's inventory if space is available."""
         if item._name == "KeyItem":
             self.keyCount += 1
-            print(self.keyCount)
         else:
             # Check for the first available slot (None)
             added = False
@@ -159,8 +158,6 @@ class Player(DungeonCharacter):
                 if self.__inventory[i] is None:  # Find the first empty slot
                     self.__inventory[i] = item  # Add the item to the empty slot
                     added = True
-                    print(f"Picked up {item} and added it to inventory.")
-                    print([str(obj) if obj else "Empty" for obj in self.__inventory])
                     self.update("PICKUP_ITEM")  # Notify the game that the player picked up an item
                     break
 
@@ -172,7 +169,6 @@ class Player(DungeonCharacter):
             if None not in self.__inventory:
                 self.invFull = True
         if self.__myFloorFactory.getKeyMin() <= self.keyCount:
-            print("FOUND ALL KEYS")
             GameWorld.getInstance().setFoundKeys(True)
 
    
@@ -190,15 +186,10 @@ class Player(DungeonCharacter):
                         self._item_Ability.use()  # Use the ability associated with the item
                         self.__inventory[idx] = None  # Replace the used item with None in the inventory
                         self.invFull = False  # Mark inventory as not full
-                        print(f"Used {item._name}. Replaced with None.")
-                        print([str(obj) if obj else "Empty" for obj in self.__inventory])  # Print remaining items in inventory
                 else:
                     # Handle other types of items (abilities, consumables, etc.)
-                    print(f"Using {item._name}...")
                     # Replace the item with None once used
                     self.__inventory[idx] = None  # Replace the used item with None
-                    print(f"Used {item._name}. Replaced with None.")
-                    print([str(obj) if obj else "Empty" for obj in self.__inventory])  # Print remaining items in inventory
 
 
         #else:
@@ -217,7 +208,7 @@ class Player(DungeonCharacter):
             self.maxHealth = 1000
         else:
             self._myHealth -= damage
-        print("player health after damage: ",self._myHealth)
+        # print("player health after damage: ",self._myHealth)
         self.update("HEALTH")
         if self._myHealth <= 0:
             self.Dies()

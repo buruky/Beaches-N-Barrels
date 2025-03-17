@@ -25,7 +25,6 @@ def initialize_enemy_db(db_path="db/enemies.db"):
     cursor.execute("INSERT INTO enemy_data (enemy_type, attack, health, speed) VALUES ('Seagull', 60, 30, 1)")
     cursor.execute("INSERT INTO enemy_data (enemy_type, attack, health, speed) VALUES ('Shark', 60, 5000, 2)")
     cursor.execute("INSERT INTO enemy_data (enemy_type, attack, health, speed) VALUES ('Barrel', 60, 500, 2)")
-    print("Default enemy data inserted.")
     
     connection.commit()
     connection.close()

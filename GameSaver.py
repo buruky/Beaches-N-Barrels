@@ -18,7 +18,6 @@ class GameSaver:
         try:
             with open(cls.SAVE_FILE, "wb") as file:
                 pickle.dump(save_data, file)
-            pprint.pprint(save_data, width=120)  # Pretty-print saved data
             print("Game saved successfully!")
         except Exception as e:
             print(f"Error saving game: {e}")

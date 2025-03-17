@@ -55,7 +55,6 @@ class Floor:
             [Room.from_dict(room) if room else None for room in row]
             for row in data["grid"]
         ]
-        print("GGGGGGGGGG")
 
         # Reconstruct doors (without linking rooms yet)
         door_list = [Door.from_dict(door) for door in data["door_list"]]

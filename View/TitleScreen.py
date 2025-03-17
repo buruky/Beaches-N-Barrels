@@ -102,7 +102,6 @@ class TitleScreen:
                     elif self.load_button.collidepoint(event.pos):
                         return "Load"  
                     elif self.quit_button.collidepoint(event.pos):
-                        print("Quit button clicked!")  # Debugging line
                         pygame.quit()
                         exit()
                     elif self.demo_button.collidepoint(event.pos):  # NEW handle demo button click

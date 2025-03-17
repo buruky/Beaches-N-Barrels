@@ -81,7 +81,7 @@ class Barrel(Enemy):
         self._check_collision_and_update_position(new_x, new_y, self)
     def Dies(self):
         """Handles enemy death."""
-        print(f"{self._name} has been defeated!")
+        # print(f"{self._name} has been defeated!")
         event = pygame.event.Event(
             EventManager.event_types["BOSS_ROOM"],
             {"name": self.getName(),
@@ -126,7 +126,6 @@ class Barrel(Enemy):
         new_y = self._myPositionY + direction.y * dash_distance
         
         # Debugging output to verify dash position
-        print(f"Dash towards player: new_x={new_x}, new_y={new_y}")
 
         # Update position after dash and check for collisions
         self._check_collision_and_update_position(new_x, new_y, self)
