@@ -82,7 +82,7 @@ class UI:
         bar_width = 400 
         bar_height = 30   
         right_margin = 10
-        bottom_margin = 10
+        bottom_margin = 20
         x_offset = ViewUnits.SCREEN_WIDTH - bar_width - right_margin
         y_offset = ViewUnits.SCREEN_HEIGHT - bar_height - bottom_margin
 

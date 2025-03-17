@@ -6,9 +6,6 @@ from .Room import Room
 from .EventManager import EventManager
 from .FloorFactory import FloorFactory
 from .Door import Door
-
-import pickle
-import os
 class GameWorld:
     """Singleton class representing the game world with obstacles and enemies."""
     _instance = None  # Stores the single instance
@@ -39,7 +36,7 @@ class GameWorld:
             )
         pygame.event.post(event)
   
-        self.__myFloor.print_dungeon()           
+        # self.__myFloor.print_dungeon()           
         self.player = None # player
         self.item = []
         self.last_damage_time = 0  # Track last damage taken
@@ -94,7 +91,7 @@ class GameWorld:
 
         
         #  Ensure the dungeon is printed correctly
-        self.__myFloor.print_dungeon()
+        # self.__myFloor.print_dungeon()
         #  Post event to update room state
         event = pygame.event.Event(
             EventManager.event_types[CustomEvents.CHANGED_ROOM],
@@ -234,8 +231,7 @@ class GameWorld:
         theDoor.isOpen = False
         newRoom = theDoor.getConnectedRoom(self.currentRoom)
         self.removeAllProjectiles()
-        #self.printCheckDirection(theDoor.getCardinalDirection(self.currentRoom))
-        #print(self.currentRoom.getCords()," -> ", newRoom.getCords())
+
         oldRoom = self.currentRoom
         self.currentRoom = newRoom
         self.direction = theDoor.getConnectedDoorDirection(oldRoom)
