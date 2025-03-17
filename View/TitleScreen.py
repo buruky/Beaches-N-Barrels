@@ -210,7 +210,7 @@ class TitleScreen:
         # Load character selection images
         dolphin_img = pygame.image.load(os.path.join(assets_path, 'Dolphin.png'))
         buddha_img = pygame.image.load(os.path.join(assets_path, 'Buddha.png'))
-        astronaut_img = pygame.image.load(os.path.join(assets_path, 'Astronaut.jpg'))
+        astronaut_img = pygame.image.load(os.path.join(assets_path, 'Astronaut.png'))
 
         # Scale images to fit
         img_width = ViewUnits.SCREEN_WIDTH // 4
