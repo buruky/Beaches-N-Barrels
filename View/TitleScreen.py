@@ -58,7 +58,7 @@ class TitleScreen:
         self.quit_image = pygame.image.load(os.path.join(assets_path, 'exit.png'))
         self.demo_image = pygame.image.load(os.path.join(assets_path, 'demo.png'))
         self.back_image = pygame.image.load(os.path.join(assets_path, 'back.png'))
-        self.guide_image = pygame.image.load(os.path.join(assets_path, 'back.png'))  # NEW Guide button image
+        self.guide_image = pygame.image.load(os.path.join(assets_path, 'help.png'))  # NEW Guide button image
 
         # Resize buttons if necessary
         button_width = ViewUnits.SCREEN_WIDTH // 4
@@ -68,7 +68,7 @@ class TitleScreen:
         self.quit_image = pygame.transform.scale(self.quit_image, (button_width, button_height))
         self.demo_image = pygame.transform.scale(self.demo_image, (button_width, button_height))
         self.back_image = pygame.transform.scale(self.back_image, (button_width // 1.5, button_height // 1.5))  
-        self.guide_image = pygame.transform.scale(self.guide_image, (button_width, button_height))  # NEW Guide button
+        self.guide_image = pygame.transform.scale(self.guide_image, (button_width//1.5, button_height//1.5))  # NEW Guide button
 
     def draw(self):
         """Draws the title screen UI elements with images."""
