@@ -65,7 +65,7 @@ class EnemyFactory():
         elif enemy_type == "Seagull":
             return Seagull(attack, health, random.randint(0,screen_width), random.randint(0, screen_height), speed)
         elif enemy_type == "Shark":
-            return Shark(attack, health, 250, 250, speed)
+            return Shark(attack, health, screen_width, screen_height, speed)
         elif enemy_type == "Barrel":
             return Barrel(attack, health, 250, 250, speed)
 
@@ -94,7 +94,7 @@ class EnemyFactory():
         enemyList = DungeonCharacterList()
         enemy_templates = {
         1: ["Crab", "BeachBall"],   # Easy enemies
-        2: ["Crab"], # just crab
+        2: ["BeachBall","BeachBall"], # just crab
         3: ["Seagull"],  # Seagulls add complexity
         4: ["Seagull", "Seagull"], # Stronger enemies
         5: ["Crab","Crab","BeachBall", "Seagull"],  # High difficulty room

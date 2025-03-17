@@ -5,7 +5,7 @@ from .EventManager import EventManager
 from CustomEvents import CustomEvents
 from .GameWorld import GameWorld
 from .Abilities import HealAbility
-from .Abilities import SpeedBoostAbility
+from .Abilities import SpeedBoostAbility,Invincibility
 from .FloorFactory import FloorFactory
 from .Item import *
 import pygame
@@ -22,13 +22,14 @@ class Player(DungeonCharacter):
         self._direction = "LEFT"  # Default direction
         self._ability = None  # To be set by subclasses
         self.__myFloorFactory = FloorFactory.getInstance()
-        #item
         self.keyCount = 0
         self.invFull = False
         self.__inventory = [None,None,None,None]
         self._item_Ability = HealAbility(self)
         self._item_Invincibility = InvincibilityAbility(self)
         self._item_Speed = SpeedBoostAbility(self)
+        self._invincibility = Invincibility(self)
+        self._canDie = True
         self._lastDoorTeleportTime = 0 
         
         """Update sprite when player is made"""
@@ -204,6 +205,7 @@ class Player(DungeonCharacter):
     
     def use_item(self, idx) -> None:
         """Use the item from inventory at the specified index and replace it with None."""
+        self._invincibility.use()
         if idx < len(self.__inventory):
             item = self.__inventory[idx]
             if item is not None:
@@ -219,10 +221,10 @@ class Player(DungeonCharacter):
                     self._item_Speed.use()
                     self.__inventory[idx] = None
                     self.invFull = False
-                else:
+                #else:
                     # Handle other types of items (abilities, consumables, etc.)
                     # Replace the item with None once used
-                    print("No usable item at this slot or ability on cooldown.")
+                    # print("No usable item at this slot or ability on cooldown.")
                     # self.__inventory[idx] = None  # Replace the used item with None
 
      
@@ -238,10 +240,11 @@ class Player(DungeonCharacter):
             self._myHealth = 1000
             self.maxHealth = 1000
         else:
-            self._myHealth -= damage
+            if self._canDie == True:
+                self._myHealth -= damage
         # print("player health after damage: ",self._myHealth)
         self.update("HEALTH")
-        if self._myHealth <= 0:
+        if self._myHealth <= 0 :
             self.Dies()
 
 
@@ -250,7 +253,10 @@ class Player(DungeonCharacter):
         if self._ability:
             self._ability.use()
 
-
+    def setCanDie(self,canDie):
+        self._canDie = canDie
+    
+    
     def update(self, theEventName: str):
         if theEventName == CustomEvents.CHARACTER_MOVED:
             state = self._direction

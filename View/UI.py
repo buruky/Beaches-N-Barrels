@@ -16,7 +16,7 @@ class UI:
         self.inventory_start_x = 20  # Starting X position for the inventory
         self.inventory_start_y = ViewUnits.SCREEN_HEIGHT - 100  # Starting Y position (bottom left)
         self.inventory_icon_size = 50
-        self.key_ui_x = 20
+        self.key_ui_x = 10
         self.key_ui_y = 50
     
     def draw_inventory(self, inventory):
@@ -25,7 +25,7 @@ class UI:
         inventory_width = self.inventory_icon_size * 4 + 30  # 4 slots with spacing
         inventory_height = self.inventory_icon_size + 40  # Height for the slots + label space
         x_offset = self.inventory_start_x
-        y_offset = self.inventory_start_y
+        y_offset = self.inventory_start_y + 35
 
         # Create a surface for the inventory background with transparency
         inventory_surface = pygame.Surface((inventory_width + 10, inventory_height - 30), pygame.SRCALPHA)  # Use the SRCALPHA flag for transparency
@@ -68,12 +68,12 @@ class UI:
         x = self.key_ui_x
         y = self.key_ui_y
         key_icon = self.mySpriteFactory.keyImage 
-        key_icon = pygame.transform.scale(key_icon, (50, 70))
+        key_icon = pygame.transform.scale(key_icon, (35, 50))
         self.screen.blit(key_icon, (x, y))
-        text = f"x {key_count}"
-        font = self.font_med
+        text = f"x{key_count}"
+        font = self.font_small
         text_surface = font.render(text, True, (255, 255, 255))
-        self.screen.blit(text_surface, (x + 50, y + 30))
+        self.screen.blit(text_surface, (x + 28, y + 20))
 
     def draw_health(self, player_health, max_health):
         """Draw the player's health as a red bar with a border, a heart icon on the left,
@@ -115,7 +115,7 @@ class UI:
         self.screen.blit(text_surface, text_rect)
         
         # Draw a heart icon to the left of the health bar
-        heart_icon_size = 50
+        heart_icon_size = 65
         heart_x = x_offset - heart_icon_size + 30
         heart_y = y_offset + (bar_height - heart_icon_size) // 2 
         heart_sprite = self.mySpriteFactory.heartImage  

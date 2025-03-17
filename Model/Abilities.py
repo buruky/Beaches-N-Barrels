@@ -50,9 +50,12 @@ class HealAbility(Ability):
         super().__init__(player, duration=3000)  # Set specific duration for speed boost
 
     def activate(self):
-        self.player._myHealth += 50  # Increase health by 50
-        if self.player._myHealth > self.player.getMaxHealth():
-            self.player.setMaxHealth(self.player._myHealth)
+         
+        if self.player._myHealth + 50 > self.player.getMaxHealth():
+            #self.player.setMaxHealth(self.player._myHealth)
+            self.player._myHealth = self.player.getMaxHealth()
+        else:
+            self.player._myHealth += 50 
         self.player.takeDamage(0)
 
     def deactivate(self):
@@ -78,12 +81,33 @@ class InvincibilityAbility(Ability):
         self.player._myHealth = self.tempHealth
         self.player.maxHealth = self.tempMax
 
-        self.player._canDie = False  # Simulating invincibility
+        self.player.setCanDie(False)  # Simulating invincibility
+
+    def deactivate(self):
+
+        self.player.update("HEALTH")
+        self.player.setCanDie(True)
+        super().deactivate()
+
+
+class Invincibility(Ability):
+    """Temporarily makes the player invincible."""
+    def __init__(self, player):
+        super().__init__(player, duration=50000)  # Set specific duration for speed boost
+        self.tempHealth = self.player._myHealth
+
+    
+    def activate(self):
+        self.player._canDie = False 
+        self.player.maxHealth = 9999
+        self.player.update("HEALTH")
+        print("invince")
 
     def deactivate(self):
 
         self.player.update("HEALTH")
         self.player._canDie = True
+        print("invince stop")
         super().deactivate()
 
 class LowGravityAbility(Ability):

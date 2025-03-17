@@ -18,7 +18,7 @@ class TitleScreen:
         font_path = os.path.join(os.path.dirname(__file__), "..", "Assets", "editundo.ttf")
         self.font_small = pygame.font.Font(font_path, 25)  # Small font for inventory
         self.font_med = pygame.font.Font(font_path, 40)
-        self.font_large = pygame.font.Font(font_path, 60)
+        self.font_large = pygame.font.Font(font_path, 80)
 
         # Create button rects
         self.start_button = pygame.Rect(center_x, start_y, self.start_image.get_width(), self.start_image.get_height())
@@ -71,7 +71,19 @@ class TitleScreen:
     def draw(self):
         """Draws the title screen UI elements with images."""
         self.screen.blit(self.background, (0, 0))  # Draw background
-        self.screen.blit(self.title_image, (self.title_x, self.title_y))  # Draw title
+        #self.screen.blit(self.title_image, (self.title_x, self.title_y))  # Draw title
+        title_text = "Beaches"
+        title_text2 = "and"
+        title_text3 = "Barrel's"
+        title_surface = self.font_large.render(title_text, True, (0, 0, 0))
+        title_surface2 = self.font_med.render(title_text2, True, (0, 0, 0))
+        title_surface3 = self.font_large.render(title_text3, True, (0, 0, 0))
+        title_rect = title_surface.get_rect(center=(ViewUnits.SCREEN_WIDTH/2, self.title_y -20))
+        title_rect2 = title_surface.get_rect(center=(ViewUnits.SCREEN_WIDTH/2 + 30, self.title_y + 40))
+        title_rect3 = title_surface.get_rect(center=(ViewUnits.SCREEN_WIDTH/2, self.title_y + 70))
+        self.screen.blit(title_surface, title_rect)
+        self.screen.blit(title_surface2, title_rect2)
+        self.screen.blit(title_surface3, title_rect3)
 
         # Get mouse position for hover effect
         mouse_pos = pygame.mouse.get_pos()
@@ -210,7 +222,7 @@ class TitleScreen:
         """Displays the character selection screen and returns the chosen class or None if 'Back' is pressed."""
         current_directory = os.path.dirname(__file__)
         assets_path = os.path.join(current_directory, '..', 'Assets')
-
+        
         # Load character selection images
         dolphin_img = pygame.image.load(os.path.join(assets_path, 'Dolphin.png'))
         buddha_img = pygame.image.load(os.path.join(assets_path, 'Buddha.png'))
@@ -239,7 +251,10 @@ class TitleScreen:
 
         while True:
             self.screen.blit(self.background, (0, 0))  # Redraw background
-
+            title_text = "Choose your Character"
+            title_surface = self.font_med.render(title_text, True, (0, 0, 0))
+            title_rect = title_surface.get_rect(center=(ViewUnits.SCREEN_WIDTH/2, self.title_y +50))
+            self.screen.blit(title_surface, title_rect)
             # Draw character buttons
             self.screen.blit(dolphin_img, dolphin_button.topleft)
             self.screen.blit(buddha_img, buddha_button.topleft)
