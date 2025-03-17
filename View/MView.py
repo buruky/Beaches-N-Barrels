@@ -299,13 +299,13 @@ class MView:
                     room_type = room.getRoomType()
                     # Beach-themed colors:
                     if room_type == "s ":
-                        color = (173, 216, 230)
+                        color = (0, 255, 0)
                     elif room_type == "n ":
-                        color = (240, 230, 140)  
+                        color = (128, 128, 128)  # Medium Grey  
                     elif room_type == "k ":
-                        color = (255, 140, 120)
+                        color = (255, 255, 0)
                     elif room_type == "b ":
-                        color = (160, 0, 0) 
+                        color = (255, 0, 0) 
                     else:
                         color = (200, 200, 200)
 

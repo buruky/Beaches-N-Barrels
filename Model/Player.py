@@ -135,8 +135,8 @@ class Player(DungeonCharacter):
         new_x = self._myPositionX + dx * self._mySpeed
         new_y = self._myPositionY + dy * self._mySpeed
 
-        new_x = max(0, min(ViewUnits.SCREEN_WIDTH - ViewUnits.DEFAULT_WIDTH, new_x))
-        new_y = max(0, min(ViewUnits.SCREEN_HEIGHT - ViewUnits.DEFAULT_HEIGHT, new_y))
+        new_x = max(25, min(ViewUnits.SCREEN_WIDTH - ViewUnits.DEFAULT_WIDTH - 25, new_x))
+        new_y = max(0, min(ViewUnits.SCREEN_HEIGHT - ViewUnits.DEFAULT_HEIGHT - 35, new_y))
 
         # Update position if no collision
         if not GameWorld.getInstance().check_collision(pygame.Rect(new_x, new_y, 50, 50), ignore=self):
