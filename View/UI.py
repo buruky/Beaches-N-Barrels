@@ -80,7 +80,7 @@ class UI:
         positioned in the bottom right of the screen. The bar color changes depending on health.
         """
         bar_width = 400 
-        bar_height = 40   
+        bar_height = 30   
         right_margin = 10
         bottom_margin = 10
         x_offset = ViewUnits.SCREEN_WIDTH - bar_width - right_margin
@@ -128,10 +128,10 @@ class UI:
         and a boss icon on the left side.
         """
         bar_width = 600   # Width of the health bar
-        bar_height = 30   # Height of the health bar
+        bar_height = 10   # Height of the health bar
         # Position the health bar at the top-center of the screen
         x_offset = (ViewUnits.SCREEN_WIDTH - bar_width) // 2
-        y_offset = 20  # Distance from the top
+        y_offset = 30  # Distance from the top
 
         # Draw a thick dark red border around the boss health bar
         border_color = (200, 0, 0)
