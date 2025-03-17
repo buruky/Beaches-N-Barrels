@@ -44,7 +44,11 @@ class UI:
             # If the slot is not empty, draw the item image
             if item:
                 if str(item) == "MockItem":
-                    item_image = self.mySpriteFactory.poisonImage  # Example: potion image from SpriteFactory
+                    item_image = self.mySpriteFactory.healPotionImage  # Example: potion image from SpriteFactory
+                elif str(item) == "InvincibilityItem":
+                    item_image = self.mySpriteFactory.invincePotionImage
+                elif str(item) == "SpeedItem":
+                    item_image = self.mySpriteFactory.speedPotionImage
                 else:
                     item_image = None  # Handle other item images if needed
 

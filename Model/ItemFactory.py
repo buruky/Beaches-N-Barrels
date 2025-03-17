@@ -1,5 +1,5 @@
 import random
-from .Item import MockItem, KeyItem
+from .Item import MockItem, KeyItem, invincibilityItem, SpeedItem
 from ViewUnits import ViewUnits
 
 class ItemFactory:
@@ -30,19 +30,39 @@ class ItemFactory:
             return MockItem(position)
         elif item_type.lower() == "key":
             return KeyItem(position)
+        if item_type.lower() == "invince":
+            return invincibilityItem(position)
+        elif item_type.lower() == "speed":
+            return SpeedItem(position)
         else:
             return None
-
     def createNormalTemplate(self):
         """
         Returns a list of mock items (3-5) created at random positions.
         """
         items = []
         num_items = random.randint(1, 3)
-        for _ in range(num_items):
-            pos = (random.randint(0, ViewUnits.SCREEN_WIDTH - 50),
-                   random.randint(0, ViewUnits.SCREEN_HEIGHT - 50))
+        if num_items == 1:
+            pos = (ViewUnits.SCREEN_WIDTH /2,
+                   ViewUnits.SCREEN_HEIGHT /2)
             items.append(self.createItem("mock", pos))
+        if num_items == 2:
+            pos = (ViewUnits.SCREEN_WIDTH /2,
+                   ViewUnits.SCREEN_HEIGHT - 50)
+            items.append(self.createItem("speed", pos))
+        if num_items == 3:
+            pos = (ViewUnits.SCREEN_WIDTH /2,
+                   ViewUnits.SCREEN_HEIGHT /2)
+            items.append(self.createItem("speed", pos))
+        
+        for _ in range(random.randint(1, 3)):
+            pos = (random.randint(0, ViewUnits.SCREEN_WIDTH - 50),
+                    random.randint(0, ViewUnits.SCREEN_HEIGHT - 50))
+            items.append(self.createItem("mock", pos))
+            items.append(self.createItem("speed", pos))
+            items.append(self.createItem("invince", pos))
+          
+        
         return items
 
     def createKeyTemplate(self):

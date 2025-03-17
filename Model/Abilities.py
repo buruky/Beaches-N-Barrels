@@ -38,9 +38,11 @@ class SpeedBoostAbility(Ability):
         super().__init__(player, duration=3000)  # Set specific duration for speed boost
 
     def activate(self):
+        print("Speed")
         self.player._mySpeed *= 2  # Double speed
 
     def deactivate(self):
+        print("Speed stop")
         self.player._mySpeed /= 2  # Restore speed
         super().deactivate()
 
@@ -50,12 +52,14 @@ class HealAbility(Ability):
         super().__init__(player, duration=3000)  # Set specific duration for speed boost
 
     def activate(self):
+        print("Heal")
         self.player._myHealth += 50  # Increase health by 50
         if self.player._myHealth > self.player.getMaxHealth():
             self.player.setMaxHealth(self.player._myHealth)
         self.player.takeDamage(0)
 
     def deactivate(self):
+        print("heal stop")
         # self.player._myHealth -= 50
         self.player.takeDamage(0)
 
@@ -70,6 +74,7 @@ class InvincibilityAbility(Ability):
 
     
     def activate(self):
+        print("invi")
         self.tempHealth = self.player._myHealth
         self.tempMax = self.player.maxHealth
         self.player._myHealth = 9999
@@ -81,7 +86,7 @@ class InvincibilityAbility(Ability):
         self.player._canDie = False  # Simulating invincibility
 
     def deactivate(self):
-
+        print("invi stop")
         self.player.update("HEALTH")
         self.player._canDie = True
         super().deactivate()

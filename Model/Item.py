@@ -88,7 +88,66 @@ class MockItem(UsableItem):
         item.rect = pygame.Rect(position[0], position[1], 50, 50)
 
         return item
-    
+
+class SpeedItem(UsableItem):
+    """
+    A simple test item that, when used, subtracts 10 health from the player.
+    It uses a 3-second cooldown by default.
+    """
+    def __init__(self, position=None):
+        super().__init__("SpeedItem", "This speeds you up", cooldown=3000)
+        
+        if position is None:
+            position = (10, 10)
+        self.position = position
+        # Create a collision rectangle (50x50) at the given position.
+        self.rect = pygame.Rect(position[0], position[1], 50, 50)
+   
+    def to_dict(self):
+        """Convert item to dictionary including position data."""
+        data = super().to_dict()  # Get parent class dictionary
+        data["position"] = tuple(self.position)  # Ensure it's stored as a tuple
+        data["class"] = self.__class__.__name__  # Store class type for deserialization
+        return data
+
+
+    @classmethod
+    def from_dict(cls, data):
+        """Reconstruct a MockItem from dictionary, ensuring position is properly restored."""
+        position = tuple(data.get("position", (10, 10)))  # Ensure it's a tuple
+        item = cls(position=position)
+
+        # Restore optional state fields
+        item._active = data.get("active", False)  # Default to inactive
+        item._start_time = data.get("start_time", None)  # Default to None
+
+        # Restore correct collision rectangle at the right position
+        item.rect = pygame.Rect(position[0], position[1], 50, 50)
+
+        return item
+
+class invincibilityItem(UsableItem):
+    """
+    A simple test item that, when used, subtracts 10 health from the player.
+    It uses a 3-second cooldown by default.
+    """
+    def __init__(self, position=None):
+        super().__init__("InvincibilityItem", "Grants player invincibiliity for 3 seconds", cooldown=3000)
+        
+        if position is None:
+            position = (10, 10)
+        self.position = position
+        # Create a collision rectangle (50x50) at the given position.
+        self.rect = pygame.Rect(position[0], position[1], 50, 50)
+   
+    def to_dict(self):
+        """Convert item to dictionary including position data."""
+        data = super().to_dict()  # Get parent class dictionary
+        data["position"] = tuple(self.position)  # Ensure it's stored as a tuple
+        data["class"] = self.__class__.__name__  # Store class type for deserialization
+        return data
+
+
 class KeyItem(UsableItem):
     """
     A simple test item that, when used, subtracts 10 health from the player.

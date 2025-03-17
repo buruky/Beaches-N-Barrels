@@ -138,6 +138,10 @@ class MController:
             self.__myPlayer._ability.update()
         if self.__myPlayer._item_Ability:
             self.__myPlayer._item_Ability.update()
+        if self.__myPlayer._item_Invincibility:
+            self.__myPlayer._item_Invincibility.update()
+        if self.__myPlayer._item_Speed:
+            self.__myPlayer._item_Speed.update()
         return self.__myIsRunning
     
     def __InitalizeEvents(self):
