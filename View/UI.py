@@ -127,8 +127,8 @@ class UI:
         """Draw the boss's health bar with a thick border, a semi-transparent background,
         and a boss icon on the left side.
         """
-        bar_width = 600   # Width of the health bar
-        bar_height = 10   # Height of the health bar
+        bar_width = 600   
+        bar_height = 15   
         # Position the health bar at the top-center of the screen
         x_offset = (ViewUnits.SCREEN_WIDTH - bar_width) // 2
         y_offset = 30  # Distance from the top
@@ -155,7 +155,7 @@ class UI:
                         border_radius=10)
 
         # Render the boss health text using the pixelated font
-        text_surface = self.font_med.render(f"{enemy_health}/{max_health}", True, (255, 255, 255))
+        text_surface = self.font_small.render(f"{enemy_health}/{max_health}", True, (255, 255, 255))
         text_rect = text_surface.get_rect(center=(x_offset + bar_width // 2 - 200, y_offset + bar_height // 2))
         self.screen.blit(text_surface, text_rect)
 

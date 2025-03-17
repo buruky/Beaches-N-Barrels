@@ -94,7 +94,7 @@ class InvincibilityAbility(Ability):
 class Invincibility(Ability):
     """Temporarily makes the player invincible."""
     def __init__(self, player):
-        super().__init__(player, duration=2000)  # Set specific duration for speed boost
+        super().__init__(player, duration=1500)  # Set specific duration for speed boost
         self.tempHealth = self.player._myHealth
 
     

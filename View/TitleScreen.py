@@ -224,7 +224,8 @@ class TitleScreen:
         """Displays the character selection screen and returns the chosen class or None if 'Back' is pressed."""
         current_directory = os.path.dirname(__file__)
         assets_path = os.path.join(current_directory, '..', 'Assets')
-        
+        self.shoot_sound.stop()
+        self.shoot_sound.play()
         # Load character selection images
         dolphin_img = pygame.image.load(os.path.join(assets_path, 'Dolphin.png'))
         buddha_img = pygame.image.load(os.path.join(assets_path, 'Buddha.png'))
@@ -273,10 +274,13 @@ class TitleScreen:
                     exit()
                 elif event.type == pygame.MOUSEBUTTONDOWN:
                     if dolphin_button.collidepoint(event.pos):
+                        self.shoot_sound.stop()
                         return "Dolphin"
                     elif buddha_button.collidepoint(event.pos):
+                        self.shoot_sound.stop()
                         return "Buddha"
                     elif astronaut_button.collidepoint(event.pos):
+                        self.shoot_sound.stop()
                         return "Astronaut"
                     elif back_button.collidepoint(event.pos):
                         return None  # Return to title screen

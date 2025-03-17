@@ -66,5 +66,4 @@ class RoomFactory():
         enemylist = self.__myEnemyFactory.createBossTemplate()
         room = Room(theRoomType, theX, theY, enemylist)
         self.__myItemFactory.populateRoomItems(room)
-        #print("KEY BOSS")
         return room

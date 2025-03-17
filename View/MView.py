@@ -118,7 +118,7 @@ class MView:
             if connected_room and connected_room.getRoomType().strip() == "b":
                 # This door connects to a boss room – use the boss door sprite.
                 door_sprite = self.mySpriteFactory.createSpriteSheet(
-                    ord(direction), "Door", 
+                    ord(direction), "BossDoor", 
                     self._getDoorX(direction), 
                     self._getDoorY(direction))
                 if direction == "N":

@@ -140,6 +140,8 @@ class SpriteFactory:
             return self.createProjectileAstronautSpriteSheet(theId, thePositionX, thePositionY)
         elif theName == "Door":
             return self.createDoorSpriteSheet(theId, thePositionX, thePositionY)
+        elif theName == "BossDoor":
+            return self.createBossDoorSpriteSheet(theId, thePositionX, thePositionY)
         elif theName == "Potion":
             return self.createPotionSpriteSheet(theId, thePositionX, thePositionY)  # NEW
         elif theName == "Poison":
@@ -212,6 +214,17 @@ class SpriteFactory:
                      }  
         DoorRect = pygame.Rect((thePositionX,thePositionY), (64,64))
         return SpriteSheet(theId, "Door", imageDict, DoorRect)  
+    
+    def createBossDoorSpriteSheet(self, theId, thePositionX, thePositionY):
+        imageDict = {
+            ViewUnits.DIRECTION_UP: self.getAssetList("DoorLocked", ViewUnits.DIRECTION_UP),
+            ViewUnits.DIRECTION_DOWN: self.getAssetList("DoorLocked", ViewUnits.DIRECTION_DOWN),
+            ViewUnits.DIRECTION_LEFT: self.getAssetList("DoorLocked", ViewUnits.DIRECTION_LEFT),
+            ViewUnits.DIRECTION_RIGHT: self.getAssetList("DoorLocked", ViewUnits.DIRECTION_RIGHT),
+        }
+        DoorRect = pygame.Rect((thePositionX, thePositionY), (64, 64))
+        return SpriteSheet(theId, "BossDoor", imageDict, DoorRect)
+
     
     def createSharkSpriteSheet(self, theId, thePositionX, thePositionY):
         """Creates a Dolphin sprite sheet."""
