@@ -7,7 +7,7 @@ from .Room import Room
 from ViewUnits import ViewUnits
 
 class FloorFactory:
-    _FLOOR_LEVEL = 1
+    _FLOOR_LEVEL = 2
     _instance = None  # Stores the single instance
 
     def __new__(cls):
