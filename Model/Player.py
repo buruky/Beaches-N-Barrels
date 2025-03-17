@@ -12,17 +12,19 @@ import pygame
 
 class Player(DungeonCharacter):
     """Parent class for all player heroes with shared movement and event handling."""
-    
+    MAX_INVENTORY_SIZE: Final = 4
     def __init__(self, name: str, speed: int, health: int, damage: int):
         super().__init__(damage, health, 250, 250, speed)  # Default attackDamage = 50
         self._myHealth = health
+        self.maxHealth = health
         self._name = name
         self._direction = "LEFT"  # Default direction
         self._ability = None  # To be set by subclasses
         self.__myFloorFactory = FloorFactory.getInstance()
         #item
         self.keyCount = 0
-        self.__inventory = []
+        self.invFull = False
+        self.__inventory = [None,None,None,None]
         self._item_Ability = HealAbility(self)
         
         """Update sprite when player is made"""
@@ -146,32 +148,49 @@ class Player(DungeonCharacter):
             self._direction = theDirections[-1]  # Last key pressed is priority
     
     def pickup(self, item) -> None:
+        """Add an item to the player's inventory if space is available."""
         if item._name == "KeyItem":
             self.keyCount += 1
-            print(self.keyCount)
-        else:    
-            self.__inventory.append(item)
-        print(f"Picked up {item}")
-        print([str(obj) for obj in self.__inventory])
+        else:
+            # Check for the first available slot (None)
+            added = False
+            for i in range(len(self.__inventory)):
+                if self.__inventory[i] is None:  # Find the first empty slot
+                    self.__inventory[i] = item  # Add the item to the empty slot
+                    added = True
+                    self.update("PICKUP_ITEM")  # Notify the game that the player picked up an item
+                    break
+
+            # If the inventory was full and no slot was available, display a message
+            if not added:
+                print("Inventory is full. Cannot pick up more items.")
+            
+            # Check if the inventory is now full after adding the item
+            if None not in self.__inventory:
+                self.invFull = True
         if self.__myFloorFactory.getKeyMin() <= self.keyCount:
-            print("FOUND ALL KEYS")
+            GameWorld.getInstance().setFoundKeys(True)
 
    
     def getInventory(self) -> list:
         return self.__inventory
     
-    def use_item(self) -> None:
-        ### use item when t is pressed
-        if self.__inventory:
-            item = self.__inventory[0]
-            if item._name == "MockItem":
-                if not self._item_Ability.active:
-                    self.__inventory.pop(0)
-                    self._item_Ability.use()
-                    print([str(obj) for obj in self.__inventory])
-            else:
-                #other items
-                print("other items")
+    def use_item(self, idx) -> None:
+        """Use the item from inventory at the specified index and replace it with None."""
+        if idx < len(self.__inventory):  # Ensure the index is valid
+            item = self.__inventory[idx]  # Get the item at the specified index
+            
+            if item is not None:  # Check if the item exists at the given index
+                if str(item) == "MockItem":  # Check for a specific item type (MockItem in this case)
+                    if not self._item_Ability.active:
+                        self._item_Ability.use()  # Use the ability associated with the item
+                        self.__inventory[idx] = None  # Replace the used item with None in the inventory
+                        self.invFull = False  # Mark inventory as not full
+                else:
+                    # Handle other types of items (abilities, consumables, etc.)
+                    # Replace the item with None once used
+                    self.__inventory[idx] = None  # Replace the used item with None
+
 
         #else:
             #print("No items available to use!")
@@ -181,13 +200,15 @@ class Player(DungeonCharacter):
         self._myPositionY = num2
         """If Character moves their sprite should be updated to location"""
         self.update(CustomEvents.CHARACTER_STOPPED)#might work
+
     
     def takeDamage(self, damage: int):
         if damage == 0.1:
             self._myHealth = 1000
+            self.maxHealth = 1000
         else:
             self._myHealth -= damage
-        print("player health after damage: ",self._myHealth)
+        # print("player health after damage: ",self._myHealth)
         self.update("HEALTH")
         if self._myHealth <= 0:
             self.Dies()
@@ -217,7 +238,9 @@ class Player(DungeonCharacter):
             event = pygame.event.Event(
                 EventManager.event_types[theEventName],
                 {"name": self.getName(),
-                "health": self.getHealth()}        
+                "health": self.getHealth(),
+                "maxHealth": self.getMaxHealth()
+                }        
             )
         elif theEventName == "PICKUP_ITEM":
             event = pygame.event.Event(
@@ -226,6 +249,13 @@ class Player(DungeonCharacter):
                 "inventory": self.getInventory()}        
             )
         pygame.event.post(event)
+
+    def getMaxHealth(self):
+        return self.maxHealth
+    
+    def setMaxHealth(self, health):
+        self.maxHealth = health
+        self.update("HEALTH")
 
     def update_items(self) -> None:
         """

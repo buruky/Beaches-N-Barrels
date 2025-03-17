@@ -42,6 +42,9 @@ class DungeonCharacterList:
         from .BeachBall import BeachBall
         from .Seagull import Seagull
         from .Crab import Crab  # Import all subclasses
+        from .Shark import Shark
+        from .Barrel import Barrel
+
 
         character_list = cls()  # Create an empty list
 
@@ -54,6 +57,10 @@ class DungeonCharacterList:
                 character = Crab.from_dict(char_data)  #  Correctly load Crab
             elif char_data["name"] == "Seagull":
                 character = Seagull.from_dict(char_data)  # Correctly load Seagull
+            elif char_data["name"] == "Shark":
+                character = Shark.from_dict(char_data)  # Correctly load Seagull
+            elif char_data["name"] == "Barrel":
+                character = Barrel.from_dict(char_data)  # Correctly load Seagull
             else:
                 character = Enemy.from_dict(char_data)  # Default to generic enemy
 

@@ -50,10 +50,16 @@ class MController:
             "Dolphin": Dolphin,
             "Buddha": Buddha,
             "Astronaut": Astronaut
+            
         }
-
-        self.__myPlayer = character_map.get(selected_character, Dolphin)()
-        self.__myWorld.setPlayer(self.__myPlayer)
+        if "Demo" in selected_character:
+            self.__myWorld.setDemo()
+            selected_character = selected_character.replace("Demo", "")
+            self.__myPlayer = character_map.get(selected_character, Buddha)()
+            self.__myWorld.setPlayer(self.__myPlayer)
+        else:
+            self.__myPlayer = character_map.get(selected_character, Dolphin)()
+            self.__myWorld.setPlayer(self.__myPlayer)
 
     def ControllerTick(self):
         """Main game loop tick, handling events, updating entities, and checking abilities."""
@@ -77,9 +83,12 @@ class MController:
         EventManager.registerEvent(CustomEvents.CHARACTER_MOVED, self.__myView.update_entity)
         EventManager.registerEvent(CustomEvents.CHARACTER_STOPPED, self.__myView.update_entity)
         EventManager.registerEvent(CustomEvents.PLAYER_DIED, self.__handle_character_death)
+        
         EventManager.registerEvent(CustomEvents.CHANGED_ROOM, self.__myView.updateRoom)
         EventManager.registerEvent(CustomEvents.SHOOT_PROJECTILE, self.__shoot_projectile)
         EventManager.registerEvent(CustomEvents.HEALTH, self.__myView.updateHealthUI)
+        EventManager.registerEvent(CustomEvents.BOSS_ROOM, self.__myView.updateBossHealthUI)
+
         EventManager.registerEvent(CustomEvents.PICKUP_ITEM, self.__myView.updateInventoryUI)
         EventManager.registerEvent(CustomEvents.UPDATE_PROJECTILE, self.__myView.remove_projectile)
 
@@ -102,8 +111,16 @@ class MController:
 
             elif event.type == pygame.KEYDOWN and event.key == pygame.K_k:
                 self.__myWorld.testRandomKillEnemy()
-                self.__myView.redrawCharacter()
-            
+                event = pygame.event.Event(
+                EventManager.event_types["BOSS_ROOM"],
+                {"name": "",
+                "health": 0,
+                "maxHealth": 0,
+                "isdead":True
+                }        
+                )
+                pygame.event.post(event)
+                
             EventManager.dispatch_event(event)
 
     def __handle_keyboard(self):
@@ -114,10 +131,22 @@ class MController:
         # Handle activating abilities
         if keys[pygame.K_e]:  # Press 'E' to activate ability
             self.__myPlayer.activate_ability()
-        elif keys[pygame.K_t]:  # Press 'T' to use an item
-            self.__myPlayer.use_item()
+            self.__myView.redrawCharacter()
+        elif keys[pygame.K_1]:  # Press 'T' to use an item
+            self.__myPlayer.use_item(0)
+            self.__myView.redrawCharacter()
+        elif keys[pygame.K_2]:  # Press 'T' to use an item
+            self.__myPlayer.use_item(1)
+            self.__myView.redrawCharacter()
+        elif keys[pygame.K_3]:  # Press 'T' to use an item
+            self.__myPlayer.use_item(2)
+            self.__myView.redrawCharacter()
+        elif keys[pygame.K_4]:  # Press 'T' to use an item
+            self.__myPlayer.use_item(3)
+            self.__myView.redrawCharacter()
         elif keys[pygame.K_r]:  # Press 'T' to use an item
             self.__myPlayer.takeDamage(0.1)
+            self.__myView.redrawCharacter()
         
         
         # Handle minimap visibility change

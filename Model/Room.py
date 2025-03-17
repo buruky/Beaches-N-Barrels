@@ -45,6 +45,7 @@ class Room:
         from .Item import UsableItem
         # room.__items = [UsableItem.from_dict(item_data) for item_data in data["items"]]  # Restore items
         room.__myDoorMap = {direction: Door.from_dict(door) for direction, door in data["doors"].items()}
+        # print("GGGGGGGGGG")
         return room  
 
 

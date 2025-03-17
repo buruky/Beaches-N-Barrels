@@ -56,8 +56,9 @@ class RoomFactory():
         self.__myItemFactory.populateRoomItems(room)
         return room
 
-    def createKeyRoom(self, theRoomType, theX, theY):    
-        room = Room(theRoomType, theX, theY, DungeonCharacterList())
+    def createKeyRoom(self, theRoomType, theX, theY): 
+        enemylist = self.__myEnemyFactory.createKeyTemplate()   
+        room = Room(theRoomType, theX, theY, enemylist)
         self.__myItemFactory.populateRoomItems(room)
         return room
 

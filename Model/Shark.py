@@ -2,14 +2,16 @@ from .Enemy import Enemy
 import pygame
 import random
 import math
+from .EventManager import EventManager
 
-from ViewUnits import ViewUnits
+
 
 class Shark(Enemy):
     """A boss enemy representing a shark with special abilities."""
     
     def __init__(self, attackDamage: int, healthPoints: int, positionX: int, positionY: int, speed: int, shoot_distance: int = 300):
         super().__init__("Shark", attackDamage, healthPoints, speed, positionX, positionY)
+        
         self.shoot_distance = shoot_distance  # Distance for the shark to shoot at the player
         self.special_attack_cooldown = 5000  # Time between special attacks (5 seconds)
         self.last_special_attack_time = 0
@@ -19,8 +21,18 @@ class Shark(Enemy):
 
         self.is_angry = False  # Track if the shark is in an "angry" state for special attacks
         self.boss_health_threshold = healthPoints * 0.5  # The health threshold at which the shark becomes angrier
+        self.maxHealth = self._myHealth
+        # event = pygame.event.Event(
+        #     EventManager.event_types["BOSS_ROOM"],
+        #     {"name": self.getName(),
+        #     "health": self._myHealth,
+        #     "maxHealth": self.maxHealth
+        #     }        
+        # )
+        # pygame.event.post(event)
 
     def update(self):
+        self._myRect = pygame.Rect(self._myPositionX, self._myPositionY,200,200)
         """Updates the shark's movement and actions."""
         current_time = pygame.time.get_ticks()
         
@@ -31,6 +43,15 @@ class Shark(Enemy):
         # Perform the special attack if the cooldown allows
         if current_time - self.last_special_attack_time >= self.special_attack_cooldown:
             self.perform_special_attack()
+        event = pygame.event.Event(
+            EventManager.event_types["BOSS_ROOM"],
+            {"name": self.getName(),
+            "health": self._myHealth,
+            "maxHealth": self.maxHealth,
+            "isdead":False
+            }        
+        )
+        pygame.event.post(event)
 
         # Regular movement and shooting at player
         self.moveCharacter()
@@ -101,3 +122,52 @@ class Shark(Enemy):
             # Shoot in the direction of the player
             self.shoot("SHOOT_PROJECTILE", angle)
             self.last_shot_time = current_time  # Update last shot tim
+
+    def Dies(self):
+        """Handles enemy death."""
+        print(f"{self._name} has been defeated!")
+        event = pygame.event.Event(
+            EventManager.event_types["BOSS_ROOM"],
+            {"name": self.getName(),
+            "health": self._myHealth,
+            "maxHealth": self.maxHealth,
+            "isdead": True
+            }        
+        )
+        pygame.event.post(event)
+        from .GameWorld import GameWorld
+        GameWorld.getInstance().removeEnemy(self)
+
+
+    def to_dict(self):
+            """Convert enemy state to a dictionary for serialization."""
+            return {
+                "name": self._name,
+                "speed": self._mySpeed,
+                "health": self._myHealth,
+                "direction": self._direction,
+                "damage": self._myAttackDamage,
+                "positionX": self._myPositionX,
+                "positionY": self._myPositionY,
+            }
+    @classmethod
+    def from_dict(cls, data):
+        """Reconstruct a Shark enemy from a dictionary, ensuring it properly tracks the player."""
+        Shark = cls(
+            data["damage"],
+            data["health"],
+            data["positionX"],
+            data["positionY"],
+            data["speed"]
+        )
+
+        # Restore game world reference
+        from .GameWorld import GameWorld
+        Shark._game_world = GameWorld.getInstance()
+
+        # ✅ Restore movement state correctly
+        Shark._direction = data["direction"]
+        Shark.last_shot_time = pygame.time.get_ticks()  # Reset shot cooldown
+
+
+        return Shark

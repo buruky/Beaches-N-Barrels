@@ -26,7 +26,6 @@ class GameWorld:
         self.__myFloorFactory = FloorFactory.getInstance()
         self.__myFloor = self.__myFloorFactory.createFloor()
         self.currentRoom = self.__myFloor.getStartRoom()
-        self.maxProj= 10
            
     
         event = pygame.event.Event(
@@ -39,13 +38,13 @@ class GameWorld:
                 }
             )
         pygame.event.post(event)
-        print(self.currentRoom.getDoorMap())
   
         self.__myFloor.print_dungeon()           
         self.player = None # player
         self.item = []
         self.last_damage_time = 0  # Track last damage taken
         self.projectiles = []
+        self._foundKeys = False
 
 
 
@@ -56,8 +55,19 @@ class GameWorld:
             cls._instance = cls()  # This triggers __new__()
         return cls._instance
 
-
-
+    def setDemo(self):
+        self.__myFloor = self.__myFloorFactory.createDemoFloor()
+        self.currentRoom = self.__myFloor.getStartRoom()
+        event = pygame.event.Event(
+            EventManager.event_types[CustomEvents.CHANGED_ROOM],
+            {
+                "roomtype": self.currentRoom.getRoomType(),
+                "doors": self.currentRoom.getDoorPos(),
+                "cords": self.currentRoom.getCords(),
+                "direction": None
+            }
+        )
+        pygame.event.post(event)
     def to_dict(self):
         """Serialize the entire GameWorld into a dictionary."""
         return {
@@ -85,13 +95,12 @@ class GameWorld:
         
         #  Ensure the dungeon is printed correctly
         self.__myFloor.print_dungeon()
-
         #  Post event to update room state
         event = pygame.event.Event(
             EventManager.event_types[CustomEvents.CHANGED_ROOM],
             {
                 "roomtype": self.currentRoom.getRoomType(),
-                "doors": self.currentRoom.getDoorMap(),
+                "doors": self.currentRoom.getDoorPos(),
                 "cords": self.currentRoom.getCords(),
                 "direction": None
             }
@@ -103,9 +112,6 @@ class GameWorld:
 
         print("Game loaded successfully! Player abilities restored.")
 
-    
-    
-   
 
     def loadWorld(self):
         self.player.update(CustomEvents.CHARACTER_MOVED)
@@ -120,6 +126,17 @@ class GameWorld:
         for entity in self.projectiles:
             if entity.is_active:
                 entity.moveCharacter()
+        for door in self.currentRoom.getDoorMap().values():
+            if door is not None:
+                connected_room = door.getConnectedRoom(self.currentRoom)
+                if connected_room.getRoomType() == "b ":
+                    if self.getFoundKeys():
+                        door.toggleDoor(True)
+
+                        break
+
+                    else:
+                        door.toggleDoor(False)
 
 
 
@@ -161,12 +178,14 @@ class GameWorld:
     def collideWithItem(self, thePlayerRect):
         """Checks if the player's rectangle collides with any item in the current room.
         If a collision is detected, remove the item from the room and return it."""
-        items = self.currentRoom.get_items()
+        items = self.currentRoom.get_items() 
+        
         for item in items:
-            if thePlayerRect.colliderect(item.rect):
-                # Remove the item from the room.
-                items.remove(item)
-                return item
+            if not self.player.invFull or str(item) == "Key":
+                if thePlayerRect.colliderect(item.rect):
+                    # Remove the item from the room.
+                    items.remove(item)
+                    return item
         return None
     
     def getPlayer(self):
@@ -187,7 +206,6 @@ class GameWorld:
             )
         pygame.event.post(event)
 
-    
     def testRandomKillEnemy(self):
         self.currentRoom.randomKillEnemy()
         event = pygame.event.Event(
@@ -203,6 +221,12 @@ class GameWorld:
         
     def getCurrentRoom(self):
         return self.currentRoom
+    
+    def setFoundKeys(self, theFound):
+        self._foundKeys = theFound
+
+    def getFoundKeys(self):
+        return self._foundKeys
     
     def changeCurrentRoom(self, theDoor:Door):
         theDoor.isOpen = False
@@ -234,7 +258,7 @@ class GameWorld:
 
         for enemy in self.currentRoom.getEnemyList().get_entities():
             if enemy != ignore:  # Don't check collision with itself
-                enemy_rect = pygame.Rect(enemy.getPositionX(), enemy.getPositionY(), 50, 50)
+                enemy_rect = enemy.getRect()
                 if rect.colliderect(enemy_rect):
                     if ignore is self.player and (current_time - self.last_damage_time > DAMAGE_COOLDOWN):
                         self.player.takeDamage(enemy.getAttackDamage())  # Only take damage if cooldown has passed
@@ -258,9 +282,7 @@ class GameWorld:
     def check_projectile_collision(self, projectile,isEnemy):
         """Checks if a projectile collides with an enemy, player, or obstacle."""
         projectile_rect = pygame.Rect(projectile.getPositionX(), projectile.getPositionY(), 10, 10)
-        if len(self.projectiles) >= self.maxProj:
-            self.removeProjectile(self.projectiles[0])
-            return True
+        
         room_width = ViewUnits.SCREEN_WIDTH
         room_height = ViewUnits.SCREEN_HEIGHT
 
@@ -278,7 +300,7 @@ class GameWorld:
                 return True
         else:#player loop
             for enemy in self.currentRoom.getEnemyList().get_entities():
-                enemy_rect = pygame.Rect(enemy.getPositionX(), enemy.getPositionY(), 50, 50)
+                enemy_rect = enemy.getRect()
                 if projectile_rect.colliderect(enemy_rect):
                     enemy.takeDamage(projectile.getAttackDamage())  # Apply projectile damage
 
@@ -301,40 +323,4 @@ class GameWorld:
     
 
 
-
-     # def save_state(self):
-    #     """Saves only the player state to a file using pickle."""
-    #     if not self.player:
-    #         print("No player to save.")
-    #         return
-
-    #     save_data = {"player": self.player.to_dict()}  # Wrap in "player" key
-
-    #     try:
-    #         with open(self.SAVE_FILE, "wb") as file:
-    #             pickle.dump(save_data, file)
-    #         print("Player saved successfully.", self.player.getInventory())  # Debugging line
-    #     except Exception as e:
-    #         print(f"Error saving player: {e}")
-
-    # def load_state(self):
-    #     """Loads only the player state from a file."""
-    #     if not os.path.exists(self.SAVE_FILE):
-    #         print("No saved player found.")
-    #         return
-
-    #     try:
-    #         with open(self.SAVE_FILE, "rb") as file:
-    #             save_data = pickle.load(file)
-
-    #         print(f"Loaded player data: {save_data}")  # Debugging line
-
-    #         from .Player import Player  # Ensure Player is recognized at runtime
-    #         if "player" in save_data:
-    #             self.player = Player.from_dict(save_data["player"])
-    #             print("Player loaded successfully.")
-    #         else:
-    #             print("Error: Player data missing in save file.")
-    #     except Exception as e:
-    #         print(f"Error loading player: {e}")
  

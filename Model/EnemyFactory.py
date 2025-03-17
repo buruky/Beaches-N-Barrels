@@ -4,12 +4,14 @@ from .Crab import Crab
 from .Pirate import Pirate
 from .Seagull import Seagull
 from .BeachBall import BeachBall
+from .Barrel import Barrel
 from .Shark import Shark
 from .DungeonCharacterList import DungeonCharacterList
 from .database import initialize_enemy_db
 import sqlite3
 import random
 from ViewUnits import ViewUnits
+
 
 class EnemyFactory():
     _instance = None  # Stores the single instance
@@ -63,7 +65,9 @@ class EnemyFactory():
         elif enemy_type == "Seagull":
             return Seagull(attack, health, random.randint(0,screen_width), random.randint(0, screen_height), speed)
         elif enemy_type == "Shark":
-            return Shark(attack, health, random.randint(0,screen_width), random.randint(0, screen_height), speed)
+            return Shark(attack, health, 250, 250, speed)
+        elif enemy_type == "Barrel":
+            return Barrel(attack, health, 250, 250, speed)
 
         else:
             return None
@@ -73,9 +77,8 @@ class EnemyFactory():
             cursor = connection.cursor()
             cursor.execute("SELECT * FROM enemy_data")
             rows = cursor.fetchall()
-            print("Loaded enemy data from database:")
-            for row in rows:
-                print(row)
+            # for row in rows:
+            #     print(row)
             connection.close()
         except Exception as e:
             print("Error connecting to database:", e)
@@ -96,7 +99,6 @@ class EnemyFactory():
         4: ["Seagull", "Seagull"], # Stronger enemies
         5: ["Crab","Crab","BeachBall", "Seagull"],  # High difficulty room
         }
-        print(num)
         # Retrieve the enemy names based on difficulty
         if num in enemy_templates:
             for enemy_name in enemy_templates[num]:
@@ -105,5 +107,11 @@ class EnemyFactory():
         return enemyList
     def createBossTemplate(self):
         enemyList = DungeonCharacterList()
+        
         enemyList.add_entity(self.create_enemy("Shark"))
+        return enemyList
+    
+    def createKeyTemplate(self):
+        enemyList = DungeonCharacterList()
+        enemyList.add_entity(self.create_enemy("Barrel"))
         return enemyList
