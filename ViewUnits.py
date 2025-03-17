@@ -29,6 +29,10 @@ class ViewUnits:
                                       DEFAULT_POSITION_Y),
                                       (DEFAULT_WIDTH,
                                        DEFAULT_HEIGHT ))
+    DEFAULT_SPRITE_RECT = pygame.Rect((DEFAULT_POSITION_X,
+                                      DEFAULT_POSITION_Y),
+                                      (64,
+                                       64 ))
     DEFAULT_STATE_NAME = "IDLE"
     DEFAULT_DICT:Final = {DEFAULT_STATE_NAME: []}
     PLAYER_SPRITE_NAME = "PlayerMock"
