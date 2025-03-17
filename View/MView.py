@@ -21,7 +21,7 @@ class MView:
         self.keyRoomBackground = pygame.image.load(player_image_path3)
         self.theTest3 = pygame.transform.scale(self.keyRoomBackground, (ViewUnits.SCREEN_WIDTH,ViewUnits.SCREEN_HEIGHT))
         self.bossRoomPath = os.path.join(current_directory, '..', 'Assets', 'background-bossRoom.png')        
-        self.BossRoom = pygame.image.load(self.bossRoomPath)
+        # self.BossRoom = pygame.image.load(self.bossRoomPath)
         
 
         door_image_path = os.path.join(current_directory, '..', 'Assets', 'door.png')
