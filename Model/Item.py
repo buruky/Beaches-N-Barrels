@@ -102,6 +102,28 @@ class KeyItem(UsableItem):
         # Create a collision rectangle (50x50) at the given position.
         self.rect = pygame.Rect(position[0], position[1], 50, 50)
 
+    def to_dict(self):
+        """Convert item to dictionary including position data."""
+        data = super().to_dict()  # Get parent class dictionary
+        data["position"] = tuple(self.position)  # Ensure it's stored as a tuple
+        data["class"] = self.__class__.__name__  # Store class type for deserialization
+        return data
+
+
+    @classmethod
+    def from_dict(cls, data):
+        """Reconstruct a MockItem from dictionary, ensuring position is properly restored."""
+        position = tuple(data.get("position", (10, 10)))  # Ensure it's a tuple
+        item = cls(position=position)
+
+        # Restore optional state fields
+        item._active = data.get("active", False)  # Default to inactive
+        item._start_time = data.get("start_time", None)  # Default to None
+
+        # Restore correct collision rectangle at the right position
+        item.rect = pygame.Rect(position[0], position[1], 50, 50)
+
+        return item
     
     def __str__(self):
         return "Key"

@@ -1,6 +1,5 @@
 import pickle
 import os
-import pprint
 from Model.GameWorld import GameWorld
 
 class GameSaver:

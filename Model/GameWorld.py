@@ -147,18 +147,19 @@ class GameWorld:
         return self.projectiles
     
     def removeProjectile(self, theProjectile):
-        self.projectiles.remove(theProjectile)
-        
-        event = pygame.event.Event(
-                EventManager.event_types[CustomEvents.CHANGED_ROOM],
-                {
-                    "roomtype": self.currentRoom.getRoomType(),
-                    "direction": None,
-                    "cords": self.currentRoom.getCords(),
-                    "doors": self.currentRoom.getDoorPos()
-                }
-            )
-        pygame.event.post(event)
+        if theProjectile in self.projectiles:
+            self.projectiles.remove(theProjectile)
+            
+            event = pygame.event.Event(
+                    EventManager.event_types[CustomEvents.CHANGED_ROOM],
+                    {
+                        "roomtype": self.currentRoom.getRoomType(),
+                        "direction": None,
+                        "cords": self.currentRoom.getCords(),
+                        "doors": self.currentRoom.getDoorPos()
+                    }
+                )
+            pygame.event.post(event)
 
     def removeAllProjectiles(self):
         self.projectiles.clear()
