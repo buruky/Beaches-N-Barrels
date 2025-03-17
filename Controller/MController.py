@@ -230,6 +230,8 @@ class MController:
             self.__myPlayer.setDamage(1000)
             self.__myView.redrawCharacter()
         elif keys[pygame.K_p]:  # Press 'T' to use an item
+            self.__myPlayer.keyCount = 2
+            self.__myPlayer.update("PICKUP_KEY")
             self.__myPlayer.setMaxKeys()
             self.__myView.redrawCharacter()
         
