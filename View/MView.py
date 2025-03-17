@@ -152,7 +152,8 @@ class MView:
             if theEvent.id == characterSprite.getId():
                 characterSprite.checkCycle()
                 characterSprite.setPosition(theEvent.positionX, theEvent.positionY)
-                if characterSprite.getName() in ["Dolphin", "Buddha", "Astronaut"]:
+                print(characterSprite.getName())
+                if characterSprite.getName() in ["Dolphin", "Buddha", "Astronaut"] or characterSprite.getName() =="BeachBall":
                     characterSprite.setCurrentState(theEvent.state)
         
         self.needs_redraw = True
