@@ -83,11 +83,11 @@ class MController:
         EventManager.registerEvent(CustomEvents.CHARACTER_MOVED, self.__myView.update_entity)
         EventManager.registerEvent(CustomEvents.CHARACTER_STOPPED, self.__myView.update_entity)
         EventManager.registerEvent(CustomEvents.PLAYER_DIED, self.__handle_character_death)
+        
         EventManager.registerEvent(CustomEvents.CHANGED_ROOM, self.__myView.updateRoom)
         EventManager.registerEvent(CustomEvents.SHOOT_PROJECTILE, self.__shoot_projectile)
         EventManager.registerEvent(CustomEvents.HEALTH, self.__myView.updateHealthUI)
         EventManager.registerEvent(CustomEvents.BOSS_ROOM, self.__myView.updateBossHealthUI)
-        # EventManager.registerEvent(CustomEvents.MINI_BOSS_ROOM, self.__myView.updateMiniBossHealthUI)
 
         EventManager.registerEvent(CustomEvents.PICKUP_ITEM, self.__myView.updateInventoryUI)
         EventManager.registerEvent(CustomEvents.UPDATE_PROJECTILE, self.__myView.remove_projectile)

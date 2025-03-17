@@ -50,6 +50,7 @@ class Shark(Enemy):
             }        
         )
         pygame.event.post(event)
+        
         # Regular movement and shooting at player
         self.moveCharacter()
 

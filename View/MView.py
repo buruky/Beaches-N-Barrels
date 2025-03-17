@@ -69,7 +69,6 @@ class MView:
 
     def updateInventoryUI(self, event: pygame.event.Event):
         self.inventory = event.inventory
-        print("YUR",self.inventory)
         self.redrawCharacter()
 
 

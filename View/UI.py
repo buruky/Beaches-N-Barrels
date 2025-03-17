@@ -86,7 +86,7 @@ class UI:
         elif player_health > 30:
             bar_color = (255, 255, 170)  
         else:
-            bar_color = (255, 182, 193)  
+            bar_color = (255, 0, 0)  
 
         # Draw the foreground of the health bar (current health), with rounded corners
         pygame.draw.rect(self.screen, bar_color, (x_offset, y_offset, health_bar_width, bar_height), border_radius=border_radius)
@@ -101,8 +101,8 @@ class UI:
         """Draw the enemy's health bar, placed at the top of the screen in boss rooms."""
         
         # Set the dimensions of the health bar
-        bar_width = 600  # Health bar width, larger for a boss
-        bar_height = 40  # Health bar height
+        bar_width = 800  # Health bar width, larger for a boss
+        bar_height = 20  # Health bar height
         
         # Position the health bar at the top-center of the screen
         x_offset = (ViewUnits.SCREEN_WIDTH - bar_width) // 2  # Center the bar horizontally
@@ -118,13 +118,8 @@ class UI:
         health_percentage = enemy_health / max_health  # Calculate health percentage (0 to 1)
         health_bar_width = bar_width * health_percentage  # Scale the bar width based on health
         
-        # Choose the color for the health bar (green for full, yellow for medium, red for low)
-        if enemy_health > 70:
-            bar_color = (144, 238, 144)  # Soft pastel green
-        elif enemy_health > 30:
-            bar_color = (255, 255, 170)  # Soft pastel yellow
-        else:
-            bar_color = (255, 182, 193)  # Soft pastel red
+
+        bar_color = (250, 0, 0)  # Soft pastel red
         
         # Draw the foreground of the health bar (current health), with rounded corners
         pygame.draw.rect(self.screen, bar_color, (x_offset, y_offset, health_bar_width, bar_height), border_radius=border_radius)

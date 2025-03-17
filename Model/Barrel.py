@@ -58,7 +58,7 @@ class Barrel(Enemy):
                 distance_y = abs(player_y - self._myPositionY)
 
                 # Run away from the player if they are too close
-                if distance_x < 300 and distance_y < 300:  # Player is too close, run away
+                if distance_x < 500 and distance_y < 500:  # Player is too close, run away
                     self._move_away_from_player(player_x, player_y)
                 else:
                     # Move randomly if player is not close
@@ -113,7 +113,7 @@ class Barrel(Enemy):
 
     def _dash_towards_player(self, player_x, player_y):
         """Perform a dash towards the player."""
-        dash_distance = self._mySpeed * 3  # Dash 3 times the normal speed
+        dash_distance = self._mySpeed * 3 + 3  # Dash 3 times the normal speed
         
         # Calculate the direction towards the player
         direction = pygame.math.Vector2(player_x - self._myPositionX, player_y - self._myPositionY)
