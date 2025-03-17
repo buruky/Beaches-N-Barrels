@@ -5,6 +5,7 @@ from .SpriteSheet import SpriteSheet
 from .SpriteFactory import SpriteFactory
 from ViewUnits import ViewUnits
 from Model.GameWorld import GameWorld 
+import random
 
 class MView:
     def __init__(self):
@@ -157,7 +158,75 @@ class MView:
         
         self.needs_redraw = True
 
+    def display_game_won(self):
+        """Display 'You Won!' with animations and effects."""
 
+        # Load assets
+        assets_path = os.path.join(os.path.dirname(__file__), "..", "Assets")
+        
+        fireworks_image = pygame.image.load(os.path.join(assets_path, "Goat2.jpg"))
+        fireworks_image = pygame.transform.scale(fireworks_image, (200, 200))  # Resize
+
+
+        # Colors
+        GOLD = (255, 215, 0)
+        WHITE = (255, 255, 255)
+
+        # Confetti particle list
+        confetti_particles = []
+
+        font_big = pygame.font.Font(None, 100)  # Victory text font
+        font_small = pygame.font.Font(None, 40)  # Replay prompt
+
+        clock = pygame.time.Clock()
+        running = True
+
+        while running:
+            self.screen.fill((0, 0, 50))  # Dark blue victory background
+
+            # Draw fireworks at random positions
+            for _ in range(3):  # Three fireworks randomly placed
+                x = random.randint(100, ViewUnits.SCREEN_WIDTH - 200)
+                y = random.randint(50, ViewUnits.SCREEN_HEIGHT // 2)
+                self.screen.blit(fireworks_image, (x, y))
+
+            # Victory Text (Glowing Effect)
+            text_surface = font_big.render("YOU WON!", True, GOLD)
+            glow_surface = font_big.render("YOU WON!", True, WHITE)
+            text_rect = text_surface.get_rect(center=(ViewUnits.SCREEN_WIDTH // 2, ViewUnits.SCREEN_HEIGHT // 3))
+
+            self.screen.blit(glow_surface, (text_rect.x - 2, text_rect.y - 2))  # Glow layer
+            self.screen.blit(text_surface, text_rect)
+
+            # Instruction to replay
+            replay_text = font_small.render("Thanks For Playing!", True, WHITE)
+            replay_rect = replay_text.get_rect(center=(ViewUnits.SCREEN_WIDTH // 2, ViewUnits.SCREEN_HEIGHT // 1.5))
+            self.screen.blit(replay_text, replay_rect)
+
+            # Confetti Effect
+            if random.randint(0, 5) == 0:  # Add confetti randomly
+                confetti_particles.append([
+                    random.randint(0, ViewUnits.SCREEN_WIDTH),  # X position
+                    0,  # Y starts at top
+                    random.choice([(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0)])  # Random colors
+                ])
+
+            for particle in confetti_particles:
+                pygame.draw.circle(self.screen, particle[2], (particle[0], particle[1]), 5)  # Draw confetti
+                particle[1] += 3  # Move down
+            confetti_particles = [p for p in confetti_particles if p[1] < ViewUnits.SCREEN_HEIGHT]  # Remove off-screen
+
+            pygame.display.flip()
+            clock.tick(30)
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    pygame.quit()
+                    exit()
+                elif event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_SPACE:  # Restart on SPACE
+                        pygame.mixer.music.stop()  # Stop victory music
+                        return  
     def display_game_over(self):
         """Display 'Game Over' and stop the game."""
         self.clear()

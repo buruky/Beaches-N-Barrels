@@ -40,7 +40,7 @@ class Player(DungeonCharacter):
             "damage": self._myAttackDamage,
             "positionX": self._myPositionX,
             "positionY": self._myPositionY,
-            "inventory": [item.to_dict() for item in self.__inventory],  # ✅ Store full inventory
+            "inventory": [item.to_dict() if item is not None else None for item in self.__inventory],
             "class": self.__class__.__name__,  # ✅ Save player subclass name
         }
 
@@ -76,16 +76,19 @@ class Player(DungeonCharacter):
         if "inventory" in data:
             from .Item import UsableItem  # Ensure item classes are imported
             player.__inventory = []
+
             for item_data in data["inventory"]:
-                item_class_name = item_data.get("class", "UsableItem")  # Default to UsableItem
-                item_class = globals().get(item_class_name, UsableItem)  # Find the correct item class
-
-                if hasattr(item_class, 'from_dict'):
-                    item_instance = item_class.from_dict(item_data)  # ✅ Create the item instance
-                    player.__inventory.append(item_instance)  # ✅ Append to instance inventory
+                if item_data is None:
+                    player.__inventory.append(None)  # ✅ Preserve None values
                 else:
-                    print(f"Error: {item_class_name} does not have a from_dict method")
+                    item_class_name = item_data.get("class", "UsableItem")  # Default to UsableItem
+                    item_class = globals().get(item_class_name, UsableItem)  # Find the correct item class
 
+                    if hasattr(item_class, 'from_dict'):
+                        item_instance = item_class.from_dict(item_data)  # ✅ Create the item instance
+                        player.__inventory.append(item_instance)  # ✅ Append to instance inventory
+                    else:
+                        print(f"Error: {item_class_name} does not have a from_dict method")
         return player
 
 

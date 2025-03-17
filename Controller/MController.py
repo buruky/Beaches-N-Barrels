@@ -80,6 +80,29 @@ class MController:
             self.__myWorld.setPlayer(self.__myPlayer)
 
     
+    def change_gamewon_music(self, song):
+        """
+        Changes the background music to a new song based on an event.
+        :param event: Event containing `event.song` (string, e.g., "battleTheme.mp3")
+        """
+        assets_path = os.path.join(os.path.dirname(__file__), "..", "Assets/sounds")
+        new_song_path = os.path.join(assets_path, song)  # Get song filename from event
+
+        # Stop current music
+        pygame.mixer.stop()  # Stops all currently playing sounds
+
+        try:
+            # Load and play the new music
+            new_music = pygame.mixer.Sound(new_song_path)
+            new_music.set_volume(0.05)  # Adjust volume as needed
+            new_music.play(-1)  # Loop indefinitely
+            self.current_music = new_music  # Store reference to track current music
+
+            print(f"Now playing: {song}")
+
+        except Exception as e:
+            print(f"Error loading music: {song} - {e}")
+
     def change_music(self, event):
         """
         Changes the background music to a new song based on an event.
@@ -126,7 +149,7 @@ class MController:
         EventManager.registerEvent(CustomEvents.CHARACTER_MOVED, self.__myView.update_entity)
         EventManager.registerEvent(CustomEvents.CHARACTER_STOPPED, self.__myView.update_entity)
         EventManager.registerEvent(CustomEvents.PLAYER_DIED, self.__handle_character_death)
-        EventManager.registerEvent(CustomEvents.PLAYER_DIED, self.gameWon)
+        EventManager.registerEvent(CustomEvents.GAME_WON, self.gameWon)
         
         EventManager.registerEvent(CustomEvents.CHANGED_ROOM, self.__myView.updateRoom)
         EventManager.registerEvent(CustomEvents.SHOOT_PROJECTILE, self.__shoot_projectile)
@@ -139,6 +162,8 @@ class MController:
 
 
     def gameWon(self, event):
+        self.change_gamewon_music("gameWon.mp3")
+        self.__myView.display_game_won()
         print("WOOHOOOO")
     def __handle_character_death(self, event):
         """Displays 'Game Over' and stops the game loop."""
