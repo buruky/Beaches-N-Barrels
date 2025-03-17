@@ -219,7 +219,12 @@ class MController:
             self.__myView.redrawCharacter()
         elif keys[pygame.K_r]:  # Press 'T' to use an item
             self.__myPlayer.takeDamage(0.1)
+            self.__myPlayer.setDamage(1000)
             self.__myView.redrawCharacter()
+        elif keys[pygame.K_p]:  # Press 'T' to use an item
+            self.__myPlayer.setMaxKeys()
+            self.__myView.redrawCharacter()
+        
         
         
         # Handle minimap visibility change

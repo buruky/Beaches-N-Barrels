@@ -189,7 +189,8 @@ class Player(DungeonCharacter):
         if self.__myFloorFactory.getKeyMin() <= self.keyCount:
             GameWorld.getInstance().setFoundKeys(True)
 
-   
+    def setMaxKeys(self):
+        GameWorld.getInstance().setFoundKeys(True)
     def getInventory(self) -> list:
         return self.__inventory
     
@@ -209,9 +210,6 @@ class Player(DungeonCharacter):
                     # Replace the item with None once used
                     self.__inventory[idx] = None  # Replace the used item with None
 
-
-        #else:
-            #print("No items available to use!")
      
     def teleportCharacter(self, num1: int, num2: int) -> None:
         self._myPositionX = num1
@@ -299,6 +297,7 @@ class Player(DungeonCharacter):
     
     def getName(self):
         return self._name
-
+    def setDamage(self, damage):
+        self._myAttackDamage = damage
     def toString(self) -> str:
         return f"{self._name} at ({self._myPositionX}, {self._myPositionY})"
