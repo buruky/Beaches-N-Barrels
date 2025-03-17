@@ -12,6 +12,7 @@ from View import *
 from CustomEvents import CustomEvents
 from View.TitleScreen import TitleScreen
 from GameSaver import GameSaver
+import os
 
 class MController:
     
@@ -23,6 +24,8 @@ class MController:
             pygame.K_a: "LEFT",
             pygame.K_d: "RIGHT"
         }
+        assets_path = os.path.join(os.path.dirname(__file__), "..", "Assets/sounds")
+
         self.__mySign = 1
         self.__myView: Final = MView()
         self.__InitalizeEvents()
@@ -33,9 +36,24 @@ class MController:
         # Show title screen and get character selection
         title_screen = TitleScreen(self.__myView.screen)
         selected_character = title_screen.run()
+        mainTheme = pygame.mixer.Sound(os.path.join(assets_path, "mainTheme.mp3"))  # Beach wave sound
+
         
+          # Loop indefinitely
         # Load or create new game
-        
+        # Load sound effects
+        wave_sound = pygame.mixer.Sound(os.path.join(assets_path, "waves.mp3"))  # A sound effect
+
+        # Set individual sound volumes
+        mainTheme.set_volume(0.05)
+        wave_sound.set_volume(0.2)  # Half volume
+
+        # Play a sound effect when an event happens
+        mainTheme.play()
+        wave_sound.play()  # Plays the wave sound once
+
+        # If you want to loop a sound effect indefinitely:
+        wave_sound.play(-1)  # Loop wave sound infinitely
         if selected_character == "Load":
             print()
             self.__myWorld = GameSaver.load_game()
