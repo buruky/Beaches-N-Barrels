@@ -37,9 +37,11 @@ class TitleScreen:
         assets_path = os.path.join(current_directory, '..', 'Assets')
         pygame.mixer.init()
         pygame.mixer.music.load(os.path.join(assets_path, "waves.mp3"))  # Beach wave sound
-
         pygame.mixer.music.set_volume(0.2)
         pygame.mixer.music.play(-1)  # Loop indefinitely
+        assets_path = os.path.join(os.path.dirname(__file__), "..", "Assets")
+        self.shoot_sound = pygame.mixer.Sound(os.path.join(assets_path, "BeachTheme.mp3"))
+        self.shoot_sound.set_volume(0.1)
         # Load background
         self.background = pygame.image.load(os.path.join(assets_path, 'Goat.jpg'))
         self.background = pygame.transform.scale(self.background, (ViewUnits.SCREEN_WIDTH, ViewUnits.SCREEN_HEIGHT))
