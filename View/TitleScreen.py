@@ -74,7 +74,7 @@ class TitleScreen:
         #self.screen.blit(self.title_image, (self.title_x, self.title_y))  # Draw title
         title_text = "Beaches"
         title_text2 = "and"
-        title_text3 = "Barrel's"
+        title_text3 = "Barrels"
         title_surface = self.font_large.render(title_text, True, (0, 0, 0))
         title_surface2 = self.font_med.render(title_text2, True, (0, 0, 0))
         title_surface3 = self.font_large.render(title_text3, True, (0, 0, 0))

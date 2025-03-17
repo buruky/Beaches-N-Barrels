@@ -99,8 +99,7 @@ class Invincibility(Ability):
 
     
     def activate(self):
-        self.player._canDie = False 
-        self.player.maxHealth = 9999
+        self.player._canDie = False
         self.player.update("HEALTH")
         print("invince")
 
