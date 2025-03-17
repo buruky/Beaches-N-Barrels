@@ -15,14 +15,18 @@ class MView:
         player_image_path = os.path.join(current_directory, '..', 'Assets', 'background-normalRoom.png')
         self.myRawPlayerImage = pygame.image.load(player_image_path)
         self.theTest = pygame.transform.scale(self.myRawPlayerImage, (ViewUnits.SCREEN_WIDTH,ViewUnits.SCREEN_HEIGHT))
-        player_image_path2 = os.path.join(current_directory, '..', 'Assets', 'background-normalRoom.png')
-        self.myRawPlayerImage2 = pygame.image.load(player_image_path2)
-        self.theTest2 = pygame.transform.scale(self.myRawPlayerImage2, (ViewUnits.SCREEN_WIDTH,ViewUnits.SCREEN_HEIGHT))
-        player_image_path3 = os.path.join(current_directory, '..', 'Assets', 'key.png')
-        self.keyRoomBackground = pygame.image.load(player_image_path3)
-        self.theTest3 = pygame.transform.scale(self.keyRoomBackground, (ViewUnits.SCREEN_WIDTH,ViewUnits.SCREEN_HEIGHT))
-        self.bossRoomPath = os.path.join(current_directory, '..', 'Assets', 'background-bossRoom.png')        
-        # self.BossRoom = pygame.image.load(self.bossRoomPath)
+        normalRoomPath = os.path.join(current_directory, '..', 'Assets', 'background-normalRoom.png')
+        self.myRawNormalBackground = pygame.image.load(normalRoomPath)
+        self.normalRoomImage = pygame.transform.scale(self.myRawNormalBackground, (ViewUnits.SCREEN_WIDTH,ViewUnits.SCREEN_HEIGHT))
+        
+        keyRoomImagePath = os.path.join(current_directory, '..', 'Assets', 'background-keyRoom.png')
+       
+        self.keyRoomBackground = pygame.image.load(keyRoomImagePath)
+        self.keyRoomImage = pygame.transform.scale(self.keyRoomBackground, (ViewUnits.SCREEN_WIDTH,ViewUnits.SCREEN_HEIGHT))
+        
+        # self.bossRoomPath = os.path.join(current_directory, '..', 'Assets', 'background-bossRoom.png')        
+        self.BossRoom = self.normalRoomImage
+        
         font_path = os.path.join(os.path.dirname(__file__), "..", "Assets", "editundo.ttf")
         self.font_small = pygame.font.Font(font_path, 25)  # Small font for inventory
         self.font_med = pygame.font.Font(font_path, 37)
@@ -93,7 +97,7 @@ class MView:
         if event.roomtype == "s ":
             self.theNewRoom = self.theTest  # Set background for start room
         else:
-            self.theNewRoom = self.theTest2  # Set background for other rooms
+            self.theNewRoom = self.normalRoomImage  # Set background for other rooms
 
         self.myDoorList = []
         for dir, isDoor in event.doors.items():
@@ -118,11 +122,11 @@ class MView:
         if event.roomtype == "s ":
             self.theNewRoom = self.theTest  # Set background for start room
         elif event.roomtype == "k ":
-            self.theNewRoom = self.theTest3  # Set background for key room
+            self.theNewRoom = self.keyRoomImage  # Set background for key room
         elif event.roomtype == "n ":
-            self.theNewRoom = self.theTest2  # Set background for other rooms
+            self.theNewRoom = self.normalRoomImage  # Set background for other rooms
         elif event.roomtype == "b ":
-            self.theNewRoom = self.theTest2  # Set background for other rooms
+            self.theNewRoom = self.normalRoomImage  # Set background for other rooms
         if len(self.onScreenChar) != 0:
             playerSprite = None
             for i in range(len(self.onScreenChar)):
