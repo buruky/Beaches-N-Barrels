@@ -51,7 +51,12 @@ class GameWorld:
         if cls._instance is None:  # Ensure an instance exists
             cls._instance = cls()  # This triggers __new__()
         return cls._instance
-
+    
+    @classmethod
+    def reset_instance(cls):
+        """Resets the singleton instance."""
+        cls._instance = None  # This forces a new instance to be created
+        
     def setDemo(self):
         self.__myFloor = self.__myFloorFactory.createDemoFloor()
         self.currentRoom = self.__myFloor.getStartRoom()

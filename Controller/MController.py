@@ -24,7 +24,6 @@ class MController:
             pygame.K_a: "LEFT",
             pygame.K_d: "RIGHT"
         }
-        assets_path = os.path.join(os.path.dirname(__file__), "..", "Assets/sounds")
 
         self.__mySign = 1
         self.__myView: Final = MView()
@@ -36,12 +35,15 @@ class MController:
         # Show title screen and get character selection
         title_screen = TitleScreen(self.__myView.screen)
         selected_character = title_screen.run()
-        mainTheme = pygame.mixer.Sound(os.path.join(assets_path, "mainTheme.mp3"))  # Beach wave sound
-
         
-          # Loop indefinitely
-        # Load or create new game
-        # Load sound effects
+        
+        self.__setup_new_game(selected_character)
+
+    def __setup_new_game(self, selected_character):
+        """Creates a new game with the chosen character."""
+        assets_path = os.path.join(os.path.dirname(__file__), "..", "Assets/sounds")
+
+        mainTheme = pygame.mixer.Sound(os.path.join(assets_path, "mainTheme.mp3"))  # Beach wave sound
         wave_sound = pygame.mixer.Sound(os.path.join(assets_path, "waves.mp3"))  # A sound effect
 
         # Set individual sound volumes
@@ -54,43 +56,100 @@ class MController:
 
         # If you want to loop a sound effect indefinitely:
         wave_sound.play(-1)  # Loop wave sound infinitely
+        self.gameWon = False
         if selected_character == "Load":
             print()
             self.__myWorld = GameSaver.load_game()
             self.__myPlayer = self.__myWorld.getPlayer()
-        else:
-            self.__setup_new_game(selected_character)
-
-    def __setup_new_game(self, selected_character):
-        """Creates a new game with the chosen character."""
-        self.__myWorld = GameWorld.getInstance()
-        character_map = {
-            "Dolphin": Dolphin,
-            "Buddha": Buddha,
-            "Astronaut": Astronaut
-            
-        }
-        character_shoot_map = {
-            "Dolphin": 300,
-            "Buddha": 600,
-            "Astronaut": 500
-            
-        }
-        if "Demo" in selected_character:
-            self.__myWorld.setDemo()
-            selected_character = selected_character.replace("Demo", "")
-            self.__myPlayer = character_map.get(selected_character, Buddha)()
-            self.__myWorld.setPlayer(self.__myPlayer)
-            self.shoot_cooldown = character_shoot_map.get(selected_character, 500)
+                
 
         else:
-            self.__myPlayer = character_map.get(selected_character, Dolphin)()
-            self.__myWorld.setPlayer(self.__myPlayer)
-            self.shoot_cooldown = character_shoot_map.get(selected_character, 500)
+            self.__myWorld = GameWorld.getInstance()
+            character_map = {
+                "Dolphin": Dolphin,
+                "Buddha": Buddha,
+                "Astronaut": Astronaut
+                
+            }
+            character_shoot_map = {
+                "Dolphin": 300,
+                "Buddha": 600,
+                "Astronaut": 500
+                
+            }
+            if "Demo" in selected_character:
+                self.__myWorld.setDemo()
+                selected_character = selected_character.replace("Demo", "")
+                self.__myPlayer = character_map.get(selected_character, Buddha)()
+                self.__myWorld.setPlayer(self.__myPlayer)
+                self.shoot_cooldown = character_shoot_map.get(selected_character, 500)
+
+            else:
+                self.__myPlayer = character_map.get(selected_character, Dolphin)()
+                self.__myWorld.setPlayer(self.__myPlayer)
+                self.shoot_cooldown = character_shoot_map.get(selected_character, 500)
 
         
 
     
+
+    def ControllerTick(self):
+        """Main game loop tick, handling events, updating entities, and checking abilities."""
+        self.__handleEvents()
+        if self.gameWon:
+            self.__myView.update_game_won_screen()  # Keep animating the victory screen
+        else:
+            self.__handle_keyboard()
+            self.__handle_mouse(self.__mySign)
+            self.__myWorld.tick()
+            self.__myView.process_updates()
+            if self.__myPlayer._ability:
+                self.__myPlayer._ability.update()
+            if self.__myPlayer._item_Ability:
+                self.__myPlayer._item_Ability.update()
+            if self.__myPlayer._item_Invincibility:
+                self.__myPlayer._item_Invincibility.update()
+            if self.__myPlayer._item_Speed:
+                self.__myPlayer._item_Speed.update()
+            if self.__myPlayer._invincibility.update:
+                self.__myPlayer._invincibility.update()
+
+        return self.__myIsRunning
+    
+    def __InitalizeEvents(self):
+        """Registers game-related events."""
+        EventManager.RegisterExistingEvent(CustomEvents.QUIT, pygame.QUIT, self.__quitGame)
+
+        EventManager.RegisterExistingEvent(CustomEvents.MOUSE_BUTTON_DOWN, pygame.MOUSEBUTTONDOWN, self.__mouseButtonDown)
+        EventManager.RegisterExistingEvent(CustomEvents.MOUSE_BUTTON_UP, pygame.MOUSEBUTTONUP, self.__mouseButtonUp)
+        
+        EventManager.registerEvent(CustomEvents.CHARACTER_MOVED, self.__myView.update_entity)
+        EventManager.registerEvent(CustomEvents.CHARACTER_STOPPED, self.__myView.update_entity)
+        EventManager.registerEvent(CustomEvents.PLAYER_DIED, self.__handle_character_death)
+        EventManager.registerEvent(CustomEvents.GAME_WON, self.gameWon)
+        
+        EventManager.registerEvent(CustomEvents.CHANGED_ROOM, self.__myView.updateRoom)
+        EventManager.registerEvent(CustomEvents.SHOOT_PROJECTILE, self.__shoot_projectile)
+        EventManager.registerEvent(CustomEvents.HEALTH, self.__myView.updateHealthUI)
+        EventManager.registerEvent(CustomEvents.BOSS_ROOM, self.__myView.updateBossHealthUI)
+        EventManager.registerEvent(CustomEvents.SONG_CHANGE, self.change_music)
+
+        EventManager.registerEvent(CustomEvents.PICKUP_ITEM, self.__myView.updateInventoryUI)
+        EventManager.registerEvent(CustomEvents.PICKUP_KEY, self.__myView.updateKeyInventoryUI)
+        EventManager.registerEvent(CustomEvents.UPDATE_PROJECTILE, self.__myView.remove_projectile)
+
+    def __reset_game(self):
+        """Handles resetting the game view and clearing the screen."""
+        pygame.mixer.stop()
+        self.__myView.reset_view()  # Call reset method in MView
+        GameWorld.reset_instance()  # Reset game world singleton
+        pygame.display.update()  # Ensure changes are displayed
+    def gameWon(self, event):
+        """Handles the game won state and allows key presses."""
+        self.gameWon = True
+        self.change_gamewon_music("victory.mp3")
+        self.change_gamewon_music("gameWon.mp3")
+        self.__myView.display_game_won()
     def change_gamewon_music(self, song):
         """
         Changes the background music to a new song based on an event.
@@ -137,53 +196,7 @@ class MController:
         except Exception as e:
             print(f"Error loading music: {event.song} - {e}")
 
-
-    def ControllerTick(self):
-        """Main game loop tick, handling events, updating entities, and checking abilities."""
-        self.__handleEvents()
-        self.__handle_keyboard()
-        self.__handle_mouse(self.__mySign)
-        self.__myWorld.tick()
-        self.__myView.process_updates()
-        if self.__myPlayer._ability:
-            self.__myPlayer._ability.update()
-        if self.__myPlayer._item_Ability:
-            self.__myPlayer._item_Ability.update()
-        if self.__myPlayer._item_Invincibility:
-            self.__myPlayer._item_Invincibility.update()
-        if self.__myPlayer._item_Speed:
-            self.__myPlayer._item_Speed.update()
-        if self.__myPlayer._invincibility.update:
-            self.__myPlayer._invincibility.update()
-
-        return self.__myIsRunning
-    
-    def __InitalizeEvents(self):
-        """Registers game-related events."""
-        EventManager.RegisterExistingEvent(CustomEvents.QUIT, pygame.QUIT, self.__quitGame)
-        EventManager.RegisterExistingEvent(CustomEvents.MOUSE_BUTTON_DOWN, pygame.MOUSEBUTTONDOWN, self.__mouseButtonDown)
-        EventManager.RegisterExistingEvent(CustomEvents.MOUSE_BUTTON_UP, pygame.MOUSEBUTTONUP, self.__mouseButtonUp)
-        
-        EventManager.registerEvent(CustomEvents.CHARACTER_MOVED, self.__myView.update_entity)
-        EventManager.registerEvent(CustomEvents.CHARACTER_STOPPED, self.__myView.update_entity)
-        EventManager.registerEvent(CustomEvents.PLAYER_DIED, self.__handle_character_death)
-        EventManager.registerEvent(CustomEvents.GAME_WON, self.gameWon)
-        
-        EventManager.registerEvent(CustomEvents.CHANGED_ROOM, self.__myView.updateRoom)
-        EventManager.registerEvent(CustomEvents.SHOOT_PROJECTILE, self.__shoot_projectile)
-        EventManager.registerEvent(CustomEvents.HEALTH, self.__myView.updateHealthUI)
-        EventManager.registerEvent(CustomEvents.BOSS_ROOM, self.__myView.updateBossHealthUI)
-        EventManager.registerEvent(CustomEvents.SONG_CHANGE, self.change_music)
-
-        EventManager.registerEvent(CustomEvents.PICKUP_ITEM, self.__myView.updateInventoryUI)
-        EventManager.registerEvent(CustomEvents.PICKUP_KEY, self.__myView.updateKeyInventoryUI)
-        EventManager.registerEvent(CustomEvents.UPDATE_PROJECTILE, self.__myView.remove_projectile)
-
-
-    def gameWon(self, event):
-        self.change_gamewon_music("gameWon.mp3")
-        self.__myView.display_game_won()
-        print("WOOHOOOO")
+ 
     def __handle_character_death(self, event):
         """Displays 'Game Over' and stops the game loop."""
         self.__myView.display_game_over()
@@ -197,29 +210,46 @@ class MController:
     def __handleEvents(self):
         """Processes all pygame events."""
         for event in pygame.event.get():
-            if event.type == pygame.KEYDOWN and event.key == pygame.K_l:
-                print("Saving game...")  # Press "L" to save anytime
-                GameSaver.save_game()
+            if self.gameWon:
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_RETURN:  # Restart game
+                        print("Restarting Game...")
+                        self.gameWon = False  # Reset game state
+                        self.__reset_game()
 
-            elif event.type == pygame.KEYDOWN and event.key == pygame.K_k:
-                self.__myWorld.testRandomKillEnemy()
-                event = pygame.event.Event(
-                EventManager.event_types["BOSS_ROOM"],
-                {"name": "",
-                "health": 0,
-                "maxHealth": 0,
-                "isdead":True
-                }        
-                )
-                pygame.event.post(event)
-                
+                        title_screen = TitleScreen(self.__myView.screen)
+                        selected_character = title_screen.run()
+                        self.__setup_new_game(selected_character)
+                        self.__myIsRunning = True  
+
+                    elif event.key == pygame.K_ESCAPE:  # Quit game
+                        pygame.quit()
+                        exit()
+            else:
+                if event.type == pygame.KEYDOWN and event.key == pygame.K_l:
+                    print("Saving game...")  # Press "L" to save anytime
+                    GameSaver.save_game()
+
+                elif event.type == pygame.KEYDOWN and event.key == pygame.K_k:
+                    self.__myWorld.testRandomKillEnemy()
+                    event = pygame.event.Event(
+                    EventManager.event_types["BOSS_ROOM"],
+                    {"name": "",
+                    "health": 0,
+                    "maxHealth": 0,
+                    "isdead":True
+                    }        
+                    )
+                    pygame.event.post(event)
+                    
             EventManager.dispatch_event(event)
 
     def __handle_keyboard(self):
         """Handles keyboard input for moving the player and activating abilities."""
         keys = pygame.key.get_pressed()
         directions = []
-
+        if self.gameWon:
+            print("IM HEREEE")
         # Handle activating abilities
         if keys[pygame.K_SPACE]:  # Press 'E' to activate ability
             self.__myPlayer.activate_ability()
@@ -245,6 +275,17 @@ class MController:
             self.__myPlayer.update("PICKUP_KEY")
             self.__myPlayer.setMaxKeys()
             self.__myView.redrawCharacter()
+        elif keys[pygame.K_DELETE]:
+            # self.__myView.onScreenChar.clear
+        
+            self.__reset_game()
+            
+            title_screen = TitleScreen(self.__myView.screen)
+            selected_character = title_screen.run()
+            
+
+            self.__setup_new_game(selected_character)
+            self.__myIsRunning = True
         
         
         
