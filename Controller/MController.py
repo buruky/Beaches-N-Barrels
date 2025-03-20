@@ -1,21 +1,23 @@
 from typing import Final
-import pygame
+import os
 import math
-from ViewUnits import ViewUnits
-from .MModel import MModel
+import pygame
+from Model import *
 from Model.Dolphin import Dolphin
 from Model.Buddha import Buddha
 from Model.Astronaut import Astronaut
 from Model.Projectile import Projectile
-from Model import *
 from View import *
-from CustomEvents import CustomEvents
 from View.TitleScreen import TitleScreen
+from CustomEvents import CustomEvents
 from GameSaver import GameSaver
-import os
 
 class MController:
-    
+    """
+    The MController class manages the core gameplay logic, including handling user input, 
+    managing events, and updating the game state. It acts as the main game loop controller, 
+    orchestrating interactions between the player, the game world, and the view.
+    """
     def __init__(self):
         """Initializes the game controller, handling input, events, and game state."""
         self.__myKeyMap: Final = {
@@ -89,18 +91,41 @@ class MController:
                 self.__myWorld.setPlayer(self.__myPlayer)
                 self.shoot_cooldown = character_shoot_map.get(selected_character, 500)
 
+    def __InitalizeEvents(self):
+        """
+        Sets up a new game instance with the chosen character.
+
+        :param selected_character: The character chosen by the player.
+        """
+        EventManager.RegisterExistingEvent(CustomEvents.QUIT, pygame.QUIT, self.__quitGame)
+        EventManager.RegisterExistingEvent(CustomEvents.MOUSE_BUTTON_DOWN, pygame.MOUSEBUTTONDOWN, self.__mouseButtonDown)
+        EventManager.RegisterExistingEvent(CustomEvents.MOUSE_BUTTON_UP, pygame.MOUSEBUTTONUP, self.__mouseButtonUp)
         
-
+        EventManager.registerEvent(CustomEvents.CHARACTER_MOVED, self.__myView.update_entity)
+        EventManager.registerEvent(CustomEvents.CHARACTER_STOPPED, self.__myView.update_entity)
+        EventManager.registerEvent(CustomEvents.PLAYER_DIED, self.__handle_character_death)
+        EventManager.registerEvent(CustomEvents.GAME_WON, self.gameWon)
+        EventManager.registerEvent(CustomEvents.CHANGED_ROOM, self.__myView.updateRoom)
+        EventManager.registerEvent(CustomEvents.SHOOT_PROJECTILE, self.__shoot_projectile)
+        EventManager.registerEvent(CustomEvents.HEALTH, self.__myView.updateHealthUI)
+        EventManager.registerEvent(CustomEvents.BOSS_ROOM, self.__myView.updateBossHealthUI)
+        EventManager.registerEvent(CustomEvents.SONG_CHANGE, self.change_music)
+        EventManager.registerEvent(CustomEvents.PICKUP_ITEM, self.__myView.updateInventoryUI)
+        EventManager.registerEvent(CustomEvents.PICKUP_KEY, self.__myView.updateKeyInventoryUI)
+        EventManager.registerEvent(CustomEvents.UPDATE_PROJECTILE, self.__myView.remove_projectile)
     
-
     def ControllerTick(self):
-        """Main game loop tick, handling events, updating entities, and checking abilities."""
+        """
+        Runs the main game loop tick, handling events, updating entities, and checking abilities.
+
+        :return: True if the game is still running, False otherwise.
+        """
         self.__handleEvents()
         if self.gameWon:
             self.__myView.update_game_won_screen()  # Keep animating the victory screen
         else:
             self.__handle_keyboard()
-            self.__handle_mouse(self.__mySign)
+            # self.__handle_mouse(self.__mySign)
             self.__myWorld.tick()
             self.__myView.process_updates()
             if self.__myPlayer._ability:
@@ -114,98 +139,7 @@ class MController:
             if self.__myPlayer._invincibility.update:
                 self.__myPlayer._invincibility.update()
 
-        return self.__myIsRunning
-    
-    def __InitalizeEvents(self):
-        """Registers game-related events."""
-        EventManager.RegisterExistingEvent(CustomEvents.QUIT, pygame.QUIT, self.__quitGame)
-
-        EventManager.RegisterExistingEvent(CustomEvents.MOUSE_BUTTON_DOWN, pygame.MOUSEBUTTONDOWN, self.__mouseButtonDown)
-        EventManager.RegisterExistingEvent(CustomEvents.MOUSE_BUTTON_UP, pygame.MOUSEBUTTONUP, self.__mouseButtonUp)
-        
-        EventManager.registerEvent(CustomEvents.CHARACTER_MOVED, self.__myView.update_entity)
-        EventManager.registerEvent(CustomEvents.CHARACTER_STOPPED, self.__myView.update_entity)
-        EventManager.registerEvent(CustomEvents.PLAYER_DIED, self.__handle_character_death)
-        EventManager.registerEvent(CustomEvents.GAME_WON, self.gameWon)
-        
-        EventManager.registerEvent(CustomEvents.CHANGED_ROOM, self.__myView.updateRoom)
-        EventManager.registerEvent(CustomEvents.SHOOT_PROJECTILE, self.__shoot_projectile)
-        EventManager.registerEvent(CustomEvents.HEALTH, self.__myView.updateHealthUI)
-        EventManager.registerEvent(CustomEvents.BOSS_ROOM, self.__myView.updateBossHealthUI)
-        EventManager.registerEvent(CustomEvents.SONG_CHANGE, self.change_music)
-
-        EventManager.registerEvent(CustomEvents.PICKUP_ITEM, self.__myView.updateInventoryUI)
-        EventManager.registerEvent(CustomEvents.PICKUP_KEY, self.__myView.updateKeyInventoryUI)
-        EventManager.registerEvent(CustomEvents.UPDATE_PROJECTILE, self.__myView.remove_projectile)
-
-    def __reset_game(self):
-        """Handles resetting the game view and clearing the screen."""
-        pygame.mixer.stop()
-        self.__myView.reset_view()  # Call reset method in MView
-        GameWorld.reset_instance()  # Reset game world singleton
-        pygame.display.update()  # Ensure changes are displayed
-    def gameWon(self, event):
-        """Handles the game won state and allows key presses."""
-        self.gameWon = True
-        self.change_gamewon_music("victory.mp3")
-        self.change_gamewon_music("gameWon.mp3")
-        self.__myView.display_game_won()
-    def change_gamewon_music(self, song):
-        """
-        Changes the background music to a new song based on an event.
-        :param event: Event containing `event.song` (string, e.g., "battleTheme.mp3")
-        """
-        assets_path = os.path.join(os.path.dirname(__file__), "..", "Assets/sounds")
-        new_song_path = os.path.join(assets_path, song)  # Get song filename from event
-
-        # Stop current music
-        pygame.mixer.stop()  # Stops all currently playing sounds
-
-        try:
-            # Load and play the new music
-            new_music = pygame.mixer.Sound(new_song_path)
-            new_music.set_volume(0.05)  # Adjust volume as needed
-            new_music.play(-1)  # Loop indefinitely
-            self.current_music = new_music  # Store reference to track current music
-
-            print(f"Now playing: {song}")
-
-        except Exception as e:
-            print(f"Error loading music: {song} - {e}")
-
-    def change_music(self, event):
-        """
-        Changes the background music to a new song based on an event.
-        :param event: Event containing `event.song` (string, e.g., "battleTheme.mp3")
-        """
-        assets_path = os.path.join(os.path.dirname(__file__), "..", "Assets/sounds")
-        new_song_path = os.path.join(assets_path, event.song)  # Get song filename from event
-
-        # Stop current music
-        pygame.mixer.stop()  # Stops all currently playing sounds
-
-        try:
-            # Load and play the new music
-            new_music = pygame.mixer.Sound(new_song_path)
-            new_music.set_volume(0.05)  # Adjust volume as needed
-            new_music.play(-1)  # Loop indefinitely
-            self.current_music = new_music  # Store reference to track current music
-
-            print(f"Now playing: {event.song}")
-
-        except Exception as e:
-            print(f"Error loading music: {event.song} - {e}")
-
- 
-    def __handle_character_death(self, event):
-        """Displays 'Game Over' and stops the game loop."""
-        self.__myView.display_game_over()
-        self.__myIsRunning = False  
-
-    def __quitGame(self, event) -> bool:
-        """Handles quitting the game, ensuring state is saved."""
-        self.__myIsRunning = False
-        return self.__myIsRunning
+        return self.__myIsRunning    
 
     def __handleEvents(self):
         """Processes all pygame events."""
@@ -345,10 +279,44 @@ class MController:
         # If there are any movement directions, move the player
         if directions:
             self.__myPlayer.moveCharacter(directions)
+    
+    def __handle_character_death(self, event):
+        """
+        Handles what happens when the player dies.
+        Displays the game-over screen and stops the game loop.
 
+        :param event: The event that triggered the death.
+        """
+        self.__myView.display_game_over()
+        self.__myIsRunning = False  
+    
+    def __quitGame(self, event) -> bool:
+        """
+        Handles quitting the game, ensuring the game state is saved.
 
+        :param event: The quit event.
+        :return: False, indicating that the game should exit.
+        """
+        self.__myIsRunning = False
+        return self.__myIsRunning
+    
+    def gameWon(self, event):
+        """
+        Handles when the player wins the game.
+
+        :param event: The event triggering game completion.
+        """
+        self.gameWon = True
+        self.change_gamewon_music("victory.mp3")
+        self.change_gamewon_music("gameWon.mp3")
+        self.__myView.display_game_won()
+    
     def __shoot_projectile(self, event: pygame.event.Event):
-        """Handles shooting a projectile in the given direction."""
+        """
+        Handles shooting a projectile in the given direction.
+
+        :param event: The event containing information about the projectile.
+        """
         shooterName = "Projectile" + event.shooter
         if event.shooter:
             # Create the projectile using the angle provided by the event
@@ -364,18 +332,81 @@ class MController:
             )
             
             self.__myWorld.addProjectile(projectile)  # Add to the game world
-                
+    
+    def __reset_game(self):
+        """Handles resetting the game view and clearing the screen."""
+        pygame.mixer.stop()
+        self.__myView.reset_view()  # Call reset method in MView
+        GameWorld.reset_instance()  # Reset game world singleton
+        pygame.display.update()  # Ensure changes are displayed
+    
     def __mouseButtonUp(self, theEvent):
-        """Handles mouse button release."""
+        """
+        Handles mouse button press events.
+
+        :param theEvent: The mouse button down event.
+        """
         if theEvent.button in [1, 3]:  # Left or right click
             self.__myIsHoldingClick = False
-
+    
     def __mouseButtonDown(self, theEvent):
-        """Handles mouse button press."""
+        """
+        Handles mouse button release events.
+
+        :param theEvent: The mouse button up event.
+        """
         if theEvent.button in [1, 3]:  # Left or right click
             self.__myIsHoldingClick = True
             self.__mySign = 1 if theEvent.button == 1 else -1
+    
+    def change_gamewon_music(self, song):
+        """
+        Changes the background music to a new song based on an event.
+        :param event: Event containing `event.song` (string, e.g., "battleTheme.mp3")
+        """
+        assets_path = os.path.join(os.path.dirname(__file__), "..", "Assets/sounds")
+        new_song_path = os.path.join(assets_path, song)  # Get song filename from event
 
-    def __handle_mouse(self, theSign: int):
-        """Handles mouse input (future implementation)."""
-        pass
+        # Stop current music
+        pygame.mixer.stop()  # Stops all currently playing sounds
+
+        try:
+            # Load and play the new music
+            new_music = pygame.mixer.Sound(new_song_path)
+            new_music.set_volume(0.05)  # Adjust volume as needed
+            new_music.play(-1)  # Loop indefinitely
+            self.current_music = new_music  # Store reference to track current music
+
+            print(f"Now playing: {song}")
+
+        except Exception as e:
+            print(f"Error loading music: {song} - {e}")
+   
+    def change_music(self, event):
+        """
+        Changes the background music to a new song based on an event.
+        :param event: Event containing `event.song` (string, e.g., "battleTheme.mp3")
+        """
+        assets_path = os.path.join(os.path.dirname(__file__), "..", "Assets/sounds")
+        new_song_path = os.path.join(assets_path, event.song)  # Get song filename from event
+
+        # Stop current music
+        pygame.mixer.stop()  # Stops all currently playing sounds
+
+        try:
+            # Load and play the new music
+            new_music = pygame.mixer.Sound(new_song_path)
+            new_music.set_volume(0.05)  # Adjust volume as needed
+            new_music.play(-1)  # Loop indefinitely
+            self.current_music = new_music  # Store reference to track current music
+
+            print(f"Now playing: {event.song}")
+
+        except Exception as e:
+            print(f"Error loading music: {event.song} - {e}")
+
+ 
+    
+    
+               
+        

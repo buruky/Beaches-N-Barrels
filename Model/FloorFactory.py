@@ -7,6 +7,7 @@ from .Room import Room
 from ViewUnits import ViewUnits
 
 class FloorFactory:
+    """generates the grid with rooms and doors"""
     _FLOOR_LEVEL = 2
     _instance = None  # Stores the single instance
 
@@ -18,6 +19,7 @@ class FloorFactory:
         return cls._instance
     
     def _init_once(self):
+        """initializes floorfactory"""
         self.grid_width = 11
         self.grid_height = 11
         self.start_pos = (5, 5)  # Center of the grid
@@ -26,8 +28,6 @@ class FloorFactory:
         #self.grid = self.generate_dungeon(level)  # Store the grid in an instance variable
         #self.update()
         
-
-    
     @classmethod
     def getInstance(cls):
         """Getter for the singleton instance."""
@@ -36,6 +36,7 @@ class FloorFactory:
         return cls._instance
 
     def createFloor(self) -> Floor:
+        """creates the floor with the rooms"""
         enough_keys = True
         while enough_keys:
             self.keys_min = 0
@@ -46,6 +47,7 @@ class FloorFactory:
         return Floor(grid, doors)
     
     def createDemoFloor(self) -> Floor:
+        """creates a floor for our demo"""
         startx = Floor._START_POS[0]
         starty = Floor._START_POS[1]
         theHeight = ViewUnits.FLOOR_SIDE_LENGTH
@@ -70,9 +72,13 @@ class FloorFactory:
         self.grid = grid
         self.keys_min = 2
         return Floor(grid, doors)
+    
     def getKeyMin(self):
+        """returns minimum number of keys"""
         return self.keys_min
+    
     def generateGrid(self) -> list[list]:
+        """generates the grid"""
         startx = Floor._START_POS[0]
         
         starty = Floor._START_POS[1]
@@ -161,19 +167,16 @@ class FloorFactory:
                     
         return grid
 
-
-    
     def get_dungeon(self):
+        """returns dungeon grid"""
         return self.grid  
 
     def getStartRoom(self):
+        """returns the start room"""
         return self.start_pos
     
-
-    
-    
-
     def connect_rooms(self, theGrid):
+        """connects rooms in the grid with doors"""
         doors = []
         directions = {
             "N": (-1, 0),

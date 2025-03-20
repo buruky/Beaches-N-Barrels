@@ -2,15 +2,18 @@ from .Player import Player
 from .Abilities import SpeedBoostAbility
 import pygame
 
-
 class Dolphin(Player):
     """Dolphin hero that can swim fast temporarily."""
     
     def __init__(self):
+        '''creates dolphin player'''
+
         super().__init__("Dolphin", speed=7, health= 150, damage = 25)  # Faster base speed, more health
         self._ability = SpeedBoostAbility(self)
     
     def setAbility(self):
+        '''sets ability'''
+
         self._ability = SpeedBoostAbility(self)
 
         return self._ability
@@ -27,7 +30,6 @@ class Dolphin(Player):
 
         return data
 
-    
     @classmethod
     def from_dict(cls, data):
         """Reconstruct a Dolphin player from a dictionary, ensuring abilities are restored."""

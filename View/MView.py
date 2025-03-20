@@ -1,14 +1,19 @@
 import os
 import pygame
-from .UI import UI  # Import the UI class from the UI.py file
-from .SpriteSheet import SpriteSheet
+from .UI import UI
 from .SpriteFactory import SpriteFactory
 from ViewUnits import ViewUnits
 from Model.GameWorld import GameWorld 
 import random
 
 class MView:
+    """
+    Handles rendering, UI management, and game state updates for the view.
+    """
     def __init__(self):
+        """
+        Initializes the game view, loads assets, and sets up the UI.
+        """
         # self.screen = screen
         current_directory = os.path.dirname(__file__)
         # Build the relative path to the player and enemy images
@@ -57,41 +62,55 @@ class MView:
         # self.theNewRoom = (10,10,10)
         self.bossRoom = True
     
-    def getScreen(self):
-        return self.screen
-    
     def clear(self):
         """Clear the screen before drawing the next frame."""
         self.screen.fill((0, 0, 0))  # Fill screen with black
-
-    def updateBossHealthUI(self, event: pygame.event.Event):
-        self.BossHealth = event.health
-        self.bossMaxHealth = event.maxHealth
-        self.bossRoom = event.isdead
-        self.needs_redraw = True
-    
-
-
-    def updateHealthUI(self, event: pygame.event.Event):
-        self.playerHealth = event.health
-        self.maxHealth = event.maxHealth
-        self.needs_redraw = True
-
-
-    def updateInventoryUI(self, event: pygame.event.Event):
-        self.inventory = event.inventory
-        self.redrawCharacter()
-
-    def updateKeyInventoryUI(self, event: pygame.event.Event):
-        self.keyInventory = event.keyInventory
-        self.redrawCharacter()   
-
 
     def process_updates(self):
         """Process all updates and perform a single redraw if needed."""
         if self.needs_redraw:
             self.redrawCharacter()
             self.needs_redraw = False
+    
+    def updateBossHealthUI(self, event: pygame.event.Event):
+        """
+        Updates the boss health UI.
+
+        :param event: Event containing boss health information.
+        """
+        self.BossHealth = event.health
+        self.bossMaxHealth = event.maxHealth
+        self.bossRoom = event.isdead
+        self.needs_redraw = True
+    
+    def updateHealthUI(self, event: pygame.event.Event):
+        """
+        Updates player health UI.
+
+        :param event: Event containing updated health information.
+        """
+        self.playerHealth = event.health
+        self.maxHealth = event.maxHealth
+        self.needs_redraw = True
+    
+    def updateInventoryUI(self, event: pygame.event.Event):
+        """
+        Updates player inventory UI.
+
+        :param event: Event containing inventory updates.
+        """
+        self.inventory = event.inventory
+        self.redrawCharacter()
+    
+    def updateKeyInventoryUI(self, event: pygame.event.Event):
+        """
+        Updates the key inventory UI.
+
+        :param event: Event containing key count.
+        """
+        self.keyInventory = event.keyInventory
+        self.redrawCharacter()   
+    
     def updateRoom(self, event: pygame.event.Event):
         """Updates the room background and creates door sprites.
         The door that connects to a boss room uses a boss door sprite.
@@ -153,45 +172,7 @@ class MView:
                     playerSprite = sprite
             self.onScreenChar = [playerSprite]
         self.cords = event.cords
-
-    def _getDoorX(self, direction):
-        if direction == "N":
-            return ViewUnits.SOUTH_DOOR_CORD[0]
-        elif direction == "S":
-            return ViewUnits.NORTH_DOOR_CORD[0]
-        elif direction == "W":
-            return ViewUnits.EAST_DOOR_CORD[0]
-        elif direction == "E":
-            return ViewUnits.WEST_DOOR_CORD[0]
-        return 0
-
-    def _getDoorY(self, direction):
-        if direction == "N":
-            return ViewUnits.SOUTH_DOOR_CORD[1]
-        elif direction == "S":
-            return ViewUnits.NORTH_DOOR_CORD[1]
-        elif direction == "W":
-            return ViewUnits.EAST_DOOR_CORD[1]
-        elif direction == "E":
-            return ViewUnits.WEST_DOOR_CORD[1]
-        return 0
-
-
-
-    def addCharacterToScreenList(self, theEvent:pygame.event):
-        
-        newCharSprite = self.mySpriteFactory.createSpriteSheet(theEvent.id, theEvent.name, theEvent.positionX,theEvent.positionY)
-        self.onScreenChar.append(newCharSprite)
     
-    def remove_projectile(self, theEvent:pygame.event):
-        """Removes a projectile from the screen."""
-        for i in range(len(self.onScreenChar)):
-            if theEvent.id == self.onScreenChar[i].getId():
-                self.onScreenChar.pop(i)
-                break
-        self.needs_redraw = True
-
-
     def update_entity(self,theEvent:pygame.event):#need to find way to clear canvas when you draw
         """Adds Chracter to list and to screen with new position  """
     
@@ -213,6 +194,7 @@ class MView:
                     characterSprite.setCurrentState(theEvent.state)
         
         self.needs_redraw = True
+    
     def update_game_won_screen(self):
         """Continuously updates the game won animations each frame."""
         
@@ -255,6 +237,22 @@ class MView:
         self.confetti_particles = [p for p in self.confetti_particles if p[1] < ViewUnits.SCREEN_HEIGHT]
 
         pygame.display.flip()  # Refresh screen
+    
+    def addCharacterToScreenList(self, theEvent:pygame.event):
+        """
+        adds characters to screen  
+        """
+        newCharSprite = self.mySpriteFactory.createSpriteSheet(theEvent.id, theEvent.name, theEvent.positionX,theEvent.positionY)
+        self.onScreenChar.append(newCharSprite)
+
+    def remove_projectile(self, theEvent:pygame.event):
+        """Removes a projectile from the screen."""
+        for i in range(len(self.onScreenChar)):
+            if theEvent.id == self.onScreenChar[i].getId():
+                self.onScreenChar.pop(i)
+                break
+        self.needs_redraw = True
+
     def display_game_won(self):
         """Displays 'You Won!' screen with animations that update every frame."""
         
@@ -282,7 +280,6 @@ class MView:
 
         pygame.display.flip()  # Update screen
 
-  
     def display_game_over(self):
         """Display 'Game Over' and stop the game."""
         self.clear()
@@ -316,6 +313,7 @@ class MView:
 
             # Draw the sprite at its designated position.
             self.screen.blit(item_sprite.getCurrentSprite(), item_sprite.getRect().topleft)
+
     def draw_minimap(self):
         """Draws a minimap of the floor using rounded rectangles to represent rooms with beach-themed colors and a border."""
         gameworld = GameWorld.getInstance()
@@ -354,6 +352,7 @@ class MView:
                     rect = pygame.Rect(rect_x, rect_y, cell_width - 2, cell_height - 2)
                     pygame.draw.rect(self.screen, color, rect, border_radius=border_radius)
                     pygame.draw.rect(self.screen, (0, 0, 0), rect, 2, border_radius=border_radius)
+
     def reset_view(self):
         """Clears the screen and resets the view state."""
         self.inventory.clear()
@@ -363,6 +362,7 @@ class MView:
         self.onScreenChar.clear()
         self.showMinimap = False  # Hide minimap if needed
         pygame.display.update()  # Force screen update
+
     def redrawCharacter(self):
         """Clears the screen, redraws the room, characters, and room coordinates."""
         
@@ -395,6 +395,37 @@ class MView:
         self.ui.draw_key_count(self.keyInventory)
         self.ui.draw_health(self.playerHealth, self.maxHealth)  # Draw health  
         pygame.display.flip()
+    
+    def getScreen(self):
+        """
+        Returns the Pygame screen object.
 
+        :return: The Pygame display screen.
+        """
+        return self.screen
+    
+    def _getDoorX(self, direction):
+        """Helper function to get X position for doors based on direction."""
+        if direction == "N":
+            return ViewUnits.SOUTH_DOOR_CORD[0]
+        elif direction == "S":
+            return ViewUnits.NORTH_DOOR_CORD[0]
+        elif direction == "W":
+            return ViewUnits.EAST_DOOR_CORD[0]
+        elif direction == "E":
+            return ViewUnits.WEST_DOOR_CORD[0]
+        return 0
+    
+    def _getDoorY(self, direction):
+        """Helper function to get Y position for doors based on direction."""
+        if direction == "N":
+            return ViewUnits.SOUTH_DOOR_CORD[1]
+        elif direction == "S":
+            return ViewUnits.NORTH_DOOR_CORD[1]
+        elif direction == "W":
+            return ViewUnits.EAST_DOOR_CORD[1]
+        elif direction == "E":
+            return ViewUnits.WEST_DOOR_CORD[1]
+        return 0
 
     

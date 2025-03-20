@@ -5,25 +5,30 @@ from CustomEvents import CustomEvents
 from .Door import Door
 
 class Floor:
-    
+    """ a floor that has rooms and doors"""
     _ROOM_SIZE = 100
     _START_POS:Final = (5,5)
     def __init__(self, theGrid:list[list], theDoorList:list[Door]):
+        """initializes floor"""
         self.__myGrid = theGrid
         self.__myDoorList = theDoorList
         self.__myStartCord = Floor._START_POS
 
 
     def get_dungeon(self) -> list[list]:
+        """returns grid"""
         return self.__myGrid  
     
     def getDoorList(self) -> list[Door]:
+        """returns the list of doors on the floor"""
         return self.__myDoorList
     
     def getStartRoom(self):
+        """returns the start room for the floor"""
         return self.__myGrid[self.__myStartCord[0]][self.__myStartCord[1]]
     
     def print_dungeon(self):
+        """prints the grid for testing"""
         for row in range(len(self.__myGrid)):
             line = ""
             for col in range(len(self.__myGrid[0])):
@@ -35,6 +40,7 @@ class Floor:
         print()
     
     def getRoomByCoords(self, theCoords:tuple):
+        """returns the room by using coords"""
         return self.__myGrid[theCoords[0]][theCoords[1]]
     
     def to_dict(self):

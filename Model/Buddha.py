@@ -1,18 +1,20 @@
 from .Player import Player
 from .Abilities import InvincibilityAbility
 import pygame
-from .EventManager import EventManager
-from CustomEvents import CustomEvents
+
 
 class Buddha(Player):
     """Buddha hero that can become temporarily invincible."""
     
     def __init__(self):
+        '''creates buddha player'''
         super().__init__("Buddha", speed=4, health=200, damage = 25)  # Slower but tankier
         self._canDie = True
         self._ability = InvincibilityAbility(self)
         self.update("HEALTH")
     def takeDamage(self, damage: int):
+        '''custom damge so that ability can cause invincibilty'''
+
         if damage == 0.1:
             self._myHealth = 1000
             self.maxHealth = 1000
@@ -25,15 +27,15 @@ class Buddha(Player):
                 self.update("HEALTH")
                 if self._myHealth <= 0:
                     self.Dies()
+    
     def setAbility(self):
+        '''sets ability'''
+
         self.update("HEALTH")
         self._ability = InvincibilityAbility(self)
 
         return self._ability
         
-
-
-
     def to_dict(self):
         """Convert Buddha to a dictionary for serialization, including ability state."""
         data = super().to_dict()  # Get base player data
@@ -46,8 +48,6 @@ class Buddha(Player):
 
         return data
 
-
-    
     @classmethod
     def from_dict(cls, data):
         """Reconstruct a Buddha player from a dictionary, ensuring abilities are restored correctly."""
