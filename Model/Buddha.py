@@ -8,7 +8,7 @@ class Buddha(Player):
     """Buddha hero that can become temporarily invincible."""
     
     def __init__(self):
-        super().__init__("Buddha", speed=4, health=200, damage = 50)  # Slower but tankier
+        super().__init__("Buddha", speed=4, health=200, damage = 25)  # Slower but tankier
         self._canDie = True
         self._ability = InvincibilityAbility(self)
         self.update("HEALTH")

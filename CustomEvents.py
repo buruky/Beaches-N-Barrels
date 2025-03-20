@@ -19,4 +19,5 @@ class CustomEvents:
     BOSS_ROOM:Final = "BOSS_ROOM"
     SONG_CHANGE:Final = "SONG_CHANGE"
     GAME_WON:Final = "GAME_WON"
+    RESET:Final = "RESET"
 
