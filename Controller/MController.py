@@ -70,14 +70,25 @@ class MController:
             "Astronaut": Astronaut
             
         }
+        character_shoot_map = {
+            "Dolphin": 300,
+            "Buddha": 600,
+            "Astronaut": 500
+            
+        }
         if "Demo" in selected_character:
             self.__myWorld.setDemo()
             selected_character = selected_character.replace("Demo", "")
             self.__myPlayer = character_map.get(selected_character, Buddha)()
             self.__myWorld.setPlayer(self.__myPlayer)
+            self.shoot_cooldown = character_shoot_map.get(selected_character, 500)
+
         else:
             self.__myPlayer = character_map.get(selected_character, Dolphin)()
             self.__myWorld.setPlayer(self.__myPlayer)
+            self.shoot_cooldown = character_shoot_map.get(selected_character, 500)
+
+        
 
     
     def change_gamewon_music(self, song):

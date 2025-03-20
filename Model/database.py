@@ -20,11 +20,11 @@ def initialize_enemy_db(db_path="db/enemies.db"):
     
     # Insert default enemy data
     cursor.execute("INSERT INTO enemy_data (enemy_type, attack, health, speed) VALUES ('Pirate', 20, 1, 2)")
-    cursor.execute("INSERT INTO enemy_data (enemy_type, attack, health, speed) VALUES ('Crab', 20, 1, 10)")
-    cursor.execute("INSERT INTO enemy_data (enemy_type, attack, health, speed) VALUES ('BeachBall', 20, 60, 4)")
-    cursor.execute("INSERT INTO enemy_data (enemy_type, attack, health, speed) VALUES ('Seagull', 60, 30, 1)")
-    cursor.execute("INSERT INTO enemy_data (enemy_type, attack, health, speed) VALUES ('Shark', 60, 1005, 2)")
-    cursor.execute("INSERT INTO enemy_data (enemy_type, attack, health, speed) VALUES ('Barrel', 60, 500, 2)")
+    cursor.execute("INSERT INTO enemy_data (enemy_type, attack, health, speed) VALUES ('Crab', 10, 1, 10)")
+    cursor.execute("INSERT INTO enemy_data (enemy_type, attack, health, speed) VALUES ('BeachBall', 20, 60, 3)")
+    cursor.execute("INSERT INTO enemy_data (enemy_type, attack, health, speed) VALUES ('Seagull', 30, 15, 1)")
+    cursor.execute("INSERT INTO enemy_data (enemy_type, attack, health, speed) VALUES ('Shark', 25, 1000, 2)")
+    cursor.execute("INSERT INTO enemy_data (enemy_type, attack, health, speed) VALUES ('Barrel', 30, 500, 2)")
     
     connection.commit()
     connection.close()
