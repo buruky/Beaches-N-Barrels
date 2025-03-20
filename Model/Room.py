@@ -77,9 +77,7 @@ class Room:
         """
         if len(self.__myEnemyList.get_entities()) > 0:
             self.__myEnemyList.deleteAllEnemy()
-        else:
-            print("They are dead!")
-
+        
     def killEnemy(self, theEnemy):
         """
         Removes a specific enemy from the room.

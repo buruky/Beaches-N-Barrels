@@ -82,12 +82,10 @@ class InvincibilityAbility(Ability):
         self.player.maxHealth = self.tempMax
 
         self.player.setCanDie(False)  # Simulating invincibility
-        print("invincible")
     def deactivate(self):
 
         self.player.update("HEALTH")
         self.player.setCanDie(True)
-        print("not Invincible")
         super().deactivate()
 
 
@@ -101,13 +99,11 @@ class Invincibility(Ability):
     def activate(self):
         self.player._canDie = False
         self.player.update("HEALTH")
-        print("invince")
 
     def deactivate(self):
 
         self.player.update("HEALTH")
         self.player._canDie = True
-        print("invince stop")
         super().deactivate()
 
 class LowGravityAbility1(Ability):
@@ -139,14 +135,12 @@ class LowGravityAbility(Ability):
     def use(self):
         current_time = pygame.time.get_ticks()
         if current_time - self.last_used < self.cooldown:
-            print("Dash ability is cooling down.")
             return  # Cooldown has not elapsed; do nothing.
         # Otherwise, proceed to use dash.
         self.last_used = current_time  # Record the time dash is used.
         super().use()  # This sets active to True and calls activate().
 
     def activate(self):
-        print("Dash Activated!")
         dx, dy = 0, 0
         direction = self.player._direction  
         if direction == "LEFT":
@@ -166,5 +160,4 @@ class LowGravityAbility(Ability):
         self.deactivate()
 
     def deactivate(self):
-        print("Dash Ended.")
         super().deactivate()

@@ -163,7 +163,6 @@ class GameWorld:
         pygame.event.post(event)
         if self.currentRoom.getRoomType() == "n " :
             if self.changedRoom:
-                print("INHEREEE")
                 event = pygame.event.Event(
                     EventManager.event_types["SONG_CHANGE"],
                     {"song": "MainTheme.mp3"
@@ -333,7 +332,6 @@ class GameWorld:
         # Ensure player updates correctly after loading
         self.loadWorld()
 
-        print("Game loaded successfully! Player abilities restored.")
 
     
 

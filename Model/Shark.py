@@ -107,8 +107,6 @@ class Shark(Enemy):
         if self.is_angry:
             print(f"{self.getName()} performs a special attack!")
             # You can add special effects, like a charging attack or an area attack
-            print("IM MARK THE SHARK AND I AM ANGRY")
-            # self.shoot("SPECIAL_SHOOT_PROJECTILE")  # Shoot a special projectile
             self.last_special_attack_time = current_time  # Reset the special attack cooldown
 
     def enter_angry_mode(self):

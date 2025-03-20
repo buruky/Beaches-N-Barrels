@@ -147,7 +147,6 @@ class MController:
             if self.gameWon:
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_RETURN:  # Restart game
-                        print("Restarting Game...")
                         self.gameWon = False  # Reset game state
                         self.__reset_game()
 
@@ -161,7 +160,6 @@ class MController:
                         exit()
             else:
                 if event.type == pygame.KEYDOWN and event.key == pygame.K_l:
-                    print("Saving game...")  # Press "L" to save anytime
                     GameSaver.save_game()
 
                 elif event.type == pygame.KEYDOWN and event.key == pygame.K_k:
@@ -182,8 +180,7 @@ class MController:
         """Handles keyboard input for moving the player and activating abilities."""
         keys = pygame.key.get_pressed()
         directions = []
-        if self.gameWon:
-            print("IM HEREEE")
+        
         # Handle activating abilities
         if keys[pygame.K_SPACE]:  # Press 'E' to activate ability
             self.__myPlayer.activate_ability()
@@ -287,8 +284,20 @@ class MController:
 
         :param event: The event that triggered the death.
         """
+        self.change_gamewon_music("womp.mp3")
         self.__myView.display_game_over()
         self.__myIsRunning = False  
+    
+    def gameWon(self, event):
+        """
+        Handles when the player wins the game.
+
+        :param event: The event triggering game completion.
+        """
+        self.gameWon = True
+        self.change_gamewon_music("victory.mp3")
+        
+        self.__myView.display_game_won()
     
     def __quitGame(self, event) -> bool:
         """
@@ -299,17 +308,6 @@ class MController:
         """
         self.__myIsRunning = False
         return self.__myIsRunning
-    
-    def gameWon(self, event):
-        """
-        Handles when the player wins the game.
-
-        :param event: The event triggering game completion.
-        """
-        self.gameWon = True
-        self.change_gamewon_music("victory.mp3")
-        self.change_gamewon_music("gameWon.mp3")
-        self.__myView.display_game_won()
     
     def __shoot_projectile(self, event: pygame.event.Event):
         """
@@ -377,7 +375,6 @@ class MController:
             new_music.play(-1)  # Loop indefinitely
             self.current_music = new_music  # Store reference to track current music
 
-            print(f"Now playing: {song}")
 
         except Exception as e:
             print(f"Error loading music: {song} - {e}")
@@ -400,7 +397,6 @@ class MController:
             new_music.play(-1)  # Loop indefinitely
             self.current_music = new_music  # Store reference to track current music
 
-            print(f"Now playing: {event.song}")
 
         except Exception as e:
             print(f"Error loading music: {event.song} - {e}")

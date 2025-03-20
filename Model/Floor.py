@@ -3,7 +3,7 @@ from .Room import Room
 from .EventManager import EventManager
 from CustomEvents import CustomEvents
 from .Door import Door
-
+print
 class Floor:
     """ a floor that has rooms and doors"""
     _ROOM_SIZE = 100
@@ -13,7 +13,6 @@ class Floor:
         self.__myGrid = theGrid
         self.__myDoorList = theDoorList
         self.__myStartCord = Floor._START_POS
-
 
     def get_dungeon(self) -> list[list]:
         """returns grid"""

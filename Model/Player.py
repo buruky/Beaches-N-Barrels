@@ -214,7 +214,6 @@ class Player(DungeonCharacter):
     
     def Dies(self) -> None:
         """Trigger death event"""
-        print(f"{self._name} has died!")  # Debugging
         death_event = pygame.event.Event(EventManager.event_types[CustomEvents.PLAYER_DIED])
         pygame.event.post(death_event)
     
