@@ -6,6 +6,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 from CustomEvents import CustomEvents
 from Model import *
 from Controller import *
+from Model.MockEnemy import MockEnemy
 
 
 class TestPlayer(unittest.TestCase):
@@ -23,42 +24,74 @@ class TestPlayer(unittest.TestCase):
         print(event)
         
     def setUp(self):
-        """Create a Player instance for testing."""
-        EventManager.registerEvent(CustomEvents.CHARACTER_STOPPED, self.EmptyMethod(CustomEvents.CHARACTER_STOPPED))
-        EventManager.registerEvent(CustomEvents.CHARACTER_MOVED, self.EmptyMethod(CustomEvents.CHARACTER_MOVED))
+        self.enemy = MockEnemy()
+        # self.testGameworld.add_enemy(self.enemy)
+    
 
-        EventManager.registerEvent(CustomEvents.PICKUP_ITEM,self.EmptyMethod(CustomEvents.PICKUP_ITEM))
-        EventManager.registerEvent(CustomEvents.CHANGED_ROOM,self.EmptyMethod(CustomEvents.CHANGED_ROOM))
-        self.testGameworld = GameWorld.getInstance()
-        self.enemy = Enemy("P1",2000, 1, 0)
-        self.testGameworld.add_enemy(self.enemy)
+    def setUp(self):
+        self.enemy = MockEnemy(name="Crab", attackDamage=15, healthPoints=100, speed=2, positionX=50, positionY=50)
 
+    def test_initialization(self):
+        self.assertEqual(self.enemy.getName(), "Crab")
+        self.assertEqual(self.enemy.getAttackDamage(), 15)
+        self.assertEqual(self.enemy.getHealth(), 100)
+        self.assertEqual(self.enemy.getPositionX(), 50)
+        self.assertEqual(self.enemy.getPositionY(), 50)
+        self.assertFalse(self.enemy.isDead())
 
-    def test_movement(self):
-        """Test if the player moves correctly."""
-        self.enemy.moveCharacter(["LEFT"])
-        self.enemy.moveCharacter([])
-        self.assertTrue(self.player.getPositionX() < 250)  # Moves left by 5 pixels
-        
-        print("pass")
-        self.player.moveCharacter(["RIGHT"])
-        self.player.moveCharacter([])
-        self.assertTrue(self.player.getPositionX() > 250)  # Moves back to original
-        
+    def test_take_damage_exact_kill(self):
+        self.enemy.takeDamage(100)
+        self.assertEqual(self.enemy.getHealth(), 0)
+        self.assertTrue(self.enemy.isDead())
 
-        self.player.moveCharacter(["UP"])
-        self.player.moveCharacter([])
-        self.assertTrue(self.player.getPositionY() < 250)  # Moves up by 5 pixels
-        
+    def test_take_damage_overkill(self):
+        self.enemy.takeDamage(150)
+        self.assertLess(self.enemy.getHealth(), 0)
+        self.assertTrue(self.enemy.isDead())
 
-        self.player.moveCharacter(["DOWN"])
-        self.player.moveCharacter([])
-        self.assertTrue(self.player.getPositionY() > 250)  # Moves back down
+    def test_take_damage_zero(self):
+        self.enemy.takeDamage(0)
+        self.assertEqual(self.enemy.getHealth(), 100)
+        self.assertFalse(self.enemy.isDead())
 
-    # def test_rect_position_update(self):
-    #     """Test if the rect position updates correctly with movement."""
-    #     self.player.moveCharacter("RIGHT")
-    #     self.assertEqual(self.player.rect.topleft, (105, 100))
+    def test_multiple_hits(self):
+        self.enemy.takeDamage(20)
+        self.enemy.takeDamage(30)
+        self.assertEqual(self.enemy.getHealth(), 50)
+        self.assertFalse(self.enemy.isDead())
+
+    def test_move_left(self):
+        self.enemy.setDirection("LEFT")
+        start_x = self.enemy.getPositionX()
+        self.enemy.moveCharacter()
+        self.assertEqual(self.enemy.getPositionX(), start_x - 2)
+
+    def test_move_right(self):
+        self.enemy.setDirection("RIGHT")
+        start_x = self.enemy.getPositionX()
+        self.enemy.moveCharacter()
+        self.assertEqual(self.enemy.getPositionX(), start_x + 2)
+
+    def test_move_up(self):
+        self.enemy.setDirection("UP")
+        start_y = self.enemy.getPositionY()
+        self.enemy.moveCharacter()
+        self.assertEqual(self.enemy.getPositionY(), start_y - 2)
+
+    def test_move_down(self):
+        self.enemy.setDirection("DOWN")
+        start_y = self.enemy.getPositionY()
+        self.enemy.moveCharacter()
+        self.assertEqual(self.enemy.getPositionY(), start_y + 2)
+
+    def test_custom_speed_and_position(self):
+        enemy = MockEnemy(speed=5, positionX=10, positionY=20)
+        enemy.setDirection("RIGHT")
+        enemy.moveCharacter()
+        self.assertEqual(enemy.getPositionX(), 15)
+        enemy.setDirection("DOWN")
+        enemy.moveCharacter()
+        self.assertEqual(enemy.getPositionY(), 25)
 
 if __name__ == "__main__":
 
