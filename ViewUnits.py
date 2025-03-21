@@ -48,3 +48,5 @@ class ViewUnits:
     DIRECTION_DOWN:Final = "DOWN"
     DIRECTION_LEFT:Final = "LEFT"
     DIRECTION_RIGHT:Final = "RIGHT"
+    PLAYER_START_X:Final = 250
+    PLAYER_START_Y:Final = 250

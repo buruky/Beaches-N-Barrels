@@ -17,15 +17,8 @@ class Player(DungeonCharacter):
     MAX_INVENTORY_SIZE: Final = 4
     
     def __init__(self, name: str, speed: int, health: int, damage: int):
-        """
-    Initializes the player character with the given attributes.
 
-        :param name: Name of the player.
-        :param speed: Movement speed of the player.
-        :param health: Maximum health of the player.
-        :param damage: Base attack damage of the player.
-        """
-        super().__init__(damage, health, 250, 250, speed)  # Default attackDamage = 50
+        super().__init__(damage, health, ViewUnits.PLAYER_START_X, ViewUnits.PLAYER_START_Y, speed)  # Default attackDamage = 50
         self._myHealth = health
         self.maxHealth = health
         self._name = name
