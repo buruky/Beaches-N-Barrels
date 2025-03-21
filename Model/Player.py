@@ -15,7 +15,9 @@ import os
 class Player(DungeonCharacter):
     """Parent class for all player heroes with shared movement and event handling."""
     MAX_INVENTORY_SIZE: Final = 4
+    
     def __init__(self, name: str, speed: int, health: int, damage: int):
+
         super().__init__(damage, health, ViewUnits.PLAYER_START_X, ViewUnits.PLAYER_START_Y, speed)  # Default attackDamage = 50
         self._myHealth = health
         self.maxHealth = health
@@ -42,82 +44,17 @@ class Player(DungeonCharacter):
         """Update sprite when player is made"""
         self.update(CustomEvents.CHARACTER_STOPPED)
 
-    def to_dict(self):
-        """Convert player state to a dictionary for serialization, ensuring inventory is saved correctly."""
-        return {
-            "name": self._name,
-            "speed": self._mySpeed,
-            "health": self._myHealth,
-            "direction": self._direction,
-            "damage": self._myAttackDamage,
-            "positionX": self._myPositionX,
-            "positionY": self._myPositionY,
-            "inventory": [item.to_dict() if item is not None else None for item in self.__inventory],
-            "class": self.__class__.__name__,  
-            "keys": self.keyCount
-        }
-
-
-    @classmethod
-    def from_dict(cls, data):
-        """Reconstruct a Player object, ensuring the correct subclass is restored properly."""
-        from .Dolphin import Dolphin
-        from .Buddha import Buddha
-        from .Astronaut import Astronaut
-
-        class_mapping = {
-            "Dolphin": Dolphin,
-            "Buddha": Buddha,
-            "Astronaut": Astronaut,
-            "Player": Player
-        }
-
-        player_class = class_mapping.get(data.get("class", "Player"), Player)
-
-        #  If the class is Dolphin/Buddha (no init params), just instantiate
-        if player_class in [Dolphin, Buddha, Astronaut]:
-            player = player_class()
-        else:
-            player = player_class(data["name"], data["speed"], data["health"], data["damage"])
-
-        # Restore base attributes
-        player._myPositionX = data["positionX"]
-        player._myPositionY = data["positionY"]
-        player._direction = data["direction"]
-        player.keyCount = data["keys"]
-        player.update("PICKUP_KEY")
-
-        #  Restore inventory correctly on the instance
-        if "inventory" in data:
-            from .Item import UsableItem  # Ensure item classes are imported
-            player.__inventory = []
-            
-            for item_data in data["inventory"]:
-                if item_data is None:
-                    player.__inventory.append(None)  #  Preserve None values
-                else:
-                    item_class_name = item_data.get("class", "UsableItem")  # Default to UsableItem
-                    item_class = globals().get(item_class_name, UsableItem)  # Find the correct item class
-
-                    if hasattr(item_class, 'from_dict'):
-                        item_instance = item_class.from_dict(item_data)  #  Create the item instance
-                        player.__inventory.append(item_instance)  #  Append to instance inventory
-                    else:
-                        print(f"Error: {item_class_name} does not have a from_dict method")
-        return player
-
-
-    
-    
-    
     def restore_abilities(self):
         """Ensure player abilities are restored after loading."""
         for ability in self.abilities:
             ability.restore_state()  # If abilities store cooldowns, restore them
-    def getAttackDamage(self) -> int:
-        return self._myAttackDamage
     
     def moveCharacter(self, theDirections: list) -> None:
+        """
+        Moves the player character based on the input direction.
+
+        :param theDirections: A list of movement directions (UP, DOWN, LEFT, RIGHT).
+        """
         dx, dy = 0, 0
 
         if "LEFT" in theDirections:
@@ -180,6 +117,18 @@ class Player(DungeonCharacter):
         if theDirections:
             self._direction = theDirections[-1]  # Last key pressed is priority
     
+    def teleportCharacter(self, num1: int, num2: int) -> None:
+        """
+        Instantly moves the player to a new position.
+
+        :param num1: X coordinate.
+        :param num2: Y coordinate.
+        """
+        self._myPositionX = num1
+        self._myPositionY = num2
+        """If Character moves their sprite should be updated to location"""
+        self.update(CustomEvents.CHARACTER_STOPPED)#might work
+   
     def pickup(self, item) -> None:
         """Add an item to the player's inventory if space is available."""
         if item._name == "KeyItem":
@@ -206,18 +155,13 @@ class Player(DungeonCharacter):
                 self.invFull = True
         if self.__myFloorFactory.getKeyMin() <= self.keyCount:
             GameWorld.getInstance().setFoundKeys(True)
-
-    def setMaxKeys(self):
-        GameWorld.getInstance().setFoundKeys(True)
-
-    def getInventory(self) -> list:
-        return self.__inventory
-    
-    def getKey(self):
-        return  self.keyCount
     
     def use_item(self, idx) -> None:
-        """Use the item from inventory at the specified index and replace it with None."""
+        """
+        Uses an item from the player's inventory at the given index.
+
+        :param idx: Index of the item in the inventory.
+        """
         if idx < len(self.__inventory):
             item = self.__inventory[idx]
             if item is not None:
@@ -238,16 +182,18 @@ class Player(DungeonCharacter):
                     # Replace the item with None once used
                     # print("No usable item at this slot or ability on cooldown.")
                     # self.__inventory[idx] = None  # Replace the used item with None
-
-     
-    def teleportCharacter(self, num1: int, num2: int) -> None:
-        self._myPositionX = num1
-        self._myPositionY = num2
-        """If Character moves their sprite should be updated to location"""
-        self.update(CustomEvents.CHARACTER_STOPPED)#might work
-
+    
+    def activate_ability(self):
+        """Triggers the player's special ability when 'E' is pressed."""
+        if self._ability:
+            self._ability.use()
     
     def takeDamage(self, damage: int):
+        """
+        Reduces the player's health by the given damage amount.
+
+        :param damage: The amount of damage taken.
+        """
         if damage == 0.1:
             self._myHealth = 1000
             self.maxHealth = 1000
@@ -258,18 +204,48 @@ class Player(DungeonCharacter):
         self.update("HEALTH")
         if self._myHealth <= 0 :
             self.Dies()
-
-
-    def activate_ability(self):
-        """Triggers the player's special ability when 'E' is pressed."""
-        if self._ability:
-            self._ability.use()
-
+    
+    def Dies(self) -> None:
+        """Trigger death event"""
+        death_event = pygame.event.Event(EventManager.event_types[CustomEvents.PLAYER_DIED])
+        pygame.event.post(death_event)
+    
     def setCanDie(self,canDie):
+        """
+        Toggles whether the player can die.
+
+        :param canDie: Boolean value indicating if the player can die.
+        """
         self._canDie = canDie
     
+    def getInventory(self) -> list:
+        """
+        Returns the player's inventory.
+
+        :return: List of items in the inventory.
+        """
+        return self.__inventory
+    
+    def setMaxKeys(self):
+        """
+        Sets the maximum number of keys as found.
+        """
+        GameWorld.getInstance().setFoundKeys(True)
+    
+    def getKey(self):
+        """
+        Returns the number of keys the player has.
+
+        :return: Number of keys.
+        """
+        return  self.keyCount
     
     def update(self, theEventName: str):
+        """
+        Updates the player's state and dispatches relevant events.
+
+        :param theEventName: Name of the event to update.
+        """
         if theEventName == CustomEvents.CHARACTER_MOVED:
             state = self._direction
         elif theEventName == CustomEvents.CHARACTER_STOPPED:
@@ -304,14 +280,7 @@ class Player(DungeonCharacter):
                 "keyInventory": self.getKey()}        
             )
         pygame.event.post(event)
-
-    def getMaxHealth(self):
-        return self.maxHealth
     
-    def setMaxHealth(self, health):
-        self.maxHealth = health
-        self.update("HEALTH")
-
     def update_items(self) -> None:
         """
         Updates each item in the player's inventory so that cooldowns are tracked.
@@ -319,24 +288,140 @@ class Player(DungeonCharacter):
         """
         for item in self.__inventory:
             item.update(self)
-
     
-    def Dies(self) -> None:
-        """Trigger death event"""
-        print(f"{self._name} has died!")  # Debugging
-        death_event = pygame.event.Event(EventManager.event_types[CustomEvents.PLAYER_DIED])
-        pygame.event.post(death_event)
+    def getMaxHealth(self):
+        """
+        Returns the player's maximum health.
 
+        :return: Maximum health value.
+        """
+        return self.maxHealth
+    
+    def setMaxHealth(self, health):
+        """
+        Sets the player's maximum health.
+
+        :param health: New maximum health value.
+        """
+        self.maxHealth = health
+        self.update("HEALTH")
+    
     def getPositionX(self) -> int:
+        """
+        Returns the player's current X-coordinate.
+
+        :return: X position of the player.
+        """
         return self._myPositionX
+    
     def getHealth(self):
+        """
+        Returns the player's current health.
+
+        :return: Health value.
+        """
         return self._myHealth
+    
     def getPositionY(self) -> int:
+        """
+        Returns the player's current Y-coordinate.
+
+        :return: Y position of the player.
+        """
         return self._myPositionY
     
     def getName(self):
+        """
+        Returns the player's name.
+
+        :return: Name of the player.
+        """
         return self._name
+    
     def setDamage(self, damage):
+        """
+        Sets the player's attack damage.
+
+        :param damage: New attack damage value.
+        """
         self._myAttackDamage = damage
+    
+    def getAttackDamage(self) -> int:
+        """
+        Returns the player's current attack damage.
+
+        :return: Attack damage value.
+        """
+        return self._myAttackDamage 
+    
     def toString(self) -> str:
+        """
+        Returns a string representation of the player's state.
+
+        :return: String describing the player's name and position.
+        """
         return f"{self._name} at ({self._myPositionX}, {self._myPositionY})"
+
+    def to_dict(self):
+        """Convert player state to a dictionary for serialization, ensuring inventory is saved correctly."""
+        return {
+            "name": self._name,
+            "speed": self._mySpeed,
+            "health": self._myHealth,
+            "direction": self._direction,
+            "damage": self._myAttackDamage,
+            "positionX": self._myPositionX,
+            "positionY": self._myPositionY,
+            "inventory": [item.to_dict() if item is not None else None for item in self.__inventory],
+            "class": self.__class__.__name__,  
+            "keys": self.keyCount
+        }
+    
+    @classmethod
+    def from_dict(cls, data):
+        """Reconstruct a Player object, ensuring the correct subclass is restored properly."""
+        from .Dolphin import Dolphin
+        from .Buddha import Buddha
+        from .Astronaut import Astronaut
+
+        class_mapping = {
+            "Dolphin": Dolphin,
+            "Buddha": Buddha,
+            "Astronaut": Astronaut,
+            "Player": Player
+        }
+
+        player_class = class_mapping.get(data.get("class", "Player"), Player)
+
+        #  If the class is Dolphin/Buddha (no init params), just instantiate
+        if player_class in [Dolphin, Buddha, Astronaut]:
+            player = player_class()
+        else:
+            player = player_class(data["name"], data["speed"], data["health"], data["damage"])
+
+        # Restore base attributes
+        player._myPositionX = data["positionX"]
+        player._myPositionY = data["positionY"]
+        player._direction = data["direction"]
+        player.keyCount = data["keys"]
+        player.update("PICKUP_KEY")
+
+        #  Restore inventory correctly on the instance
+        if "inventory" in data:
+            from .Item import UsableItem  # Ensure item classes are imported
+            player.__inventory = []
+            
+            for item_data in data["inventory"]:
+                if item_data is None:
+                    player.__inventory.append(None)  #  Preserve None values
+                else:
+                    item_class_name = item_data.get("class", "UsableItem")  # Default to UsableItem
+                    item_class = globals().get(item_class_name, UsableItem)  # Find the correct item class
+
+                    if hasattr(item_class, 'from_dict'):
+                        item_instance = item_class.from_dict(item_data)  #  Create the item instance
+                        player.__inventory.append(item_instance)  #  Append to instance inventory
+                    else:
+                        print(f"Error: {item_class_name} does not have a from_dict method")
+        return player
+

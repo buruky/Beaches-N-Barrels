@@ -2,7 +2,6 @@ import os
 import pygame
 from ViewUnits import ViewUnits  # Assuming this exists
 from .SpriteFactory import SpriteFactory
-from Model.GameWorld import GameWorld 
 
 class UI:
     def __init__(self, screen):
@@ -134,7 +133,7 @@ class UI:
         y_offset = 30  # Distance from the top
 
         # Draw a thick dark red border around the boss health bar
-        border_color = (200, 0, 0)
+        border_color = (0, 0, 0)
         border_thickness = 4
         pygame.draw.rect(self.screen, border_color, 
                         (x_offset - 2, y_offset - 2, bar_width + 4, bar_height + 4), 

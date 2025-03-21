@@ -1,14 +1,19 @@
 import os
 import pygame
-from .UI import UI  # Import the UI class from the UI.py file
-from .SpriteSheet import SpriteSheet
+from .UI import UI
 from .SpriteFactory import SpriteFactory
 from ViewUnits import ViewUnits
 from Model.GameWorld import GameWorld 
 import random
 
 class MView:
+    """
+    Handles rendering, UI management, and game state updates for the view.
+    """
     def __init__(self):
+        """
+        Initializes the game view, loads assets, and sets up the UI.
+        """
         # self.screen = screen
         current_directory = os.path.dirname(__file__)
         # Build the relative path to the player and enemy images
@@ -57,41 +62,55 @@ class MView:
         # self.theNewRoom = (10,10,10)
         self.bossRoom = True
     
-    def getScreen(self):
-        return self.screen
-    
     def clear(self):
         """Clear the screen before drawing the next frame."""
         self.screen.fill((0, 0, 0))  # Fill screen with black
-
-    def updateBossHealthUI(self, event: pygame.event.Event):
-        self.BossHealth = event.health
-        self.bossMaxHealth = event.maxHealth
-        self.bossRoom = event.isdead
-        self.needs_redraw = True
-    
-
-
-    def updateHealthUI(self, event: pygame.event.Event):
-        self.playerHealth = event.health
-        self.maxHealth = event.maxHealth
-        self.needs_redraw = True
-
-
-    def updateInventoryUI(self, event: pygame.event.Event):
-        self.inventory = event.inventory
-        self.redrawCharacter()
-
-    def updateKeyInventoryUI(self, event: pygame.event.Event):
-        self.keyInventory = event.keyInventory
-        self.redrawCharacter()   
-
 
     def process_updates(self):
         """Process all updates and perform a single redraw if needed."""
         if self.needs_redraw:
             self.redrawCharacter()
             self.needs_redraw = False
+    
+    def updateBossHealthUI(self, event: pygame.event.Event):
+        """
+        Updates the boss health UI.
+
+        :param event: Event containing boss health information.
+        """
+        self.BossHealth = event.health
+        self.bossMaxHealth = event.maxHealth
+        self.bossRoom = event.isdead
+        self.needs_redraw = True
+    
+    def updateHealthUI(self, event: pygame.event.Event):
+        """
+        Updates player health UI.
+
+        :param event: Event containing updated health information.
+        """
+        self.playerHealth = event.health
+        self.maxHealth = event.maxHealth
+        self.needs_redraw = True
+    
+    def updateInventoryUI(self, event: pygame.event.Event):
+        """
+        Updates player inventory UI.
+
+        :param event: Event containing inventory updates.
+        """
+        self.inventory = event.inventory
+        self.redrawCharacter()
+    
+    def updateKeyInventoryUI(self, event: pygame.event.Event):
+        """
+        Updates the key inventory UI.
+
+        :param event: Event containing key count.
+        """
+        self.keyInventory = event.keyInventory
+        self.redrawCharacter()   
+    
     def updateRoom(self, event: pygame.event.Event):
         """Updates the room background and creates door sprites.
         The door that connects to a boss room uses a boss door sprite.
@@ -153,45 +172,7 @@ class MView:
                     playerSprite = sprite
             self.onScreenChar = [playerSprite]
         self.cords = event.cords
-
-    def _getDoorX(self, direction):
-        if direction == "N":
-            return ViewUnits.SOUTH_DOOR_CORD[0]
-        elif direction == "S":
-            return ViewUnits.NORTH_DOOR_CORD[0]
-        elif direction == "W":
-            return ViewUnits.EAST_DOOR_CORD[0]
-        elif direction == "E":
-            return ViewUnits.WEST_DOOR_CORD[0]
-        return 0
-
-    def _getDoorY(self, direction):
-        if direction == "N":
-            return ViewUnits.SOUTH_DOOR_CORD[1]
-        elif direction == "S":
-            return ViewUnits.NORTH_DOOR_CORD[1]
-        elif direction == "W":
-            return ViewUnits.EAST_DOOR_CORD[1]
-        elif direction == "E":
-            return ViewUnits.WEST_DOOR_CORD[1]
-        return 0
-
-
-
-    def addCharacterToScreenList(self, theEvent:pygame.event):
-        
-        newCharSprite = self.mySpriteFactory.createSpriteSheet(theEvent.id, theEvent.name, theEvent.positionX,theEvent.positionY)
-        self.onScreenChar.append(newCharSprite)
     
-    def remove_projectile(self, theEvent:pygame.event):
-        """Removes a projectile from the screen."""
-        for i in range(len(self.onScreenChar)):
-            if theEvent.id == self.onScreenChar[i].getId():
-                self.onScreenChar.pop(i)
-                break
-        self.needs_redraw = True
-
-
     def update_entity(self,theEvent:pygame.event):#need to find way to clear canvas when you draw
         """Adds Chracter to list and to screen with new position  """
     
@@ -213,76 +194,92 @@ class MView:
                     characterSprite.setCurrentState(theEvent.state)
         
         self.needs_redraw = True
+    
+    def update_game_won_screen(self):
+        """Continuously updates the game won animations each frame."""
+        
+        # Redraw background
+        self.screen.fill((0, 0, 50))  
+
+        # Draw fireworks at random positions
+        for _ in range(3):  
+            x = random.randint(100, ViewUnits.SCREEN_WIDTH - 200)
+            y = random.randint(50, ViewUnits.SCREEN_HEIGHT // 2)
+            self.screen.blit(self.fireworks_image, (x, y))
+
+        # Victory Text
+        text_surface = self.font_big.render("YOU WON!", True, self.GOLD)
+        glow_surface = self.font_big.render("YOU WON!", True, self.WHITE)
+        text_rect = text_surface.get_rect(center=(ViewUnits.SCREEN_WIDTH // 2, ViewUnits.SCREEN_HEIGHT // 3))
+
+        self.screen.blit(glow_surface, (text_rect.x - 2, text_rect.y - 2))  
+        self.screen.blit(text_surface, text_rect)
+
+        # Instruction text
+        replay_text = self.font_small.render("Press ENTER to Restart, ESC to Quit", True, self.WHITE)
+        replay_rect = replay_text.get_rect(center=(ViewUnits.SCREEN_WIDTH // 2, ViewUnits.SCREEN_HEIGHT // 1.5))
+        self.screen.blit(replay_text, replay_rect)
+
+        # Add new confetti particles randomly
+        if random.randint(0, 5) == 0:  
+            self.confetti_particles.append([
+                random.randint(0, ViewUnits.SCREEN_WIDTH),  # X position
+                0,  # Y starts at top
+                random.choice([(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0)])  # Random colors
+            ])
+
+        # Move and draw confetti
+        for particle in self.confetti_particles:
+            pygame.draw.circle(self.screen, particle[2], (particle[0], particle[1]), 5)
+            particle[1] += 3  # Move confetti down
+
+        # Remove off-screen particles
+        self.confetti_particles = [p for p in self.confetti_particles if p[1] < ViewUnits.SCREEN_HEIGHT]
+
+        pygame.display.flip()  # Refresh screen
+    
+    def addCharacterToScreenList(self, theEvent:pygame.event):
+        """
+        adds characters to screen  
+        """
+        newCharSprite = self.mySpriteFactory.createSpriteSheet(theEvent.id, theEvent.name, theEvent.positionX,theEvent.positionY)
+        self.onScreenChar.append(newCharSprite)
+
+    def remove_projectile(self, theEvent:pygame.event):
+        """Removes a projectile from the screen."""
+        for i in range(len(self.onScreenChar)):
+            if theEvent.id == self.onScreenChar[i].getId():
+                self.onScreenChar.pop(i)
+                break
+        self.needs_redraw = True
 
     def display_game_won(self):
-        """Display 'You Won!' with animations and effects."""
-
+        """Displays 'You Won!' screen with animations that update every frame."""
+        
         # Load assets
         assets_path = os.path.join(os.path.dirname(__file__), "..", "Assets")
-        
         fireworks_image = pygame.image.load(os.path.join(assets_path, "Goat2.jpg"))
         fireworks_image = pygame.transform.scale(fireworks_image, (200, 200))  # Resize
 
-
         # Colors
-        GOLD = (255, 215, 0)
-        WHITE = (255, 255, 255)
+        self.GOLD = (255, 215, 0)
+        self.WHITE = (255, 255, 255)
 
-        # Confetti particle list
-        confetti_particles = []
+        # Fonts
+        self.font_big = pygame.font.Font(None, 100)
+        self.font_small = pygame.font.Font(None, 40)
 
-        font_big = pygame.font.Font(None, 100)  # Victory text font
-        font_small = pygame.font.Font(None, 40)  # Replay prompt
+        # Set background color
+        self.screen.fill((0, 0, 50))  
 
-        clock = pygame.time.Clock()
-        running = True
+        # Create confetti storage
+        self.confetti_particles = []  
 
-        while running:
-            self.screen.fill((0, 0, 50))  # Dark blue victory background
+        # Store fireworks image for repeated drawing
+        self.fireworks_image = fireworks_image
 
-            # Draw fireworks at random positions
-            for _ in range(3):  # Three fireworks randomly placed
-                x = random.randint(100, ViewUnits.SCREEN_WIDTH - 200)
-                y = random.randint(50, ViewUnits.SCREEN_HEIGHT // 2)
-                self.screen.blit(fireworks_image, (x, y))
+        pygame.display.flip()  # Update screen
 
-            # Victory Text (Glowing Effect)
-            text_surface = font_big.render("YOU WON!", True, GOLD)
-            glow_surface = font_big.render("YOU WON!", True, WHITE)
-            text_rect = text_surface.get_rect(center=(ViewUnits.SCREEN_WIDTH // 2, ViewUnits.SCREEN_HEIGHT // 3))
-
-            self.screen.blit(glow_surface, (text_rect.x - 2, text_rect.y - 2))  # Glow layer
-            self.screen.blit(text_surface, text_rect)
-
-            # Instruction to replay
-            replay_text = font_small.render("Thanks For Playing!", True, WHITE)
-            replay_rect = replay_text.get_rect(center=(ViewUnits.SCREEN_WIDTH // 2, ViewUnits.SCREEN_HEIGHT // 1.5))
-            self.screen.blit(replay_text, replay_rect)
-
-            # Confetti Effect
-            if random.randint(0, 5) == 0:  # Add confetti randomly
-                confetti_particles.append([
-                    random.randint(0, ViewUnits.SCREEN_WIDTH),  # X position
-                    0,  # Y starts at top
-                    random.choice([(255, 0, 0), (0, 255, 0), (0, 0, 255), (255, 255, 0)])  # Random colors
-                ])
-
-            for particle in confetti_particles:
-                pygame.draw.circle(self.screen, particle[2], (particle[0], particle[1]), 5)  # Draw confetti
-                particle[1] += 3  # Move down
-            confetti_particles = [p for p in confetti_particles if p[1] < ViewUnits.SCREEN_HEIGHT]  # Remove off-screen
-
-            pygame.display.flip()
-            clock.tick(30)
-
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    exit()
-                elif event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_SPACE:  # Restart on SPACE
-                        pygame.mixer.music.stop()  # Stop victory music
-                        return  
     def display_game_over(self):
         """Display 'Game Over' and stop the game."""
         self.clear()
@@ -316,6 +313,7 @@ class MView:
 
             # Draw the sprite at its designated position.
             self.screen.blit(item_sprite.getCurrentSprite(), item_sprite.getRect().topleft)
+
     def draw_minimap(self):
         """Draws a minimap of the floor using rounded rectangles to represent rooms with beach-themed colors and a border."""
         gameworld = GameWorld.getInstance()
@@ -355,6 +353,16 @@ class MView:
                     pygame.draw.rect(self.screen, color, rect, border_radius=border_radius)
                     pygame.draw.rect(self.screen, (0, 0, 0), rect, 2, border_radius=border_radius)
 
+    def reset_view(self):
+        """Clears the screen and resets the view state."""
+        self.inventory.clear()
+        
+        self.screen.fill((0, 0, 0))  # Fill screen with black
+        self.bossRoom = True
+        self.onScreenChar.clear()
+        self.showMinimap = False  # Hide minimap if needed
+        pygame.display.update()  # Force screen update
+
     def redrawCharacter(self):
         """Clears the screen, redraws the room, characters, and room coordinates."""
         
@@ -387,6 +395,37 @@ class MView:
         self.ui.draw_key_count(self.keyInventory)
         self.ui.draw_health(self.playerHealth, self.maxHealth)  # Draw health  
         pygame.display.flip()
+    
+    def getScreen(self):
+        """
+        Returns the Pygame screen object.
 
+        :return: The Pygame display screen.
+        """
+        return self.screen
+    
+    def _getDoorX(self, direction):
+        """Helper function to get X position for doors based on direction."""
+        if direction == "N":
+            return ViewUnits.SOUTH_DOOR_CORD[0]
+        elif direction == "S":
+            return ViewUnits.NORTH_DOOR_CORD[0]
+        elif direction == "W":
+            return ViewUnits.EAST_DOOR_CORD[0]
+        elif direction == "E":
+            return ViewUnits.WEST_DOOR_CORD[0]
+        return 0
+    
+    def _getDoorY(self, direction):
+        """Helper function to get Y position for doors based on direction."""
+        if direction == "N":
+            return ViewUnits.SOUTH_DOOR_CORD[1]
+        elif direction == "S":
+            return ViewUnits.NORTH_DOOR_CORD[1]
+        elif direction == "W":
+            return ViewUnits.EAST_DOOR_CORD[1]
+        elif direction == "E":
+            return ViewUnits.WEST_DOOR_CORD[1]
+        return 0
 
     
