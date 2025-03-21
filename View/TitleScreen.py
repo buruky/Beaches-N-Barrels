@@ -1,7 +1,6 @@
 import pygame
 import os
-from Model.EventManager import EventManager  # Import the event system
-from CustomEvents import CustomEvents  # Import custom event names
+from View.HelpScreen import HelpScreen
 from ViewUnits import ViewUnits  # Reference existing universal units
 
 class TitleScreen:
@@ -132,83 +131,8 @@ class TitleScreen:
                         self.show_guide_screen()
 
     def show_guide_screen(self):
-        """Displays the guide screen with fun animations and visuals."""
-        
-        # Load assets (icons for keys and background images)
-        assets_path = os.path.join(os.path.dirname(__file__), "..", "Assets")
-
-        wave_background = pygame.image.load(os.path.join(assets_path, "beach.png"))  # Add a wave-themed background
-        wave_background = pygame.transform.scale(wave_background, (ViewUnits.SCREEN_WIDTH, ViewUnits.SCREEN_HEIGHT))
-
-
-        # Resize icons
-        guide_text = [
-            ("Welcome to Beaches-N-Barrels!", None),
-            ("1. Use W, A, S, D to move your character.",None),
-            ("2. Press SPACE to activate your character's ability.", None),
-            ("3. Use 1 - 4 to activate items from your inventory.", None),
-            ("4. Hold Left Shift to toggle the minimap view.", None),
-            ("5. Use Arrow Keys to shoot.",None),
-            ("6. Press L to save the game at any time.", None),
-            ("7. Defeat enemies, and survive!", None),
-            ("8. Good luck and have fun!", None)
-        ]
-
-        # Back button with hover effect
-        back_button = pygame.Rect(20, 20, self.back_image.get_width(), self.back_image.get_height())
-
-        wave_offset = 0  # Used for wave animation
-        font_title = self.font_med
-        font_text = self.font_small
-
-        while True:
-            # Animated waves effect
-            wave_offset = (wave_offset + 1) % ViewUnits.SCREEN_HEIGHT
-            self.screen.blit(wave_background, (0, wave_offset - ViewUnits.SCREEN_HEIGHT))
-            self.screen.blit(wave_background, (0, wave_offset))  # Looping waves
-
-            # Draw semi-transparent text box
-            text_box_width = ViewUnits.SCREEN_WIDTH // 1.5
-            text_box_height = len(guide_text) * 50 + 60  # Adjust height based on text length
-            text_box_x = (ViewUnits.SCREEN_WIDTH - text_box_width) // 2
-            text_box_y = 100  
-
-            text_box_surface = pygame.Surface((text_box_width, text_box_height), pygame.SRCALPHA)
-            text_box_surface.fill((250,250,250, 180))  # Black with 70% opacity
-            self.screen.blit(text_box_surface, (text_box_x, text_box_y))
-
-            # Draw the title with a glowing effect
-            title_surface = font_title.render("Beaches-N-Barrels Guide", True, (255, 215, 0))  # Gold text
-            title_rect = title_surface.get_rect(center=(ViewUnits.SCREEN_WIDTH // 2, text_box_y - 30))
-            self.screen.blit(title_surface, title_rect)
-
-            # Display guide text with icons
-            y_offset = text_box_y + 20  
-
-            for line, icon in guide_text:
-                text_surface = font_text.render(line, True, (0,0,0))  # White text
-                text_rect = text_surface.get_rect(topleft=(text_box_x + 20, y_offset))
-                self.screen.blit(text_surface, text_rect)
-                y_offset += 50  
-
-            # Animated glowing back button
-            mouse_pos = pygame.mouse.get_pos()
-            if back_button.collidepoint(mouse_pos):
-                glow_surface = pygame.Surface((self.back_image.get_width() + 10, self.back_image.get_height() + 10), pygame.SRCALPHA)
-                glow_surface.fill((255, 255, 255, 50))  # Light white glow
-                self.screen.blit(glow_surface, (back_button.x - 5, back_button.y - 5))
-
-            self.screen.blit(self.back_image, back_button.topleft)
-
-            pygame.display.flip()
-
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    pygame.quit()
-                    exit()
-                elif event.type == pygame.MOUSEBUTTONDOWN:
-                    if back_button.collidepoint(event.pos):
-                        return  # Return to title screen
+        help_screen = HelpScreen(self.screen, self.font_small, self.font_med, self.back_image)
+        help_screen.run()
 
 
                         

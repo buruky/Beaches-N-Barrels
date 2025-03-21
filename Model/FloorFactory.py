@@ -59,15 +59,15 @@ class FloorFactory:
         grid[startx][starty] = self.roomFact.createRoom(startRoom, startx, starty)
         
         # Manually add rooms (ensure these rooms are linked properly)
-        # grid[5][6] = self.roomFact.createRoom("n ", 5, 6)
-        # grid[5][7] = self.roomFact.createRoom("n ", 5, 7)
-        # grid[5][8] = self.roomFact.createRoom("n ", 5, 8)
+        grid[5][6] = self.roomFact.createRoom("n ", 5, 6)
+        grid[5][7] = self.roomFact.createRoom("n ", 5, 7)
+        grid[5][8] = self.roomFact.createRoom("n ", 5, 8)
         grid[5][6] = self.roomFact.createRoom("b ", 5, 6)
-        # grid[6][7] = self.roomFact.createRoom("k ", 6, 7)
-        # grid[4][8] = self.roomFact.createRoom("k ", 4, 8)
+        grid[6][7] = self.roomFact.createRoom("k ", 6, 7)
+        grid[4][8] = self.roomFact.createRoom("k ", 4, 8)
         
         # Manually set up doors (optional, depending on how doors are managed)
-        # self.keys_min = 2
+        self.keys_min = 2
         doors = self.connect_rooms(grid)
         self.grid = grid
         self.keys_min = 2
