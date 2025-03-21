@@ -9,7 +9,7 @@ from .Player import Player
 
 # Define what is available when importing `model`
 __all__ = ["DungeonCharacter", "DungeonCharacterList", "EventManager","Floor","GameWorld","Room","Enemy",
-            "Player"]
+            "Player","FloorFactory", "Door"]
 
 
 
