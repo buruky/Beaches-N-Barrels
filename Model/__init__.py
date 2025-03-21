@@ -6,10 +6,11 @@ from .Floor import Floor
 from .GameWorld import GameWorld
 from .Room import Room
 from .Player import Player
+from .FloorFactory import FloorFactory
 
 # Define what is available when importing `model`
 __all__ = ["DungeonCharacter", "DungeonCharacterList", "EventManager","Floor","GameWorld","Room","Enemy",
-            "Player"]
+            "Player","FloorFactory"]
 
 
 

@@ -17,7 +17,8 @@ class Floor:
     def get_dungeon(self) -> list[list]:
         """returns grid"""
         return self.__myGrid  
-    
+    def getStartRoomCord(self):
+        return self.__myStartCord
     def getDoorList(self) -> list[Door]:
         """returns the list of doors on the floor"""
         return self.__myDoorList
@@ -48,7 +49,7 @@ class Floor:
             "grid": [[room.to_dict() if isinstance(room, Room) else None for room in row] for row in self.__myGrid],
             "door_list": [door.to_dict() for door in self.__myDoorList]
         }
-
+    
     @classmethod
     def from_dict(cls, data):
         """Reconstruct the Floor from a dictionary, linking doors to rooms correctly."""
