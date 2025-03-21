@@ -27,6 +27,7 @@ class TestPlayer(unittest.TestCase):
         EventManager.registerEvent(CustomEvents.CHARACTER_STOPPED, self.EmptyMethod(CustomEvents.CHARACTER_STOPPED))
         EventManager.registerEvent(CustomEvents.CHARACTER_MOVED, self.EmptyMethod(CustomEvents.CHARACTER_MOVED))
 
+        EventManager.registerEvent(CustomEvents.PICKUP_ITEM,self.EmptyMethod(CustomEvents.PICKUP_ITEM))
         EventManager.registerEvent(CustomEvents.CHANGED_ROOM,self.EmptyMethod(CustomEvents.CHANGED_ROOM))
         #self.theController = MController().__InitalizeEvents()
         self.testGameworld = GameWorld.getInstance()
@@ -66,4 +67,5 @@ class TestPlayer(unittest.TestCase):
     #     self.assertEqual(self.player.rect.topleft, (105, 100))
 
 if __name__ == "__main__":
+
     unittest.main()
