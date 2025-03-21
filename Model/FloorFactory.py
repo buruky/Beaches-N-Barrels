@@ -62,7 +62,7 @@ class FloorFactory:
         grid[5][6] = self.roomFact.createRoom("n ", 5, 6)
         grid[5][7] = self.roomFact.createRoom("n ", 5, 7)
         grid[5][8] = self.roomFact.createRoom("n ", 5, 8)
-        grid[5][6] = self.roomFact.createRoom("b ", 5, 6)
+        grid[5][9] = self.roomFact.createRoom("b ", 5, 9)
         grid[6][7] = self.roomFact.createRoom("k ", 6, 7)
         grid[4][8] = self.roomFact.createRoom("k ", 4, 8)
         

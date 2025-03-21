@@ -106,8 +106,8 @@ class HelpScreen:
             "DolphinBoy": {
                 "ability": "Tsunami Swim: Gains bonus speed.",
                 "passive": "Higher move speed and attack speed",
-                "lore": "Born from the fastest ocean currents, DolphinBoy is a guardian of the shores. After stealing the legendary Fin, he gained unmatched speed, using it to defend the coasts from the Red Tide Gang. A blur on land and sea, he fights to protect Beaches and Barrels.",
-                "background": "ocean_background.png",
+                "lore": "Born from the fastest ocean currents, DolphinBoy is a guardian of the shores, a living embodiment of speed and agility. For years, he raced with the tides, untouchable and free—until the Red Tide Gang invaded the coasts. These ruthless pirates, led by the corrupted Mark the Shark, sought to control the Barrel Belt, spreading pollution and chaos across the once-pristine waters. Realizing that his raw speed alone wasn’t enough, DolphinBoy set out on a perilous journey to steal the Legendary Fin, an ancient relic that grants unmatched velocity to those worthy of wielding it.",
+                "background": "ocean_background2.png",
                 "music":"dolphin.mp3"
             },
             "Baywatch Buddha": {
@@ -161,7 +161,7 @@ class HelpScreen:
 
         while True:
             self.screen.blit(bg_image, (0, 0))
-            title = self.font_med.render(character_name, True, (255, 255, 255))
+            title = self.font_med.render(character_name, True, (0,0,0))
             title_rect = title.get_rect(center=(ViewUnits.SCREEN_WIDTH // 2, 150))
             self.screen.blit(title, title_rect)
 
