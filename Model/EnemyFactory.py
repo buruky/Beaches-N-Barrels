@@ -67,7 +67,7 @@ class EnemyFactory():
         elif enemy_type == "Shark":
             return Shark(attack, health, screen_width, screen_height, speed)
         elif enemy_type == "Barrel":
-            return Barrel(attack, health, 250, 250, speed)
+            return Barrel(attack, health, screen_height/2, screen_width/2, speed)
 
         else:
             return None
